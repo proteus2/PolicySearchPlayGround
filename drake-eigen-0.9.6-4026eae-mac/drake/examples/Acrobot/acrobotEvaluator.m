@@ -1,8 +1,9 @@
-function totCost = acrobotEvaluator(policy)
-    changeURDF(100,0.01);
+function totCost = acrobotEvaluator(policy, m1, m2)
+    changeURDF(m1,m2);
     p = PlanarRigidBodyManipulator('Acrobot2.urdf');
-
+    
     x0 = [pi 0 0 0]';
+    %x0 = [0 0 0 0]';
     x_goal = [pi 0 0 0]';
     u = 0;
     t = 0;
