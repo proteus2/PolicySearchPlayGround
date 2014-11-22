@@ -19,6 +19,7 @@ f = zeros(size(x));
 for idx=1:size(x,2)
     [f(:,idx),~] = p.dynamics(0,x(:,idx),u(:,idx));
 end
+
 k1   = dt.*f;
 dx    = k1;
 
