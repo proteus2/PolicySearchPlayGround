@@ -1,8 +1,4 @@
-function totCost = acrobotEvaluator(policy, m1, m2)
-    
-    changeURDF(m1,m2);
-    
-    p = StochasticPlanarRigidBodyManipulator('Acrobot2.urdf');
+function totCost = acrobotEvaluator(p,x0,x_goal)
     
     x0 = [pi 0 0 0]';
     %x0 = [0 0 0 0]';
@@ -11,18 +7,18 @@ function totCost = acrobotEvaluator(policy, m1, m2)
     t = 0;
     
     % initialize variables
-    tape = x0;
-    
     n_timesteps = 424;     %number of time steps
     simulation_time = 10; % number of seconds to simulate
     elapsed_time_perstep = simulation_time/n_timesteps; % time per step
-
+    
     
     Q = eye(4,4)*10;
     cost = zeros(n_timesteps+1,1);
     cost(1)=(x0 - x_goal)' * Q  * (x0-x_goal);
     x = x0;
 
+    
+    
     
     for idx=1:n_timesteps
         [f,df] = p.dynamics(t,x,u);
