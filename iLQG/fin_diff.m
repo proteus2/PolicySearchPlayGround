@@ -60,6 +60,7 @@ X        = pp(permute(x,[1 3 2]), dX);
 F        = fun(X);
 m        = size(F,1);
 f        = F(:,1,:);
+
 dF       = pp(F(:,2:end,:), -f);
 FX       = tt(mms(dF, D), hh.^-1);
 fx       = FX(:,1:n,:);

@@ -1,5 +1,6 @@
 function totCost = acrobotEvaluator(p,x0,x_goal)
-    
+    p = PlanarRigidBodyManipulator('Acrobot.urdf');
+
     x0 = [pi 0 0 0]';
     %x0 = [0 0 0 0]';
     x_goal = [pi 0 0 0]';
@@ -17,7 +18,7 @@ function totCost = acrobotEvaluator(p,x0,x_goal)
     cost(1)=(x0 - x_goal)' * Q  * (x0-x_goal);
     x = x0;
 
-    
+    policy = zeros(size(x))';
     
     
     for idx=1:n_timesteps
@@ -26,7 +27,7 @@ function totCost = acrobotEvaluator(p,x0,x_goal)
         % add Gaussian white noise
         q_noise = normrnd(0,1,2,1);
         qd_noise = normrnd(0,0.1,2,1);
-        x = x+f*elapsed_time_perstep+[q_noise;qd_noise];
+        x = x+f*elapsed_time_perstep;%+[q_noise;qd_noise];
 
         q = x(1:2);
         qd = x(3:4);

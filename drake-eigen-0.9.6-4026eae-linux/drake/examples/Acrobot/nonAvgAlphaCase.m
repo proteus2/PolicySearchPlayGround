@@ -4,22 +4,22 @@ changeURDF(m_list(1),m_list(2));
 
 %% run the trajectory optimization
 % --- setup a plant
-p = PlanarRigidBodyManipulator('Acrobot2.urdf');
+p = PlanarRigidBodyManipulator('Acrobot.urdf');
 
 
 % setup initial values and necessary variables for iLQG
 n = 4; % dimension of my state
-N = 100; % length of my trajectory
 m = 1; % dimension of control
 
 n_timesteps = 424;     %number of time steps
 simulation_time = 10; % number of seconds to simulate
 elapsed_time_perstep = simulation_time/n_timesteps; % time per steps
+N = n_timesteps; % length of my trajectory
 
-x0 = [0 0 0 0]';
+x0 = [pi 0 0 0]';
 u0 = zeros(1,N);
 x_goal = [pi 0 0 0]';
-Q = eye(4,4)*10;
+Q = eye(4,4)*1;
 
 % --- select between iLQG and full DDP
 order    = 4;
