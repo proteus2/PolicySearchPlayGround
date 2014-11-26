@@ -34,8 +34,11 @@ if RK
 end
 
 xnew  = x + dx;
-
-
+q = xnew(1:2,:);
+qd = xnew(3:4,:);
+q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
+q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
+xnew=[q;qd];
 
 function dXdt = cp_f(E,X,u)  %#eml
 
