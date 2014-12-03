@@ -9,7 +9,7 @@ function [u_bar] = iLQG()
     step_cost_fun = @(x,u) costfun(x,u);
     
     plant = PlanarRigidBodyManipulator('Acrobot.urdf');
-    n=4;m=1;N=50;
+    n=4;m=1;N=10;
     F = eye(n,m); % noise model matrix
     xinit = [0;0;0;0];
     x0 = zeros(n,N); % state trajectory
@@ -92,12 +92,21 @@ function [u_bar] = iLQG()
         u = zeros(m,N-1);
         delta_u(:,1) = I{1} + L{1}*delta_x(:,1);
         u(:,1) = u0(:,1) + delta_u(:,1);
-
+        alpha = 0.1;
         for k=2:N-1
             % forward pass - delta x at he first step is always zero.
-            delta_x(:,k) = A{k}'*delta_x(:,k-1) + B{k}*delta_u(:,k-1);
+            delta_x(:,k) = (A{k}'*delta_x(:,k-1) + B{k}*delta_u(:,k-1));
+            
+            q = delta_x(1:2,k);
+            qd = delta_x(3:4,k);
+            q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
+            q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
+            delta_x(:,k) = [q;qd];
+          
+            
             delta_u(:,k) = I{k} + L{k}*delta_x(:,k); % this is wrong. I should have delta x, not x0, the trajectory;
             u(:,k) = u0(:,k) + delta_u(:,k);
+            u(:,k) = max(min(u(:,k),20),-20);
         end
         u = [u zeros(m,1)] 
         cvg_crit = sum(abs(u-u0));

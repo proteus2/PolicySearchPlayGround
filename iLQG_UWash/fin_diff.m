@@ -56,7 +56,7 @@ switch order
 end
 
 dX       = h*Q;
-X        = pp(permute(x,[1 3 2]), dX);
+X        = pp(permute(x,[1 3 2]), dX); % perturbations to different dimensions of x, i think
 F        = fun(X);
 m        = size(F,1);
 f        = F(:,1,:);

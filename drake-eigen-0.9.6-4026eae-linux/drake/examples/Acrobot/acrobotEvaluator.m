@@ -1,10 +1,10 @@
-function totCost = acrobotEvaluator(p,x0,x_goal)
+function totCost = acrobotEvaluator()
     p = PlanarRigidBodyManipulator('Acrobot.urdf');
 
     x0 = [pi 0 0 0]';
     %x0 = [0 0 0 0]';
     x_goal = [pi 0 0 0]';
-    u = 0;
+    u = -20;
     t = 0;
     
     % initialize variables

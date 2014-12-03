@@ -15,6 +15,8 @@ classdef AcrobotController < DrakeSystem
     end
     
     function u = output(obj,t,~,x)
+        u=-20;
+        return;
       q = x(1:2);
       qd = x(3:4);
       
