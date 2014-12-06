@@ -100,10 +100,12 @@ classdef AcrobotController < DrakeSystem
       
 %      x0 = [0.1*(rand(4,1) - 1)]; % start near the downward position
 %     x0 = [pi - .1*randn;0;0;0];  % start near the upright position
-      x0 = [pi 0 0 0]';
+      x0 = [0 0 0 0]';
       xtraj=simulate(sys_closedloop,[0 10],x0);
       v.axis = [-4 4 -4 4];
       playback(v,xtraj);
+      
+      
       t = xtraj.pp.breaks;
       x = xtraj.eval(t);
       t_grade = linspace(3,4,98);

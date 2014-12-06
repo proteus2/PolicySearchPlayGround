@@ -16,7 +16,7 @@ simulation_time = 10; % number of seconds to simulate
 elapsed_time_perstep = simulation_time/n_timesteps; % time per steps
 N = n_timesteps; % length of my trajectory
 
-x0 = [pi 0 0 0]';
+x0 = [0 0 0 0]';
 u0 = zeros(1,N);
 x_goal = [pi 0 0 0]';
 Q = eye(4,4)*1;
@@ -38,13 +38,23 @@ C     = @(x,u) ab_cost(x,u,Q,x_goal);
 Cp    = @(x,u) pour(C,x,u);
 CST   = @(x,u,t) diff_xu(Cp, x, u, h, order);
 
-
-
 % --- combine into DYNCST
 DYNCST   = @(x,u,t) combine(DYN,CST,x,u,t);
 Op    = struct('plot',-1,'print',3); 
 [x, u, L]   = iLQG(DYNCST, x0, u0, Op);
 
+u(u>20) = 20;
+u(u<-20) = -20;
+
+time = simulation_time;
+dt=time/n_timesteps;
+t=0:dt:dt*n_timesteps;
+%% run one instance
+v = p.constructVisualizer;
+v.axis = [-4 4 -4 4];
+xtraj = PPTrajectory(foh(t,x));
+xtraj = xtraj.setOutputFrame(p.getStateFrame);
+v.playback(xtraj) % dont play it yet...
 
 %% Try evaluating using acrobotEval
 

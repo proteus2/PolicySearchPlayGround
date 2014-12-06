@@ -1,14 +1,14 @@
 function totCost = acrobotEvaluator()
     p = PlanarRigidBodyManipulator('Acrobot.urdf');
 
-    x0 = [pi 0 0 0]';
+    x0 = [0 0 0 0]';
     %x0 = [0 0 0 0]';
     x_goal = [pi 0 0 0]';
     u = -20;
     t = 0;
     
     % initialize variables
-    n_timesteps = 424;     %number of time steps
+    n_timesteps = 400;     %number of time steps
     simulation_time = 10; % number of seconds to simulate
     elapsed_time_perstep = simulation_time/n_timesteps; % time per step
     
@@ -20,7 +20,8 @@ function totCost = acrobotEvaluator()
 
     policy = zeros(size(x))';
     
-    
+    tape=zeros(4,n_timesteps+1);
+    tape(:,1) = x0;
     for idx=1:n_timesteps
         [f,df] = p.dynamics(t,x,u);
         
@@ -36,13 +37,14 @@ function totCost = acrobotEvaluator()
         q(1) = q(1) - 2*pi*floor(q(1)/(2*pi));
         q(2) = q(2) - 2*pi*floor((q(2) + pi)/(2*pi));
         x=[q;qd];
-        
+       
+        tape(:,idx+1) = x;
         xbar = [q;qd] - x_goal;
         cost(idx) = xbar'*Q*xbar;
         
         
         u = policy*xbar;
-        u = max(min(u,20),-20);
+        u = -20;% max(min(u,20),-20);
     end
     
     totCost = -sum(cost);

@@ -1,0 +1,184 @@
+% Implementation of iLQG. 
+
+% Variable names conform to the notations used in Todorov ICDC 2005
+
+function [x0,u0] = iLQG_BK(xinit,time,N)
+    % Inputs: plant, initial position x0 and initial u traj u0, length of time step, and number of
+    % node points N.
+    % Output: u trajectory
+   % step_cost_fun = @(x,u) costfun(x,u);
+    
+    plant = PlanarRigidBodyManipulator('Acrobot.urdf');
+    n=4;m=1;
+    F = eye(n,m); % noise model matrix
+    x0 = zeros(n,N); % state trajectory
+    x0(:,1) = xinit;
+    u0 = zeros(m,N)+0.01; % control trajectory
+    cvg_crit = 100;
+    
+    dt = time/N; 
+    exp_cost = Inf;
+    n_iter = 1;
+    while cvg_crit > 0.001
+        cvg_crit
+        % initialize ubar and xbar by applying ubar to the system dynamics
+        for k=1:N-1
+            xdot = plant.dynamics(0,x0(:,k),u0(k));
+            xnew = x0(:,k) + xdot*dt;
+            q = xnew(1:2,:);
+            qd = xnew(3:4,:);
+            q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
+            q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
+            
+            x0(:,k+1)=[q;qd];
+        end      
+
+        %% Compute linearized dynamics and quadratized costs
+        % linearize the dynamics at the node points, and get A_k and B_k
+        % compute c_{i,k} by looking at F^{i}
+        % compute qk, qqk, rk, Qk, Rk
+        % initialize sK=qK, SK=QK, ssK = qqk
+        A = cell(N,1); B = cell(N,1);    
+        q = cell(N,1); qq = cell(N,1); Q = cell(N,1); 
+        r = cell(N,1); R = cell(N,1);
+        for k=1:N
+            [A{k},B{k}] = linearize(plant,0,x0(:,k),u0(:,k));
+            A{k} = eye(size(A{k})) + A{k}*dt; B{k}=B{k}*dt;
+            
+            x_cost_fun=@(x)costfun(x,u0(:,k));
+            [q{k},qq{k},Q{k}]=fin_diff(x_cost_fun,x0(:,k),2^-17);
+            Q{k} = dt*reshape(Q{k},size(Q{k},2),size(Q{k},3)); % I have a feeling that I should transpose this. I will leave it for now because Q's are symmetric.
+            q{k} = dt*q{k}';
+            qq{k} = dt*qq{k}';
+
+            u_cost_fun=@(u)costfun(x0(:,k),u);
+            [~,r{k},~] = fin_diff(u_cost_fun,u0(:,k));
+            r{k}=dt*r{k};
+            R{k} = 0;
+        end
+        
+        %% Compute the value function at each node, backward pass.
+        % compute g, G, and H using equation (3)
+        % compute Sk ssk, sk using equation (4)
+        % initialize sK=qK, SK=QK, ssK = qqk
+        s = cell(N,1); S = cell(N,1); ss = cell(N,1); H = cell(N-1,1); 
+        g = cell(N-1,1); G = cell(N-1,1); L = cell(N-1,1); I = cell(N-1,1);
+
+        S{end} = Q{end};
+        s{end} = q{end};
+        ss{end} = qq{end};
+
+        for k=fliplr(1:N-1)
+            % Equation (3)
+            g{k} = r{k} + B{k}'*ss{k+1} + 0; % my Cik is zero
+            G{k} = B{k}'*S{k+1}*A{k};
+            H{k} = R{k} + B{k}'*S{k+1}*B{k} + 0;
+
+            L{k} = -1/(H{k})*G{k};
+            I{k} = -1/(H{k})*g{k};
+
+            % Equation (4)
+            S{k} = Q{k} + A{k}'*S{k+1}*A{k} + L{k}'*H{k}*L{k} + L{k}'*G{k} + G{k}'*L{k};
+            %Q{k} + A{k}'*S{k+1}*A{k} - G{k}'*inv(H{k})*G{k}
+            
+            ss{k} = qq{k} + A{k}'*ss{k+1} + L{k}'*H{k}*I{k} + L{k}'*g{k} + G{k}'*I{k};
+            %qq{k} + A{k}'*ss{k+1} - G{k}'*inv(H{k})*g{k}
+            
+            s{k} = q{k} + s{k+1} + 0 + 1/2*I{k}'*H{k}*I{k} + I{k}'*g{k}  ;  
+            %q{k} + s{k+1} - 1/2*g{k}'*inv(H{k})*g{k}
+        end
+        
+        
+        %% Forward pass
+        curr_cost = Inf; 
+        
+        % perform line search
+        alpha_list = [1.1.^-((0:500).^2) 0];
+        %alpha_list = 1/n_iter;
+        %alpha_list = [alpha_list 0];
+        for alpha = alpha_list
+            delta_x = zeros(n,N);
+            delta_u = zeros(m,N-1); % u delta
+
+            u = zeros(m,N-1);
+            delta_u(:,1) = alpha*I{1} + L{1}*delta_x(:,1);
+            u(:,1) = max(min(u0(:,1) + delta_u(:,1),20),-20);
+            for k=2:N-1
+                % forward pass - delta x at he first step is always zero.
+                delta_x(:,k) = A{k-1}*delta_x(:,k-1) + B{k-1}*delta_u(:,k-1);
+
+%                 q = delta_x(1:2,k);
+%                 qd = delta_x(3:4,k);
+%                 q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
+%                 q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
+%                 delta_x(:,k) = [q;qd];
+
+                delta_u(:,k) = alpha*(I{k}) + L{k}*delta_x(:,k); 
+                u(:,k) = u0(:,k) + delta_u(:,k);
+                u(:,k) = max(min(u(:,k),20),-20);
+            end
+            [curr_cost,end_cost]= eval_traj(plant,xinit,u,dt);
+            if curr_cost < exp_cost
+                break
+            end
+            
+        end
+        
+        u = [u zeros(m,1)] ;
+        cvg_crit = sum(abs(u-u0));
+        u0=u;
+        n_iter = n_iter +1;
+        exp_cost = curr_cost
+        alpha
+    end
+    
+    x0(:,1) = xinit;
+    for k=1:N-1
+        xdot = plant.dynamics(0,x0(:,k),u0(k));
+        xnew = x0(:,k) + xdot*dt;
+        q = xnew(1:2,:);
+        qd = xnew(3:4,:);
+        q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
+        q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
+
+        x0(:,k+1)=[q;qd];
+    end
+       
+end
+
+function [cost,end_cost] = eval_traj(p,x0,u,dt)
+    N = size(u,2);
+    cost = zeros(N,1);
+    cost(1) = costfun(x0,u(1));
+    %tape=x0;
+    for k = 2:N
+        xdot = p.dynamics(0,x0,u(1,k));
+        xnew = x0(:,1) + xdot*dt;
+        q = xnew(1:2,1);
+        qd = xnew(3:4,1);
+        q(1,:) = q(1,1) - 2*pi*floor(q(1,1)./(2*pi));
+        q(2,:) = q(2,1) - 2*pi*floor((q(2,1) + pi)./(2*pi));
+        x0 = [q;qd];
+        %tape = [tape x0];
+        cost(k) = costfun(x0,u(k));
+    end
+    end_cost = costfun(x0,0); %cost(end);
+    cost =mean(cost);
+    
+end
+function c = costfun(x,u) 
+    x_goal = [pi 0 0 0]';
+    Q = eye(4,4);
+    Q(1,1) = 10;
+    Q(2,2) = 10;
+    R
+    
+    xerr = bsxfun(@minus,x_goal,x);
+    xerr(1,:) = mod(xerr(1,:)+pi,2*pi)-pi;
+    xerr(2,:) = mod(xerr(2,:)+pi,2*pi)-pi;
+    
+    state_cost = diag( xerr'*Q*xerr )';
+    control_cost = diag(u
+    
+    c  = 1/2*repmat(diag( xerr'*Q*xerr )',1,size(u,2));    % replicate the same amount for different u's. For the future, implement u dependent cost function and fix this.
+end

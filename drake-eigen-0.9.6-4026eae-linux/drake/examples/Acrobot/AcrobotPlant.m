@@ -94,10 +94,13 @@ classdef AcrobotPlant < Manipulator
       end
     end
     
-    function [utraj,xtraj]=swingUpTrajectory(obj)
-      x0 = zeros(4,1); 
+    function [utraj,xtraj]=swingUpTrajectory(obj,x0,tf0)
+      if nargin < 2
+        x0 = zeros(4,1); 
+        tf0 = 4;
+      end
+      
       xf = double(obj.xG);
-      tf0 = 4;
       
       N = 21;
       traj_opt = DircolTrajectoryOptimization(obj,N,[2 6]);
@@ -115,7 +118,7 @@ classdef AcrobotPlant < Manipulator
         toc
       end
 
-      function [g,dg] = cost(t,x,u);
+      function [g,dg] = cost(t,x,u)
         R = 1;
         g = sum((R*u).*u,1);
         dg = [zeros(1,1+size(x,1)),2*u'*R];
