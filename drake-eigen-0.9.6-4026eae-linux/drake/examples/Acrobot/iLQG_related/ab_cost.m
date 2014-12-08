@@ -1,5 +1,4 @@
 function l = ab_cost(x, u, Q, x_goal)
-% Instantaneous costs for the cart-pole system
 
 u(isnan(u))  = 0;
 
@@ -7,7 +6,9 @@ xerr = bsxfun(@minus,x_goal,x);
 xerr(1,:) = mod(xerr(1,:)+pi,2*pi)-pi;
 xerr(2,:) = mod(xerr(2,:)+pi,2*pi)-pi;
 l = 1/2*xerr'*Q*xerr;
-l = diag(l)';
+size(diag(l)')
+size(diag((u.*u)'))
+l = diag(l)' + (u.*u);
 
 
 % 

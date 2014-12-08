@@ -45,6 +45,9 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
             [A{k},B{k}] = linearize(plant,0,x0(:,k),u0(:,k));
             A{k} = eye(size(A{k})) + A{k}*dt; B{k}=B{k}*dt;
             
+            % Gradient is wrong for qq. It should return
+            % 1/2*(Q+Q')*delta_x(:,k), but it is currently returning
+            % 1/2*(Q+Q')*x0(:,k)
             x_cost_fun=@(x)costfun(x,u0(:,k));
             [q{k},qq{k},Q{k}]=fin_diff(x_cost_fun,x0(:,k),2^-17);
             Q{k} = dt*reshape(Q{k},size(Q{k},2),size(Q{k},3)); % I have a feeling that I should transpose this. I will leave it for now because Q's are symmetric.
@@ -171,14 +174,17 @@ function c = costfun(x,u)
     Q = eye(4,4);
     Q(1,1) = 10;
     Q(2,2) = 10;
-    R
+    R = 1;
     
     xerr = bsxfun(@minus,x_goal,x);
     xerr(1,:) = mod(xerr(1,:)+pi,2*pi)-pi;
     xerr(2,:) = mod(xerr(2,:)+pi,2*pi)-pi;
     
     state_cost = diag( xerr'*Q*xerr )';
-    control_cost = diag(u
+    control_cost = u.*R.*u;
+    state_cost = repmat(state_cost,1,size(u,2));
+    control_cost = repmat(control_cost,1,size(x,2));
     
-    c  = 1/2*repmat(diag( xerr'*Q*xerr )',1,size(u,2));    % replicate the same amount for different u's. For the future, implement u dependent cost function and fix this.
+    c = (state_cost+control_cost);
+    %c  = 1/2*repmat(diag( xerr'*Q*xerr )',1,size(u,2));    % replicate the same amount for different u's. For the future, implement u dependent cost function and fix this.
 end

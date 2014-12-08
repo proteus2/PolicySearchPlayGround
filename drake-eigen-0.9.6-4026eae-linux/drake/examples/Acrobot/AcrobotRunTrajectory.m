@@ -1,6 +1,7 @@
+N = 424;
 time = 10;
-dt=time/424;
-t=0:dt:dt*424;
+dt=time/N;
+t=0:dt:dt*N;
 t(end)=[];
 
 
@@ -8,9 +9,19 @@ t(end)=[];
 p = PlanarRigidBodyManipulator('Acrobot.urdf'); 
 v = p.constructVisualizer;
 v.axis = [-4 4 -4 4];
-x0 = [0;0;0;0];
+x0  = [0;0;0;0];
 
-[x_traj,u_traj] = iLQG_BK(x0,time,424);  
+% 
+
+UWASHINGTON = false;
+
+if UWASHINGTON
+    [x_traj,u_traj] = iLQG_Washington(x0,time,N);  
+    x_traj(:,end)=[];
+else
+ [x_traj,u_traj] = iLQG_BK(x0,time,N);    
+end
+
 xtraj = PPTrajectory(foh(t,x_traj));
 xtraj = xtraj.setOutputFrame(p.getStateFrame);
-v.playback(xtraj) % dont play it yet...
+v.playback(xtraj) % dont play it yet...¢¢
