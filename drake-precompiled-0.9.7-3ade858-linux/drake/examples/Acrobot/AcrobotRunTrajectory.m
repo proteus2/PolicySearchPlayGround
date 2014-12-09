@@ -1,6 +1,6 @@
-N = 450;
-time = 8;
-dt=time/N;
+dt=0.01;
+time = 9;
+N = time/dt;
 t=0:dt:dt*N;
 t(end)=[];
 
@@ -9,7 +9,7 @@ t(end)=[];
 p = PlanarRigidBodyManipulator('Acrobot.urdf'); 
 v = p.constructVisualizer;
 v.axis = [-4 4 -4 4];
-x0  = [0;0;0;0]+rand(4,1);
+x0  = [0;0;0;0]+[rand(2,1);zeros(2,1)];
 x0
 % 
 

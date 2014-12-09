@@ -13,7 +13,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
     F = eye(n,m); % noise model matrix
     x0 = zeros(n,N); % state trajectory
     x0(:,1) = xinit;
-    u0 = zeros(m,N)+20; % control trajectory
+    u0 = zeros(m,N)+10; % control trajectory
  %   u0(1,1:end/2) = 20;
    % u0(1,end/2+1:end)=-20;
     cvg_crit = 100;
@@ -106,7 +106,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
         
         
         %% Forward pass
-        curr_cost = Inf; 
+        % curr_cost = Inf; 
         prev_cost = Inf;
         % perform line search
         alpha_list = [1.1.^-((0:100).^2) 0];
