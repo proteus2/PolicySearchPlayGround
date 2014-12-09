@@ -13,7 +13,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
     F = eye(n,m); % noise model matrix
     x0 = zeros(n,N); % state trajectory
     x0(:,1) = xinit;
-    u0 = zeros(m,N)+0.01; % control trajectory
+    u0 = zeros(m,N)+10; % control trajectory
     cvg_crit = 100;
     
     dt = time/N; 
@@ -34,7 +34,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
         end      
 
         %% Compute linearized dynamics and quadratized costs
-        % linearize the dynamics at the node points, and get A_k and B_k
+        % linearize $the dynamics at the node points, and get A_k and B_k
         % compute c_{i,k} by looking at F^{i}
         % compute qk, qqk, rk, Qk, Rk
         % initialize sK=qK, SK=QK, ssK = qqk
@@ -49,15 +49,22 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
             % 1/2*(Q+Q')*delta_x(:,k), but it is currently returning
             % 1/2*(Q+Q')*x0(:,k)
             x_cost_fun=@(x)costfun(x,u0(:,k));
-            [q{k},qq{k},Q{k}]=fin_diff(x_cost_fun,x0(:,k),2^-17);
-            Q{k} = dt*reshape(Q{k},size(Q{k},2),size(Q{k},3)); % I have a feeling that I should transpose this. I will leave it for now because Q's are symmetric.
-            q{k} = dt*q{k}';
-            qq{k} = dt*qq{k}';
+%             [q{k},qq{k},Q{k}]=fin_diff(x_cost_fun,x0(:,k),2^-17);
+%             Q{k} = dt*reshape(Q{k},size(Q{k},2),size(Q{k},3)); % I have a feeling that I should transpose this. I will leave it for now because Q's are symmetric.
+%             q{k} = dt*q{k}';
+%             qq{k} = dt*qq{k}';
+            
+            [q{k},qq{k},Q{k}] = fin_diff_state(x_cost_fun,x0(:,k));
+            Q{k} = dt*Q{k};
+            q{k} = dt*q{k};
+            qq{k} = dt*qq{k};
 
             u_cost_fun=@(u)costfun(x0(:,k),u);
-            [~,r{k},~] = fin_diff(u_cost_fun,u0(:,k));
+            [~,r{k},R{k}] = fin_diff_control(u_cost_fun,u0(:,k));
+            %[~,r{k},~] = fin_diff(u_cost_fun,u0(:,k));
             r{k}=dt*r{k};
-            R{k} = 0;
+            R{k} =dt*R{k};
+            %R{k} = 0;
         end
         
         %% Compute the value function at each node, backward pass.
@@ -96,7 +103,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
         curr_cost = Inf; 
         
         % perform line search
-        alpha_list = [1.1.^-((0:500).^2) 0];
+        alpha_list = [1.1.^-((0:100).^2) 0];
         %alpha_list = 1/n_iter;
         %alpha_list = [alpha_list 0];
         for alpha = alpha_list
@@ -185,6 +192,6 @@ function c = costfun(x,u)
     state_cost = repmat(state_cost,1,size(u,2));
     control_cost = repmat(control_cost,1,size(x,2));
     
-    c = (state_cost+control_cost);
+    c = 1/2*(state_cost+control_cost);
     %c  = 1/2*repmat(diag( xerr'*Q*xerr )',1,size(u,2));    % replicate the same amount for different u's. For the future, implement u dependent cost function and fix this.
 end

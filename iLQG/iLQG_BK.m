@@ -13,7 +13,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
     F = eye(n,m); % noise model matrix
     x0 = zeros(n,N); % state trajectory
     x0(:,1) = xinit;
-    u0 = zeros(m,N)+0.01; % control trajectory
+    u0 = zeros(m,N)+10; % control trajectory
     cvg_crit = 100;
     
     dt = time/N; 
