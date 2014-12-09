@@ -1,4 +1,4 @@
-N = 424;
+N = 500;
 time = 10;
 dt=time/N;
 t=0:dt:dt*N;

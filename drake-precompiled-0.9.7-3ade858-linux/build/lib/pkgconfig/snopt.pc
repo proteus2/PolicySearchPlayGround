@@ -1,0 +1,12 @@
+prefix=/tmp/drake-precompiled-18332/build
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: snopt
+Description: snopt
+Requires: 
+Version: 0.0.1
+Libs: -L${libdir}  -L/tmp/drake-precompiled-18332/build/lib -lsnopt -lsnblas -lsnprint
+Cflags: -I${includedir} 
+classpath=

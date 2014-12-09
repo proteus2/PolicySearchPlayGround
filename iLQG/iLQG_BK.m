@@ -13,25 +13,26 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
     F = eye(n,m); % noise model matrix
     x0 = zeros(n,N); % state trajectory
     x0(:,1) = xinit;
-    u0 = zeros(m,N)+10; % control trajectory
+    u0 = zeros(m,N)+20; % control trajectory
+ %   u0(1,1:end/2) = 20;
+   % u0(1,end/2+1:end)=-20;
     cvg_crit = 100;
     
     dt = time/N; 
-    exp_cost = Inf;
     n_iter = 1;
-    while cvg_crit > 0.001
-        cvg_crit
+    while cvg_crit > 10
         % initialize ubar and xbar by applying ubar to the system dynamics
-        for k=1:N-1
-            xdot = plant.dynamics(0,x0(:,k),u0(k));
-            xnew = x0(:,k) + xdot*dt;
-            q = xnew(1:2,:);
-            qd = xnew(3:4,:);
-            q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
-            q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
-            
-            x0(:,k+1)=[q;qd];
-        end      
+%         for k=1:N-1
+%             xdot = plant.dynamics(0,x0(:,k),u0(k));
+%             xnew = x0(:,k) + xdot*dt;
+%             q = xnew(1:2,:);
+%             qd = xnew(3:4,:);
+%             q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
+%             q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
+%             
+%             x0(:,k+1)=[q;qd];
+%         end      
+        x0 = roll_out(plant,xinit,u0,dt);
 
         %% Compute linearized dynamics and quadratized costs
         % linearize $the dynamics at the node points, and get A_k and B_k
@@ -58,7 +59,12 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
             Q{k} = dt*Q{k};
             q{k} = dt*q{k};
             qq{k} = dt*qq{k};
-
+            
+            %xh = repmat(x0(:,k),1,4) + eye(4,4)*2^-17;
+            %diffn = bsxfun(@minus,x_cost_fun(x0(:,k)),x_cost_fun(xh))./-2^-17;
+            %qq{k}=diffn';
+            %qq{k}
+            
             u_cost_fun=@(u)costfun(x0(:,k),u);
             [~,r{k},R{k}] = fin_diff_control(u_cost_fun,u0(:,k));
             %[~,r{k},~] = fin_diff(u_cost_fun,u0(:,k));
@@ -101,7 +107,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
         
         %% Forward pass
         curr_cost = Inf; 
-        
+        prev_cost = Inf;
         % perform line search
         alpha_list = [1.1.^-((0:100).^2) 0];
         %alpha_list = 1/n_iter;
@@ -127,61 +133,56 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
                 u(:,k) = u0(:,k) + delta_u(:,k);
                 u(:,k) = max(min(u(:,k),20),-20);
             end
-            [curr_cost,end_cost]= eval_traj(plant,xinit,u,dt);
-            if curr_cost < exp_cost
-                break
+            [curr_cost,tape]= eval_traj(plant,xinit,u,dt);
+            if curr_cost < prev_cost
+                prev_cost=curr_cost
+                best_u=u;
+                alpha
             end
             
         end
         
-        u = [u zeros(m,1)] ;
-        cvg_crit = sum(abs(u-u0));
+        u = [best_u 0];%[u zeros(m,1)] ;
+        cvg_crit = sum(abs(u-u0))
         u0=u;
         n_iter = n_iter +1;
-        exp_cost = curr_cost
-        alpha
+        %prev_cost = curr_cost
+        %alpha
     end
     
-    x0(:,1) = xinit;
+    x0 = roll_out(plant,xinit,u0,dt);
+end
+
+function x_traj = roll_out(plant,x0,u,dt)
+    N=size(u,2);
+    x_traj = zeros(size(x0,1),N);
+    x_traj(:,1)=x0;
+    
     for k=1:N-1
-        xdot = plant.dynamics(0,x0(:,k),u0(k));
-        xnew = x0(:,k) + xdot*dt;
+        xdot = plant.dynamics(0,x_traj(:,k),u(k));
+        xnew = x_traj(:,k) + xdot*dt;
         q = xnew(1:2,:);
         qd = xnew(3:4,:);
         q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
         q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
-
-        x0(:,k+1)=[q;qd];
-    end
-       
+        x_traj(:,k+1)=[q;qd];
+    end      
+ 
 end
 
-function [cost,end_cost] = eval_traj(p,x0,u,dt)
-    N = size(u,2);
-    cost = zeros(N,1);
-    cost(1) = costfun(x0,u(1));
-    %tape=x0;
-    for k = 2:N
-        xdot = p.dynamics(0,x0,u(1,k));
-        xnew = x0(:,1) + xdot*dt;
-        q = xnew(1:2,1);
-        qd = xnew(3:4,1);
-        q(1,:) = q(1,1) - 2*pi*floor(q(1,1)./(2*pi));
-        q(2,:) = q(2,1) - 2*pi*floor((q(2,1) + pi)./(2*pi));
-        x0 = [q;qd];
-        %tape = [tape x0];
-        cost(k) = costfun(x0,u(k));
-    end
-    end_cost = costfun(x0,0); %cost(end);
-    cost =mean(cost);
-    
+function [cost,tape] = eval_traj(p,x0,u,dt)
+    u=[u 0];
+    tape = roll_out(p,x0,u,dt);    
+    cost = costfun(tape,u); %cost(end);
+    cost = mean(cost);
 end
+
 function c = costfun(x,u) 
     x_goal = [pi 0 0 0]';
     Q = eye(4,4);
     Q(1,1) = 10;
     Q(2,2) = 10;
-    R = 1;
+    R = 10;
     
     xerr = bsxfun(@minus,x_goal,x);
     xerr(1,:) = mod(xerr(1,:)+pi,2*pi)-pi;
@@ -192,6 +193,6 @@ function c = costfun(x,u)
     state_cost = repmat(state_cost,1,size(u,2));
     control_cost = repmat(control_cost,1,size(x,2));
     
-    c = 1/2*(state_cost+control_cost);
+    c = (state_cost+control_cost);
     %c  = 1/2*repmat(diag( xerr'*Q*xerr )',1,size(u,2));    % replicate the same amount for different u's. For the future, implement u dependent cost function and fix this.
 end

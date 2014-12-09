@@ -1,0 +1,12 @@
+prefix=/tmp/drake-precompiled-18332/build
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: snopt_cpp
+Description: snopt_cpp
+Requires:  snopt_c
+Version: 0.0.1
+Libs: -L${libdir}  -L/tmp/drake-precompiled-18332/build/lib -lsnopt_cpp
+Cflags: -I${includedir}  -I/tmp/drake-precompiled-18332/build/include/snopt
+classpath=
