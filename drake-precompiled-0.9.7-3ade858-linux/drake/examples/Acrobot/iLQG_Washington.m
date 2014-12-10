@@ -13,7 +13,7 @@ function [xtraj,utraj] = iLQG_Washington(x0,simulation_time,n_timesteps)
     elapsed_time_perstep = simulation_time/n_timesteps; % time per steps
     N = n_timesteps; % length of my trajectory
 
-    u0 = randi([-20,20],1,424);
+    u0 = ones(1,N)*15;
     x_goal = [pi 0 0 0]';
     Q = eye(4,4);
     Q(1,1)=10;

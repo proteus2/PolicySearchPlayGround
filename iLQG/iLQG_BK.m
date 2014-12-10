@@ -2,7 +2,7 @@
 
 % Variable names conform to the notations used in Todorov ICDC 2005
 
-function [x0,u0] = iLQG_BK(xinit,time,N)
+function [x0,u0] = iLQG_BK(xinit,u0,time,N)
     % Inputs: plant, initial position x0 and initial u traj u0, length of time step, and number of
     % node points N.
     % Output: u trajectory
@@ -13,7 +13,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
     F = eye(n,m); % noise model matrix
     x0 = zeros(n,N); % state trajectory
     x0(:,1) = xinit;
-    u0 = zeros(m,N)+10; % control trajectory
+    %u0 = zeros(m,N); % control trajectory
  %   u0(1,1:end/2) = 20;
    % u0(1,end/2+1:end)=-20;
     cvg_crit = 100;
@@ -80,10 +80,10 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
         s = cell(N,1); S = cell(N,1); ss = cell(N,1); H = cell(N-1,1); 
         g = cell(N-1,1); G = cell(N-1,1); L = cell(N-1,1); I = cell(N-1,1);
 
-        S{end} = Q{end};
-        s{end} = q{end};
-        ss{end} = qq{end};
-
+        S{end} = Q{end}; % 2nd derivative of cost w.r.t state
+        s{end} = q{end}; % cost at the end
+        ss{end} = qq{end}; % derivative of cost w.r.t state
+        
         for k=fliplr(1:N-1)
             % Equation (3)
             g{k} = r{k} + B{k}'*ss{k+1} + 0; % my Cik is zero
@@ -92,7 +92,8 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
 
             L{k} = -1/(H{k})*G{k};
             I{k} = -1/(H{k})*g{k};
-
+            
+            
             % Equation (4)
             S{k} = Q{k} + A{k}'*S{k+1}*A{k} + L{k}'*H{k}*L{k} + L{k}'*G{k} + G{k}'*L{k};
             %Q{k} + A{k}'*S{k+1}*A{k} - G{k}'*inv(H{k})*G{k}
@@ -101,7 +102,7 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
             %qq{k} + A{k}'*ss{k+1} - G{k}'*inv(H{k})*g{k}
             
             s{k} = q{k} + s{k+1} + 0 + 1/2*I{k}'*H{k}*I{k} + I{k}'*g{k}  ;  
-            %q{k} + s{k+1} - 1/2*g{k}'*inv(H{k})*g{k}
+            %q{k} + s{k+1} - 1/2*g{k}'*inv(H{k})*g{k}            
         end
         
         
@@ -109,9 +110,10 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
         % curr_cost = Inf; 
         prev_cost = Inf;
         % perform line search
-        alpha_list = [1.1.^-((0:100).^2) 0];
+        alpha_list = [1.1.^-((0:30).^2) 0];
         %alpha_list = 1/n_iter;
         %alpha_list = [alpha_list 0];
+        tic
         for alpha = alpha_list
             delta_x = zeros(n,N);
             delta_u = zeros(m,N-1); % u delta
@@ -134,14 +136,14 @@ function [x0,u0] = iLQG_BK(xinit,time,N)
                 u(:,k) = max(min(u(:,k),20),-20);
             end
             [curr_cost,tape]= eval_traj(plant,xinit,u,dt);
-            if curr_cost < prev_cost
+            cost_diff = prev_cost - curr_cost;
+            if cost_diff>=0
                 prev_cost=curr_cost
                 best_u=u;
                 alpha
-            end
-            
+            end 
         end
-        
+        toc
         u = [best_u 0];%[u zeros(m,1)] ;
         cvg_crit = sum(abs(u-u0))
         u0=u;
@@ -182,7 +184,7 @@ function c = costfun(x,u)
     Q = eye(4,4);
     Q(1,1) = 10;
     Q(2,2) = 10;
-    R = 10;
+    R = 1;
     
     xerr = bsxfun(@minus,x_goal,x);
     xerr(1,:) = mod(xerr(1,:)+pi,2*pi)-pi;

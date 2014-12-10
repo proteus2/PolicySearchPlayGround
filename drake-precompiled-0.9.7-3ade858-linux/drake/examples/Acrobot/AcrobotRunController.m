@@ -1,8 +1,9 @@
-N = 450;
-time = 8;
-dt=time/N;
+dt=0.0125;
+time = 5;
+N =time/dt;
 t=0:dt:dt*N;
 t(end)=[];
+
 
 % %% run one instance
 % p = PlanarRigidBodyManipulator('Acrobot.urdf'); 
@@ -18,7 +19,7 @@ t(end)=[];
 %% Trajectory Optimization
 x_traj_list=[]; u_traj_list=[];
 DIRCOL=false;
-theta_range = [pi pi-0.6283 pi-0.6283*2];
+theta_range = [0:0.3142:pi+0.3142];
 
 if DIRCOL == true
     p = AcrobotPlant;
@@ -35,12 +36,14 @@ if DIRCOL == true
     end
 else
     for th1 = theta_range
-        for th2 = theta_range
-            xinit = [th1;th2;0;0];
-            [x_traj,u_traj] = iLQG_BK(xinit,time,N);  
+        %for th2 = theta_range
+            xinit = [th1;0;0;0];
+            u_init = zeros(1,N)+min(5*norm(xinit-[pi;0;0;0]),20);
+            u_init(1)
+            [x_traj,u_traj] = iLQG_BK(xinit,u_init,time,N);  
             x_traj_list = [x_traj_list x_traj];
             u_traj_list = [u_traj_list u_traj];
-        end
+        %end
     end
 end
 

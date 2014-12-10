@@ -6,9 +6,9 @@ xerr = bsxfun(@minus,x_goal,x);
 xerr(1,:) = mod(xerr(1,:)+pi,2*pi)-pi;
 xerr(2,:) = mod(xerr(2,:)+pi,2*pi)-pi;
 l = 1/2*xerr'*Q*xerr;
-size(diag(l)')
-size(diag((u.*u)'))
-l = diag(l)' + (u.*u);
+% size(diag(l)')
+% size(diag((u.*u)'))
+l = diag(l)' + 100*(u.*u);
 
 
 % 
