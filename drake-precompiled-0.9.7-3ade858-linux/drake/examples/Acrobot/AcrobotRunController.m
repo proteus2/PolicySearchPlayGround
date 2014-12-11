@@ -6,9 +6,9 @@ t(end)=[];
 
 
 % %% run one instance
-% p = PlanarRigidBodyManipulator('Acrobot.urdf'); 
-% v = p.constructVisualizer;
-% v.axis = [-4 4 -4 4];
+p = PlanarRigidBodyManipulator('Acrobot.urdf'); 
+v = p.constructVisualizer;
+v.axis = [-4 4 -4 4];
 % 
 % [x_traj,u_traj] = iLQG_BK([0;0;0;0],time,424);  
 % xtraj = PPTrajectory(foh(t,x_traj));
@@ -19,7 +19,7 @@ t(end)=[];
 %% Trajectory Optimization
 x_traj_list=[]; u_traj_list=[];
 DIRCOL=false;
-theta_range = [0:0.3142:pi+0.3142];
+theta_range = 0:0.6283:pi;
 
 if DIRCOL == true
     p = AcrobotPlant;
@@ -38,9 +38,9 @@ else
     for th1 = theta_range
         %for th2 = theta_range
             xinit = [th1;0;0;0];
-            u_init = zeros(1,N)+min(5*norm(xinit-[pi;0;0;0]),20);
-            u_init(1)
-            [x_traj,u_traj] = iLQG_BK(xinit,u_init,time,N);  
+            %u_init = zeros(1,N)+min(8*norm(xinit-[pi;0;0;0]),20);
+            %u_init(1)
+            [x_traj,u_traj] = AcrobotRunTrajectory(xinit,p);%iLQG_BK(xinit,u_init,time,N);  
             x_traj_list = [x_traj_list x_traj];
             u_traj_list = [u_traj_list u_traj];
         %end
@@ -70,6 +70,7 @@ for k=1:N-1
     x1(:,k+1)=[q;qd];
 end
 
+x1 = x_traj_list(:,1:400);
 xtraj = PPTrajectory(foh(t,x1));
 xtraj = xtraj.setOutputFrame(p.getStateFrame);
 v.playback(xtraj) % dont play it yet...

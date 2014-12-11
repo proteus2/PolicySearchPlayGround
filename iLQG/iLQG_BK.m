@@ -2,13 +2,13 @@
 
 % Variable names conform to the notations used in Todorov ICDC 2005
 
-function [x0,u0] = iLQG_BK(xinit,u0,time,N)
+function [x0,u0,cost] = iLQG_BK(plant,xinit,u0,Q_valuefn,R_valuefn,time,N)
     % Inputs: plant, initial position x0 and initial u traj u0, length of time step, and number of
     % node points N.
     % Output: u trajectory
    % step_cost_fun = @(x,u) costfun(x,u);
     
-    plant = PlanarRigidBodyManipulator('Acrobot.urdf');
+    %plant = PlanarRigidBodyManipulator('Acrobot.urdf');
     n=4;m=1;
     F = eye(n,m); % noise model matrix
     x0 = zeros(n,N); % state trajectory
@@ -20,7 +20,10 @@ function [x0,u0] = iLQG_BK(xinit,u0,time,N)
     
     dt = time/N; 
     n_iter = 1;
-    while cvg_crit > 10
+    best_cost_so_far = Inf;
+	prev_cost = Inf;
+
+    while cvg_crit > 0.5
         % initialize ubar and xbar by applying ubar to the system dynamics
 %         for k=1:N-1
 %             xdot = plant.dynamics(0,x0(:,k),u0(k));
@@ -49,13 +52,13 @@ function [x0,u0] = iLQG_BK(xinit,u0,time,N)
             % Gradient is wrong for qq. It should return
             % 1/2*(Q+Q')*delta_x(:,k), but it is currently returning
             % 1/2*(Q+Q')*x0(:,k)
-            x_cost_fun=@(x)costfun(x,u0(:,k));
+            x_cost_fun=@(x)costfun(x,u0(:,k),Q_valuefn,R_valuefn);
 %             [q{k},qq{k},Q{k}]=fin_diff(x_cost_fun,x0(:,k),2^-17);
 %             Q{k} = dt*reshape(Q{k},size(Q{k},2),size(Q{k},3)); % I have a feeling that I should transpose this. I will leave it for now because Q's are symmetric.
 %             q{k} = dt*q{k}';
 %             qq{k} = dt*qq{k}';
             
-            [q{k},qq{k},Q{k}] = fin_diff_state(x_cost_fun,x0(:,k));
+            [q{k},qq{k},Q{k}] = fin_diff_state(x_cost_fun,x0(:,k),Q_valuefn);
             Q{k} = dt*Q{k};
             q{k} = dt*q{k};
             qq{k} = dt*qq{k};
@@ -65,8 +68,8 @@ function [x0,u0] = iLQG_BK(xinit,u0,time,N)
             %qq{k}=diffn';
             %qq{k}
             
-            u_cost_fun=@(u)costfun(x0(:,k),u);
-            [~,r{k},R{k}] = fin_diff_control(u_cost_fun,u0(:,k));
+            u_cost_fun=@(u)costfun(x0(:,k),u,Q_valuefn,R_valuefn);
+            [~,r{k},R{k}] = fin_diff_control(u_cost_fun,u0(:,k),R_valuefn);
             %[~,r{k},~] = fin_diff(u_cost_fun,u0(:,k));
             r{k}=dt*r{k};
             R{k} =dt*R{k};
@@ -108,51 +111,63 @@ function [x0,u0] = iLQG_BK(xinit,u0,time,N)
         
         %% Forward pass
         % curr_cost = Inf; 
-        prev_cost = Inf;
         % perform line search
-        alpha_list = [1.1.^-((0:30).^2) 0];
+        alpha_list = [1.1.^-((0:20).^2) 0];
+        %alpha_list = 0.75;
         %alpha_list = 1/n_iter;
         %alpha_list = [alpha_list 0];
+        prev_cost = Inf;
         tic
         for alpha = alpha_list
             delta_x = zeros(n,N);
             delta_u = zeros(m,N-1); % u delta
 
             u = zeros(m,N-1);
-            delta_u(:,1) = alpha*I{1} + L{1}*delta_x(:,1);
+            
+            %Set  alpha for stpe 1 to be bigger than 0
+            delta_u(:,1) = I{1} + L{1}*delta_x(:,1);
             u(:,1) = max(min(u0(:,1) + delta_u(:,1),20),-20);
             for k=2:N-1
                 % forward pass - delta x at he first step is always zero.
-                delta_x(:,k) = A{k-1}*delta_x(:,k-1) + B{k-1}*delta_u(:,k-1);
+                delta_x(:,k) = (A{k-1}*delta_x(:,k-1) + B{k-1}*delta_u(:,k-1));
 
 %                 q = delta_x(1:2,k);
 %                 qd = delta_x(3:4,k);
 %                 q(1,:) = q(1,:) - 2*pi*floor(q(1,:)./(2*pi));
 %                 q(2,:) = q(2,:) - 2*pi*floor((q(2,:) + pi)./(2*pi));
 %                 delta_x(:,k) = [q;qd];
-
+                
+                %TODO: delta_x is all zero for some fking reason
                 delta_u(:,k) = alpha*(I{k}) + L{k}*delta_x(:,k); 
                 u(:,k) = u0(:,k) + delta_u(:,k);
                 u(:,k) = max(min(u(:,k),20),-20);
             end
-            [curr_cost,tape]= eval_traj(plant,xinit,u,dt);
+            [curr_cost,tape]= eval_traj(plant,xinit,u,Q_valuefn,R_valuefn,dt);
             cost_diff = prev_cost - curr_cost;
             if cost_diff>=0
-                prev_cost=curr_cost
+                prev_cost=curr_cost;
                 best_u=u;
-                alpha
+                best_u_delta = delta_u;
+                best_u_alpha = alpha;
             end 
         end
         toc
         u = [best_u 0];%[u zeros(m,1)] ;
-        cvg_crit = sum(abs(u-u0))
+        cvg_crit = sum(abs(u-u0));
         u0=u;
         n_iter = n_iter +1;
         %prev_cost = curr_cost
         %alpha
+        cost_diff = abs(best_cost_so_far - curr_cost);
+        curr_cost = curr_cost;
+%         if cost_diff <1
+%             break
+%         end
+        best_cost_so_far = prev_cost;
+
     end
-    
     x0 = roll_out(plant,xinit,u0,dt);
+    cost=curr_cost;
 end
 
 function x_traj = roll_out(plant,x0,u,dt)
@@ -172,20 +187,20 @@ function x_traj = roll_out(plant,x0,u,dt)
  
 end
 
-function [cost,tape] = eval_traj(p,x0,u,dt)
+function [cost,tape] = eval_traj(p,x0,u,Q_valuefn,R_valuefn,dt)
     u=[u 0];
     tape = roll_out(p,x0,u,dt);    
-    cost = costfun(tape,u); %cost(end);
+    cost = costfun(tape,u,Q_valuefn,R_valuefn); %cost(end);
     cost = mean(cost);
 end
 
-function c = costfun(x,u) 
+function c = costfun(x,u,Q,R) 
     x_goal = [pi 0 0 0]';
-    Q = eye(4,4);
-    Q(1,1) = 10;
-    Q(2,2) = 10;
-    R = 1;
-    
+%     Q = eye(4,4);
+%     Q(1,1) = 10;
+%     Q(2,2) = 10;
+%     R = 1;
+%     
     xerr = bsxfun(@minus,x_goal,x);
     xerr(1,:) = mod(xerr(1,:)+pi,2*pi)-pi;
     xerr(2,:) = mod(xerr(2,:)+pi,2*pi)-pi;
