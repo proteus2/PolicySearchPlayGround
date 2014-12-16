@@ -1,4 +1,4 @@
-dt=0.0125;
+dt=0.0250;
 time = 5;
 N =time/dt;
 t=0:dt:dt*N;
@@ -19,7 +19,7 @@ v.axis = [-4 4 -4 4];
 %% Trajectory Optimization
 x_traj_list=[]; u_traj_list=[];
 DIRCOL=false;
-theta_range = 0:0.6283:pi;
+theta_range = [0,pi];
 
 if DIRCOL == true
     p = AcrobotPlant;
@@ -47,10 +47,11 @@ else
     end
 end
 
-save('trajectory_list','x_traj_list','u_traj_list');
+save('trajectory_list');
 
 %% Regression - turning trajectories into controller
 load('trajectory_list');
+N=200;
 x = x_traj_list'; y= u_traj_list;
 controller = TreeBagger(50,x,y,'Method','regression');
 x1=zeros(4,N);
@@ -58,7 +59,6 @@ x1(:,1) = [0;0;0;0];
 u=[];
 for k=1:N-1
     control =  max(min(controller.predict(x1(:,k)'),20),-20);
-    %control=-1.22551370e-07;
     u=[u control];
     xdot = p.dynamics(0,x1(:,k),control);
     xnew = x1(:,k) + xdot*dt;
@@ -70,7 +70,13 @@ for k=1:N-1
     x1(:,k+1)=[q;qd];
 end
 
-x1 = x_traj_list(:,1:400);
+figure; plot( sum(abs(x1(1:2,:)),1));
+hold on; plot( sum(abs(x_traj_list(1:2,1:199)),1),'r')
+legend('encountered x','training x');
+figure; plot( u,'g');
+hold on; plot(u_traj_list(1:199),'black')
+legend('predicted u','true u')
+%x1 = x_traj_list(:,1:200);
 xtraj = PPTrajectory(foh(t,x1));
 xtraj = xtraj.setOutputFrame(p.getStateFrame);
 v.playback(xtraj) % dont play it yet...
