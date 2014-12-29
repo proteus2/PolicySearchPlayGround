@@ -31,19 +31,19 @@ function [x_traj,u_traj] = AcrobotRunTrajectory(x0,p)
         cost = [cost new_cost];
     end
 end
-% 
-% clear all
-% close all
-% load('everything.mat');
-%  for N=100:100:1000
-%         N
-%         time = 5;
-%         dt = time/N;
-%         t=0:dt:dt*N;
-%         t(end)=[];
-%         x_traj=x_traj_list{N/100};
-%         xtraj = PPTrajectory(foh(t,x_traj));
-%         xtraj = xtraj.setOutputFrame(p.getStateFrame);
-%         v.playback(xtraj);
-%  end
-%  
+
+clear all
+close all
+load('everything.mat');
+ for N=1000
+        N
+        time = 5;
+        dt = time/N;
+        t=0:dt:dt*N;
+        t(end)=[];
+        x_traj=x_traj_list{N/100};
+        xtraj = PPTrajectory(foh(t,x_traj));
+        xtraj = xtraj.setOutputFrame(p.getStateFrame);
+        v.playback(xtraj);
+ end
+ 
