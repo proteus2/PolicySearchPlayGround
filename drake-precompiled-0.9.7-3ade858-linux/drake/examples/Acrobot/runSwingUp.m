@@ -3,9 +3,12 @@ function runSwingUp()
 
 p = AcrobotPlant;
 v = AcrobotVisualizer(p);
-[utraj,xtraj] = swingUpTrajectory(p,[0.684;0;0;0],4);
+[utraj,xtraj] = swingUpTrajectory(p,zeros(4,1)+[0;0;0;0]);
 %      sys = cascade(utraj,p);
 %      xtraj=simulate(sys,utraj.tspan,zeros(4,1));
-v.playback(xtraj);  
+load('traj_list_snopt');
+xtraj=traj_list{25,2};
+xtraj=xtraj.setOutputFrame(p.getStateFrame);
+v.playback(xtraj);
 
 end

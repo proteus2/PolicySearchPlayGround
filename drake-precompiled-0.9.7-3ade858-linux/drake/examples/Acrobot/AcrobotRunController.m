@@ -50,7 +50,7 @@ end
 save('trajectory_list');
 
 %% Regression - turning trajectories into controller
-load('trajectory_list');
+load('trajectory_list2');
 N=200;
 x = x_traj_list'; y= u_traj_list;
 controller = TreeBagger(50,x,y,'Method','regression');
