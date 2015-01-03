@@ -99,7 +99,7 @@ classdef AcrobotPlant < Manipulator
       xf = double(obj.xG);
       tf0 = 4;
       
-      N = 21;
+      N = 300;
       prog = DircolTrajectoryOptimization(obj,N,[2 6]);
       prog = prog.addStateConstraint(ConstantConstraint(x0),1);
       prog = prog.addStateConstraint(ConstantConstraint(xf),N);
