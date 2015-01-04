@@ -9,3 +9,4 @@ for idx=0:N
 end
 
 
+save('traj_list','traj_list');
