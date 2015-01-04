@@ -37,6 +37,7 @@ while (info~=1)
   toc
 end
 
+    
 if (nargout<1)
   v = PlaneVisualizer(p);
   v.playback(xtraj);
