@@ -31,7 +31,7 @@ function [utraj,xtraj,field]=getTrajectory(x0)
     
     
     info=11;
-    disp_msg = strcat('Solving for x=', num2str(x0(1)));
+    disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
     disp(disp_msg);
     max_num_retries = 50;
     n_retries = 0;
