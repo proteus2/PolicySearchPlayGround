@@ -18,7 +18,7 @@ end
 
 
 % get each state and action trajectory
-load('traj_list_good_vary_y');
+load('traj_list_good_vary_x,y=9');
 N = size(traj_list,1);
 x=[];y=[];
 dt=0.001;
@@ -39,24 +39,7 @@ x=x';y=y';
 % train Random Forest
 controller = TreeBagger(50,x,y,'Method','regression');
 
-% run runge katta with the controller
-for x=0:9
-    x0 = [x; 9; 0; 0];  
-
-    xtraj = traj_list{x+1,1};
-    tf = xtraj.getBreaks; tf=tf(end);
-    t = 0:dt:tf;
-    xtraj = xtraj.eval(t);
-    figure; scatter(xtraj(1,:),xtraj(2,:),'r');
-
-    p = PlanePlant();
-    tic
-    x1 = rungeKattaSimulation(x0,controller,tf,p);
-    toc
-    t=0:dt:tf;
-    traj_exed = x1.eval(t);
-    hold on;scatter(traj_exed(1,:),traj_exed(2,:),'b'); 
-end
+plotTrajectories(controller,dt,traj_list);
 % visualize
 %visualizeTraj(x1)
 
