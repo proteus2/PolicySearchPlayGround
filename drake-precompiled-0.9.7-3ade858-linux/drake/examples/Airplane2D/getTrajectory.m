@@ -36,6 +36,8 @@ function [utraj,xtraj,field]=getTrajectory(x0)
     max_num_retries = 50;
     n_retries = 0;
     initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]));
+    initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
+
     while (info==11 || info == 13 || info ==42 || info ==41) && (n_retries <=max_num_retries)
         if n_retries == 0
             initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]));
