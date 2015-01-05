@@ -1,7 +1,7 @@
 function [utraj,xtraj,field]=trajOptTest()
     p = PlanePlant();
 
-    x0 = [3.9; 0; 0; 0]; 
+    x0 = [0; 9; 0; 0]; 
     
    % x0=[0;0;0;0];
     xf = [5; 9; 0; 0];
@@ -31,13 +31,12 @@ function [utraj,xtraj,field]=trajOptTest()
     drawnow
 
     prog = setSolverOptions(prog,'snopt','MajorOptimalityTolerance',1e-2);
-    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 20);
+    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 30);
     
     
-    info=11;
     while (info==11 || info == 13 || info ==42 || info ==41)
         if info ==41
-            initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1)*randi(10,4,1) zeros(4,1)] ));
+            initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1).*randi(10,4,1) zeros(4,1)] ));
         else
             initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
         end
@@ -49,10 +48,7 @@ function [utraj,xtraj,field]=trajOptTest()
     
     v.playback(xtraj);
     
-    % potential alpha=velocity, mass, initial and final goal states
-    tf = xtraj.getBreaks; tf=tf(end);
-    x1 = rungeKattaSimulation(x0,utraj,tf,p);
-    v.playback(x1) % dont play it yet...    
+
 end
     
     

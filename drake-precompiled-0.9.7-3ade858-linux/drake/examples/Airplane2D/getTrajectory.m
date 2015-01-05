@@ -27,7 +27,7 @@ function [utraj,xtraj,field]=getTrajectory(x0)
 
  
     prog = setSolverOptions(prog,'snopt','MajorOptimalityTolerance',1e-2);
-    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 20);
+    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 100);
     
     
     info=11;
@@ -35,8 +35,11 @@ function [utraj,xtraj,field]=getTrajectory(x0)
     disp(disp_msg);
     max_num_retries = 50;
     n_retries = 0;
+    initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]));
     while (info==11 || info == 13 || info ==42 || info ==41) && (n_retries <=max_num_retries)
-        if info ==41
+        if n_retries == 0
+            initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]));
+        elseif info ==41
             initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1).*randi(10,4,1) zeros(4,1)] ));
         else
             initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
@@ -45,7 +48,7 @@ function [utraj,xtraj,field]=getTrajectory(x0)
         [xtraj,utraj,~,~,info]=solveTraj(prog,tf0,initial_guess);
         info
         toc
-        n_retries = n_retries+1;
+        n_retries = n_retries+1
     end
         
     % potential alpha=velocity, mass, initial and final goal states    
