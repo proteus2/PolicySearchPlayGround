@@ -1,14 +1,14 @@
 %TODO: Test this function
 function [tot_cost,avg_cost_per_step] = evaluateTrajCost(xtraj,utraj,field,t)
-
+   
    tot_cost = 0;
-   for step = 1:size(t(1:end-1))
+   for step = 1:size(t(1:end-1),2)
        x = xtraj.eval(step); u = utraj.eval(step);
        tot_cost = tot_cost + cost(0,x,u,field);
    end 
     
    tot_cost = tot_cost + finalCost(t(end),xtraj.eval(t(end)));
-   
+   avg_cost_per_step = tot_cost/size(t,2);
 end
 
 

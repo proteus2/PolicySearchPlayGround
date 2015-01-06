@@ -39,7 +39,9 @@ x=x';y=y';
 % train Random Forest
 controller = TreeBagger(50,x,y,'Method','regression');
 
+% Get trajectory cost
 plotTrajectories(controller,dt,traj_list);
+
 % visualize
 %visualizeTraj(x1)
 
