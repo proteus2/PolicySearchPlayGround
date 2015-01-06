@@ -3,7 +3,7 @@ function plotTrajectories(controller,dt,traj_list)
     close all;
     n=size(traj_list,1);
     figure;
-    for x=0:n
+    for x=0:n-1
         x0 = [x; 9; 0; 0];  
 
         xtraj = traj_list{x+1,1};
