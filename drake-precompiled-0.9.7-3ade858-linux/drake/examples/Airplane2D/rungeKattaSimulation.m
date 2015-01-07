@@ -1,5 +1,4 @@
-function [xtraj,utraj] = rungeKattaSimulation(x0,u,tf,p)
-    dt=0.001;
+function [xtraj,utraj] = rungeKattaSimulation(x0,u,dt,tf,p)
     t=0:dt:tf;
     N = size(t,2);
     x1=zeros(4,N); u1=zeros(1,N);
@@ -7,6 +6,8 @@ function [xtraj,utraj] = rungeKattaSimulation(x0,u,tf,p)
     for k=1:N-1
         if strcmp(class(u),'TreeBagger')
             control = u.predict(x1(:,k)');
+        elseif strcmp(class(u),'MMDController')
+            control = u.predict(x1(:,k));
         else
             control = u.eval(t(k));
         end

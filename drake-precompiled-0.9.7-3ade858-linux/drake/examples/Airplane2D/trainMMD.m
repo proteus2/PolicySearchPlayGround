@@ -1,6 +1,6 @@
 function [controller, mmd_data] = trainMMD(x0,tf,traj_list,p)
    
-    dt=0.001; t=0:dt:tf; N = size(t,2);
+    dt=0.01; t=0:dt:tf; N = size(t,2);
     x1=zeros(4,N); x1(:,1) = x0; 
     
     % get initial state and action trajectory
@@ -10,18 +10,20 @@ function [controller, mmd_data] = trainMMD(x0,tf,traj_list,p)
     controller = setNewController(controller,traj_list{1,1},traj_list{1,2});
     
     % parameters for MMD
-    alpha = 2.7977; 
+    alpha = 0.8350; 
     gamma = 0.1;
     
     for idx=2:n_mmd_itern;
         xtraj = zeros(4,N); xtraj(:,1) = x0; utraj = zeros(1,N);
         for k=1:N-1
             d = checkDiscrepancy(controller,x1(:,k));
-            k
+            
             if d > alpha
                 d
                 [u_traj_from_curr_loc,~,~] = getTrajectory(x1(:,k));
                 action_diff = u_traj_from_curr_loc.eval(0) - controller.predict(x1(:,k));
+                k
+                x1(:,k)
                 if norm(action_diff,1) > gamma
                     control = u_traj_from_curr_loc.eval(0);
                 else
