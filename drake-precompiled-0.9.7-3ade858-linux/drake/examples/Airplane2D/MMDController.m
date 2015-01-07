@@ -6,17 +6,15 @@ classdef MMDController
    properties
        controllers;
        n_mmd_itern;
-       data_sets;
-       t;
+       data_sets
        self_discrepancy;
    end 
    methods
-        function obj = MMDController(t)
+        function obj = MMDController()
             obj.n_mmd_itern = 0;
             obj.controllers = cell(0,1);
             obj.data_sets = cell(0,2);
             obj.self_discrepancy = zeros(0,1);
-            obj.t = t;
         end
 
         function obj = setNewController(obj,x_data,y_data)
@@ -24,11 +22,11 @@ classdef MMDController
             obj.data_sets{obj.n_mmd_itern,1} = x_data;
             obj.data_sets{obj.n_mmd_itern,2} = y_data;
             
-            [x,y]=aggregateDataFromCell(obj.data_sets(obj.n_mmd_itern,:));
+            %[x,y]=aggregateDataFromCell(obj.data_sets(obj.n_mmd_itern,:));
             
-            n_data = size(x,1);
+            n_data = size(x_data,2);
             obj.self_discrepancy(obj.n_mmd_itern,1) = 1/n_data^2 * sum(sum(obj.computeKernel(obj.n_mmd_itern)));
-            obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x,y,'Method','regression');
+            obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression');
         end
 
         function [min_d,min_idx] = checkDiscrepancy(obj,x)
@@ -45,7 +43,6 @@ classdef MMDController
 
         function k = computeKernel(obj,data_idx,s)
             x=obj.data_sets{data_idx,1}; 
-            x=x.eval(obj.t);
             n = size(x,2);
 
             if nargin == 2
@@ -62,7 +59,7 @@ classdef MMDController
                 for idx=1:n
                     sum_kernel = sum_kernel + obj.kernel(s,x(:,idx));
                 end
-                k = 1 - 2/n*sum_kernel + obj.self_discrepancy(data_idx,1);
+                k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
             end 
         end
 
@@ -70,12 +67,14 @@ classdef MMDController
             % only supports rbf
             
             sigma=1;
-            d=norm(x1-x2);
+            d=norm(x1-x2)^2;
             k = exp(-d/(2*sigma));
         end
 
-        function u = predict(obj,x)
-            [~,idx] = checkDiscrepancy(obj,x);
+        function u = predict(obj,x,idx)
+            if nargin<3
+                [~,idx] = checkDiscrepancy(obj,x);
+            end
             ctrller = obj.controllers{idx,1};
             u = ctrller.predict(x');
         end

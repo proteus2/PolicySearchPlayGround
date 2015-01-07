@@ -20,9 +20,11 @@ end
 
 % train using DAgger
 p = PlanePlant();
-x0 = [0; 9; 0; 0]; 
-tf=2;
-[controller,dagger_data] = trainDAgger(x0,tf,p);
+x0 = [3.9; 0; 0; 0]; 
+load('traj_list');
+tf = traj_list{1,1}.getBreaks; tf = tf(end);
+
+[controller,dagger_data] = trainDAgger(x0,tf,p,traj_list);
 save('dagger_data','dagger_data');
 
 % run runge katta with the controller

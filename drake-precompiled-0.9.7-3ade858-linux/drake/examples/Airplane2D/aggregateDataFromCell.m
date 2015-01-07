@@ -1,7 +1,7 @@
 function [x,y] = aggregateDataFromCell(data)
     n_batch = size(data,1);
     x=[];y=[];
-    dt=0.001;
+    dt=data{1,1}.getBreaks; dt=dt(end)-dt(end-1);
     for idx = 1:n_batch
         % get time idx
         xtraj = data{idx,1};

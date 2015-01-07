@@ -1,7 +1,6 @@
-function [controller, dagger_data] = trainDAgger(x0,tf,p)
+function [controller, dagger_data] = trainDAgger(x0,tf,p,traj_list)
    
     % get initial state and action trajectory
-    load('traj_list_good');
     [x,y] = aggregateDataFromCell(traj_list);
     n_init_data = size(traj_list,1);
     
@@ -11,12 +10,14 @@ function [controller, dagger_data] = trainDAgger(x0,tf,p)
     % gather DAgger data
     dt=0.01; t=0:dt:tf; N = size(t,2);
     x1=zeros(4,N); x1(:,1) = x0; 
-    n_dagg_itern = 10;
+    n_dagg_itern = 5;
     dagger_data = traj_list;
-    
+    N
     for idx=n_init_data+1:n_init_data+n_dagg_itern;
+        idx
         xtraj = zeros(4,N); xtraj(:,1) = x0; utraj = zeros(1,N);
         for k=1:N-1
+            k
             [u_traj_from_curr_loc,~,~] = getTrajectory(x1(:,k));
             control = controller.predict(x1(:,k)');
             xdot = p.dynamics(0,x1(:,k),control);

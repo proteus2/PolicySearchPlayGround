@@ -8,11 +8,14 @@ classdef PlanePlant < DrakeSystem
   end
   
   methods
-    function obj = PlanePlant()
+    function obj = PlanePlant(alpha)
       obj = obj@DrakeSystem(4,0,1,4,0,1);
       obj = setStateFrame(obj,CoordinateFrame('PlaneState',4,'x',{'x','y','theta','thetadot'}));
       obj = setInputFrame(obj,CoordinateFrame('PlaneInput',1,'u',{'thetaddot'}));
       obj = setOutputFrame(obj,getStateFrame(obj));  % allow full state feedback
+      if exist('alpha','var')
+          obj.v = alpha;
+      end
     end
     
     function [xdot, df, d2f, d3f] = dynamics(obj,t,x,u)
