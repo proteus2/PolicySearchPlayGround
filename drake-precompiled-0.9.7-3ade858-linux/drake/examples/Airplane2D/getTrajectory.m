@@ -1,5 +1,10 @@
-function [utraj,xtraj,field]=getTrajectory(x0)
-    p = PlanePlant();
+function [utraj,xtraj,field]=getTrajectory(x0,alpha)
+    if nargin < 2
+        p = PlanePlant();
+    else
+        p = PlanePlant(alpha);
+    end
+        
 
    % x0 = [3.9; 0; 0; 0]; 
     

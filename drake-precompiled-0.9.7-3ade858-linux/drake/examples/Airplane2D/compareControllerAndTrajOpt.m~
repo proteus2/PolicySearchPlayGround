@@ -5,17 +5,26 @@ function [x_ctrller,xtraj,trajopt_cost,ctrller_cost]=compareControllerAndTrajOpt
     
     if ~exist('previously_solved','var')
         % solve trajectory from the given x0
-        [utraj,~] = getTrajectory(x0,p.v);
+        [utraj,xtraj] = getTrajectory(x0,p.v);
+        tf = utraj.getBreaks; tf=tf(end);
+        t=0:dt:tf;
+        xtraj = rungeKattaSimulation(x0,utraj,dt,tf,p,varyAlpha);
+        [tot_cost,avg_cost] = evaluateTrajCost(xtraj,utraj,field,t);
+        trajopt_cost(1,1)=tot_cost; trajopt_cost(1,2)=avg_cost; 
+        xtraj_ = xtraj.eval(t);
     else
         utraj = previously_solved;
+        tf = previously_solved.getBreaks; tf=tf(end);
+        t=0:dt:tf;
+        xtraj = rungeKattaSimulation(x0,previously_solved,dt,tf,p,varyAlpha);
+        [tot_cost,avg_cost] = evaluateTrajCost(xtraj,previously_solved,field,t);
+        trajopt_cost(1,1)=tot_cost; trajopt_cost(1,2)=avg_cost; 
+        t=0:dt:tf;
+        xtraj_ = xtraj.eval(t);
     end
     
-    tf = utraj.getBreaks; tf=tf(end);
-    t = 0:dt:tf;
-    xtraj = rungeKattaSimulation(x0,utraj,dt,tf,p,varyAlpha);
-    [tot_cost,avg_cost] = evaluateTrajCost(xtraj,utraj,field,t);
-    trajopt_cost(1,1)=tot_cost; trajopt_cost(1,2)=avg_cost; 
-    xtraj_ = xtraj.eval(t);
+   xtraj = rungeKattaSimulation(x0,utraj,dt,tf,p,varyAlpha);
+
     
     % use controller starting from given x0
     tic

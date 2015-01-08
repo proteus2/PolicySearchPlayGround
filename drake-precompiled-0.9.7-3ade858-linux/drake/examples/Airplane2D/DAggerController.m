@@ -19,26 +19,37 @@ end
 
 
 % train using DAgger
-p = PlanePlant();
-x0 = [3.9; 0; 0; 0]; 
-load('traj_list');
-tf = traj_list{1,1}.getBreaks; tf = tf(end);
+trainDagger = false;
+if trainDagger 
+    p = PlanePlant();
+    x0 = [3.9; 0; 0; 0]; 
+    load('traj_list');
+    tf = traj_list{1,1}.getBreaks; tf = tf(end);
 
-[controller,dagger_data] = trainDAgger(x0,tf,p,traj_list);
-save('dagger_data','dagger_data');
+    [controller,dagger_data] = trainDAgger(x0,tf,p,traj_list);
+    save('dagger_data','dagger_data');
+else
+    load('dagger_data');
+    [x,y]=aggregateDataFromCell(dagger_data);
+    controller = TreeBagger(50,x,y,'Method','regression');
+end
 
 % run runge katta with the controller
+x0=[3.9;0;0;0];
 p = PlanePlant();
+tf=0.9246;
 tic
-x1 = rungeKattaSimulation(x0,controller,tf,p);
+x1 = rungeKattaSimulation(x0,controller,0.001,tf,p);
 toc
 
 
 % visualize trajectory
-t=0:dt:1;
+dt=0.001;
+t=0:dt:tf;
 traj_exed = x1.eval(t);
 figure;scatter(traj_exed(1,:),traj_exed(2,:)); 
-xtraj = traj_list{1,1};
+
+xtraj = dagger_data{1,1};
 tf = xtraj.getBreaks; tf=tf(end);
 t = 0:dt:tf;
 xtraj = xtraj.eval(t);

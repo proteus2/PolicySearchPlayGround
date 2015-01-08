@@ -89,6 +89,10 @@ classdef PlaneVisualizer < Visualizer
           [x_points,y_points]=plane_coll_points(x,x_coll);
           fill(x_points,y_points,plane_color);
       end
+      
+      % draw goal location
+      rectangle('Position',[4.5,8.5,1,1],'Curvature',1,'EdgeColor','red')
+      
 % 
 %       %%Plot borders
 %       plot([axis_size(1) axis_size(2); axis_size(1) axis_size(2)],...

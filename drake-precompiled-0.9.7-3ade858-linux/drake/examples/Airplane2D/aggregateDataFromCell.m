@@ -5,7 +5,9 @@ function [x,y] = aggregateDataFromCell(data)
     for idx = 1:n_batch
         % get time idx
         xtraj = data{idx,1};
-        tf = xtraj.getBreaks; tf=tf(end);
+        tf = xtraj.getBreaks; 
+        dt=tf(end)-tf(end-1);
+        tf=tf(end); 
         t = 0:dt:tf;
         
         xtraj= xtraj.eval(t);
