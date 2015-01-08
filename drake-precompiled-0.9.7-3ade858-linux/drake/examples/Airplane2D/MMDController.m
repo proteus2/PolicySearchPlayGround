@@ -26,7 +26,7 @@ classdef MMDController
             
             n_data = size(x_data,2);
             obj.self_discrepancy(obj.n_mmd_itern,1) = 1/n_data^2 * sum(sum(obj.computeKernel(obj.n_mmd_itern)));
-            obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression');
+            obj.controllers{obj.n_mmd_itern,1} = TreeBagger(20,x_data',y_data','Method','regression');
         end
 
         function [min_d,min_idx] = checkDiscrepancy(obj,x)
