@@ -1,17 +1,13 @@
-function [controller,mmd_data] = trainMMD(x0,tf,p,traj_list,n_mmd_itern,alpha)
+function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_itern,alpha)
     if exist('alpha','var')
-        x = traj_list{1,1}; 
-        alpha_to_attach = ones(1,size(x,2))*alpha;
+        x = init_traj_train_data{1,1}; 
+        alpha_to_attach = ones(1,size(x,2))*10;
         x = [x;alpha_to_attach];
-    else
-        x = traj_list{1,1};
     end
-    y = traj_list{1,2};
+    y = init_traj_train_data{1,2};
 
     % set initial training data and train it
     controller = MMDController();
-    
-    x = [x; ones(1,size(x,2))*10]; % append the alpha value
     controller = setNewController(controller,x,y);
     
     % set parameters

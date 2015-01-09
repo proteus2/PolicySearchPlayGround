@@ -1,13 +1,13 @@
-function [controller, dagger_data] = trainDAgger(x0,tf,p,traj_list,n_dagg_itern,alpha)   
+function [controller, dagger_data] = trainDAgger(x0,tf,p,init_traj_train_data,n_dagg_itern,alpha)   
     % get initial state and action trajectory
     if exist('alpha','var')
-        x = traj_list{1,1}; 
-        alpha_to_attach = ones(1,size(x,2))*alpha;
+        x = init_traj_train_data{1,1}; 
+        alpha_to_attach = ones(1,size(x,2))*10;
         x = [x;alpha_to_attach]';
     else
-        x = traj_list{1,1}';
+        x = init_traj_train_data{1,1}';
     end
-    y = traj_list{1,2}';
+    y = init_traj_train_data{1,2}';
     
     % train initial Random Forest
     controller = TreeBagger(50,x,y,'Method','regression');
@@ -15,7 +15,7 @@ function [controller, dagger_data] = trainDAgger(x0,tf,p,traj_list,n_dagg_itern,
     % gather DAgger data
     dt=0.01; t=0:dt:tf; N = size(t,2);
     x1=zeros(4,N); x1(:,1) = x0; 
-    dagger_data = traj_list;
+    dagger_data = init_traj_train_data;
     
     for idx=2:n_dagg_itern;
         xtraj = zeros(4,N); xtraj(:,1) = x0; utraj = zeros(1,N);
