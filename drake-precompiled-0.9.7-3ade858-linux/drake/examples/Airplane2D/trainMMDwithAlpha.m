@@ -19,7 +19,7 @@ function [controller, mmd_data] = trainMMDwithAlpha(x0,tf,alpha_list,init_train_
     % set parameters
     dt=0.01; t=0:dt:tf; N = size(t,2);
     n_mmd_itern = 4;
-    beta = 0.9; 
+    beta = 0.90%0.96; 
     %beta = 100;
     gamma = 0.1;
 
@@ -59,7 +59,12 @@ function [controller, mmd_data] = trainMMDwithAlpha(x0,tf,alpha_list,init_train_
                     if norm(action_diff,1) > gamma
                         control = u_traj_from_curr_loc.eval(0);
                         t=x_traj_from_curr_loc.getBreaks;
-                        x = [x x_traj_from_curr_loc.eval(t)]; y = [y u_traj_from_curr_loc.eval(t)];
+
+			x_to_attach = x_traj_from_curr_loc.eval(t);
+			alpha_to_attach = ones(1,size(t,2))*alpha; 
+			x_to_attach = [x_to_attach; alpha_to_attach];
+                        x = [x x_to_attach]; 
+			y = [y u_traj_from_curr_loc.eval(t)];
                     else
                         control = controller.predict(current_state);
                     end
