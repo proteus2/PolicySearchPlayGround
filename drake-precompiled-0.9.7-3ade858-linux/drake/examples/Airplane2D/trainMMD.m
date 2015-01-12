@@ -1,4 +1,4 @@
-function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_itern,alpha)
+function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_itern,alpha,controller)
     if exist('alpha','var')
         x = init_traj_train_data{1,1}; 
         alpha_to_attach = ones(1,size(x,2))*10;
@@ -7,15 +7,16 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
     y = init_traj_train_data{1,2};
 
     % set initial training data and train it
-    controller = MMDController();
-    controller = setNewController(controller,x,y);
-    
+    if ~exist('controller','var')
+    	controller = MMDController();
+	controller = setNewController(controller,x,y);
+    end
     % set parameters
     dt=0.01; t=0:dt:tf; N = size(t,2);
     beta = 0.90;
     gamma = 0.1;
 
-    for MMD_iteration = 2: n_mmd_itern
+    for MMD_iteration = 2:n_mmd_itern
         x1=zeros(4,N); x1(:,1) = x0; % state simulation
         x = []; y=[];                % data to be fed to MMD
 
@@ -29,7 +30,8 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
                 action_diff = u_traj_from_curr_loc.eval(0) - controller.predict(current_state,min_idx);
                 if norm(action_diff,1) > gamma
                     control = u_traj_from_curr_loc.eval(0);
-                    t=x_traj_from_curr_loc.getBreaks;
+                    temp_tf = x_traj_from_curr_loc.getBreaks;temp_tf = temp_tf(end);
+                    t=0:0.01:temp_tf;%x_traj_from_curr_loc.getBreaks;
 
                     x_to_attach = x_traj_from_curr_loc.eval(t);
                     alpha_to_attach = ones(1,size(t,2))*alpha; 

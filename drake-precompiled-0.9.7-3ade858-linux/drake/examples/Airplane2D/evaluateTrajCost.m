@@ -21,7 +21,8 @@ R = 0.0001;
 [c,i]=max(c);
 dc = dc(i,:);
 
-g = c + u'*R*u;
+xg=[5;9;0;0];
+g = c + u'*R*u + norm(xg-x);
 %g = sum((R*u).*u,1);
 dg = [0,dc,2*u'*R];
 
@@ -29,6 +30,7 @@ dg = [0,dc,2*u'*R];
 end
 
 function [h,dh] = finalCost(t,x)
-h = t;
+xg=[5;9;0;0];
+h = norm(xg-x);
 dh = [1,zeros(1,size(x,1))];
 end

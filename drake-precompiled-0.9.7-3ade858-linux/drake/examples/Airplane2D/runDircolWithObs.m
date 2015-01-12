@@ -5,7 +5,6 @@ if (nargin<1)
 end
 
 x0 = [3.9; 0; 0; 0]; 
-x0 = [0; 9; 0; 0];
 xf = [5; 9; 0; 0];
 tf0 = .7;
 
@@ -24,7 +23,7 @@ prog = field.AddConstraints(prog);
 prog = addRunningCost(prog,@(dt,x,u)cost(dt,x,u,field));
 prog = addFinalCost(prog,@finalCost);
 
-prog = addTrajectoryDisplayFunction(prog,@(dt,x,u)plotDircolTraj(dt,x,u,[1 2]));
+%prog = addTrajectoryDisplayFunction(prog,@(dt,x,u)plotDircolTraj(dt,x,u,[1 2]));
 
 
 figure(25); clf;  hold on;

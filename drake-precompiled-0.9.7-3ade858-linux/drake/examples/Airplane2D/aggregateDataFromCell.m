@@ -1,8 +1,11 @@
-function [x,y] = aggregateDataFromCell(data)
+function [x,y] = aggregateDataFromCell(data,alpha)
     n_batch = size(data,1);
     x=[];y=[];
-    dt=data{1,1}.getBreaks; dt=dt(end)-dt(end-1);
-    for idx = 1:n_batch
+    x=data{1,1};
+    y=data{1,2};
+
+    dt=data{2,1}.getBreaks; dt=dt(end)-dt(end-1);
+    for idx = 2:n_batch
         % get time idx
         xtraj = data{idx,1};
         tf = xtraj.getBreaks; 
@@ -18,5 +21,6 @@ function [x,y] = aggregateDataFromCell(data)
         x = [x xtraj];
         y = [y utraj];
     end
+    x=[x; ones(1,size(x,2))*alpha];
     x=x';y=y';  
 end

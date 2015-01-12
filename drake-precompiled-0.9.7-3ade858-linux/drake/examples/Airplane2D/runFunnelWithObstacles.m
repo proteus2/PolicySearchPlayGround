@@ -7,7 +7,9 @@ end
 p = setInputLimits(p,-inf,inf);
 
 [utraj, xtraj, field] = runDircolWithObs(p);
-% load planeTraj.mat %utraj xtraj field
+% [utraj, xtraj, field] = getTrajectory([3.9;0;0;0]);
+ 
+%load planeTraj.mat %utraj xtraj field
 hold on;
 h=fnplt(xtraj,[1 2]);
 set(h,'Color',[1 0 0]);
