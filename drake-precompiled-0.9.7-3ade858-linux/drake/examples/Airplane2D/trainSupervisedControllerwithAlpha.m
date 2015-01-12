@@ -4,7 +4,7 @@ if varyAlphaGatherData
     N = size(train_alpha_list,2);
     traj_list = cell(N,2);
     alpha_vals = zeros(N,1);
-    n_supp_itern = 5;
+    n_supp_itern = 4;
     
     
     data = cell(0,2);
