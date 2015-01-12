@@ -1,5 +1,5 @@
 % Compare controllers
-x0 = [3.7;2;0;0];
+x0 = [3.3;1;0;0];
 rand_list = rand(1,100);
 alpha_list = rand_list*26 + (1-rand_list)*8;
 
