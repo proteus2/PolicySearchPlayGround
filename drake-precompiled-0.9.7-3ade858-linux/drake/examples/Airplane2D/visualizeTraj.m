@@ -1,6 +1,10 @@
-function visualizeTraj(x_traj)
-    p = PlanePlant();
-
+function visualizeTraj(x_traj,alpha)
+     if nargin < 2
+        p = PlanePlant();
+    else
+        p = PlanePlant(alpha);
+     end
+    
     x0 = x_traj.eval(0);
     
     % add obstacles

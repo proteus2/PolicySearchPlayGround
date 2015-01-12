@@ -33,7 +33,7 @@ function [utraj,xtraj,field]=getTrajectory(x0,alpha)
  
     prog = setSolverOptions(prog,'snopt','MajorOptimalityTolerance',1e-2);
     prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 50);
-    
+
     
     info=11;
     disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
