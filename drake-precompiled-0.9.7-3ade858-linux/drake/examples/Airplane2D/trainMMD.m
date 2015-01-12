@@ -31,7 +31,7 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
                 if norm(action_diff,1) > gamma
                     control = u_traj_from_curr_loc.eval(0);
                     temp_tf = x_traj_from_curr_loc.getBreaks;temp_tf = temp_tf(end);
-                    t=0:0.01:temp_tf;%x_traj_from_curr_loc.getBreaks;
+                    t=x_traj_from_curr_loc.getBreaks;
 
                     x_to_attach = x_traj_from_curr_loc.eval(t);
                     alpha_to_attach = ones(1,size(t,2))*alpha; 

@@ -534,7 +534,7 @@ function L=findMultipliers(x,V,Vdot,rho,rhodot,options)
         figure(2); clf; [minVmRho,junk]=plotPoly(x,V{i}-rho(i));
       if (options.stability)
         figure(1); clf; [junk,maxVdot]=plotPoly(x,Vdot{i});
-        fprintf(1,'segment %d of %d, slack=%f,\n sampledmax(d/dt(V/rho))=%f, sampledmin(V-rho)=%f\n info:\n',i,N,maxVdot,minVmRho,slack{i});
+        %fprintf(1,'segment %d of %d, slack=%f,\n sampledmax(d/dt(V/rho))=%f, sampledmin(V-rho)=%f\n info:\n',i,N,maxVdot,minVmRho,slack{i});
       else
         figure(1); clf; [junk,maxVdotmRhodot]=plotPoly(x,Vdot{i}-rhodot(i));
         fprintf(1,'segment %d of %d, slack=%f,\n sampledmax(Vdot-rhodot)=%f, sampledmin(V-rho)=%f\n info:\n',i,N,maxVdotmRhodot,minVmRho,slack{i});

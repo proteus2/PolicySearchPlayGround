@@ -32,7 +32,7 @@ function [utraj,xtraj,field]=getTrajectory(x0,alpha)
 
  
     prog = setSolverOptions(prog,'snopt','MajorOptimalityTolerance',1e-2);
-    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 100);
+    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 50);
     
     
     info=11;
@@ -52,7 +52,7 @@ function [utraj,xtraj,field]=getTrajectory(x0,alpha)
              else
                  initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
              end
-         end
+        end
         tic
         [xtraj,utraj,~,~,info]=solveTraj(prog,tf0,initial_guess);
         info
