@@ -54,6 +54,7 @@ classdef MMDController
             for idx=1:obj.n_mmd_itern
                 curr_d = obj.computeKernel(idx,x);
                 if curr_d < min_d
+                    min_d,idx
                     min_idx = idx;
                     min_d = curr_d;
                 end
@@ -78,7 +79,8 @@ classdef MMDController
                 end
             elseif nargin==3
                 % Compute equation (4) in my RSS paper
-                s = s-obj.data_mean{data_idx,1};
+                data_mean = obj.data_mean{data_idx,1};
+                s = s-data_mean;
                 s = s./obj.data_stddev{data_idx,1};
                 
 %                 sum_kernel=0;
@@ -86,12 +88,14 @@ classdef MMDController
 %                 for idx=1:n
 %                     sum_kernel = sum_kernel + obj.kernel(s,x(:,idx));
 %                 end
-            
-                dists1 = (bsxfun(@minus,s(1:4,1),x(1:4,:))).^2;
-                
-                dists2 = 2*(bsxfun(@minus,s(5,1),x(5,:))).^2;
-                dists = [dists1;dists2];
-                sum_kernel = sum( exp(-sum(dists)./2) );
+%             
+%                 dists1 = (bsxfun(@minus,s(1:4,1),x(1:4,:))).^2;
+%                 
+%                 dists2 = 2*(bsxfun(@minus,s(5,1),x(5,:))).^2;
+                dists = (bsxfun(@minus,s,x)).^2 ; 
+                dists(end,:) = dists(end,:)*10;
+                sum_dists = sum(dists);
+                sum_kernel = sum( exp(-sum_dists./2) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
             end 
         end
