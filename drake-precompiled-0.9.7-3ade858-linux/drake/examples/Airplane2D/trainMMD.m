@@ -13,9 +13,9 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
     end
     % set parameters
     dt=0.01; t=0:dt:tf; N = size(t,2);
-    beta = 0.90;
-    gamma = 0.1;
-
+    beta = 0.3300;
+    gamma = 0.5;
+    d_list =[];
     for MMD_iteration = 2:n_mmd_itern
         x1=zeros(4,N); x1(:,1) = x0; % state simulation
         x = []; y=[];                % data to be fed to MMD
@@ -23,7 +23,7 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
         for k=1:N-1
             current_state = [x1(:,k);alpha];
             [d,min_idx] = checkDiscrepancy(controller,current_state); 
-
+            d_list=[d_list d];
             % Check if the encountered state lies far from datasets
             if d > beta
                 [u_traj_from_curr_loc,x_traj_from_curr_loc,~] = getTrajectory(x1(:,k),alpha);
@@ -38,6 +38,7 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
                     x_to_attach = [x_to_attach; alpha_to_attach];
                     x = [x x_to_attach]; 
                     y = [y u_traj_from_curr_loc.eval(t)];
+                    controller = setNewController(controller,x,y);
                 else
                     control = controller.predict(current_state);
                 end
@@ -52,8 +53,8 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
 
         if isempty(y)
             break
-        else
-            controller = setNewController(controller,x,y);
+%         else
+%             controller = setNewController(controller,x,y);
         end
     end
         

@@ -15,7 +15,7 @@ function [controller, dagger_data] = trainDAgger(x0,tf_list,init_traj_train_data
     % gather DAgger data
     dagger_data = init_traj_train_data;
     n_dagg_itern = 5;
-    n=1; n_alpha=size(train_alpha_list);
+    n=1; n_alpha=size(train_alpha_list,2);
 
     for idx_alpha=1:n_alpha
         alpha=train_alpha_list(idx_alpha);

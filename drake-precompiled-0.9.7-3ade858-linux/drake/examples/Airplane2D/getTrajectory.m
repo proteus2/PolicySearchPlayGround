@@ -32,7 +32,7 @@ function [utraj,xtraj,field]=getTrajectory(x0,alpha)
 
  
     prog = setSolverOptions(prog,'snopt','MajorOptimalityTolerance',1e-2);
-    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 50);
+    prog = setSolverOptions(prog,'snopt', 'majoriterationslimit', 200);
 
     
     info=11;

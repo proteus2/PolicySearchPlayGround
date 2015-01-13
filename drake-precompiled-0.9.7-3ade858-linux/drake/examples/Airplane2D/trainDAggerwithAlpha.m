@@ -1,4 +1,4 @@
-train_alpha_list = [7,12,14,15,18,20,22,24];
+train_alpha_list = [12,14,15,18,20,22,24];
 
 N = size(train_alpha_list,2);
 n_dagg_itern = 5;

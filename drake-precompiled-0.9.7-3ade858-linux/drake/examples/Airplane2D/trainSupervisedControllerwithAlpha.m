@@ -4,10 +4,14 @@ if varyAlphaGatherData
     N = size(train_alpha_list,2);
     traj_list = cell(N,2);
     alpha_vals = zeros(N,1);
-    n_supp_itern = 4;
+    n_supp_itern = 1;
     
     
     data = cell(0,2);
+    load('official_init_train_traj');  
+    init_traj_train_data = traj_list;
+    data{1,1}=traj_list{1,1}; data{1,2}=traj_list{1,2};
+    
     x0 = [3.9;0;0;0];
     idx3 = 1;
     for idx=1:N
@@ -16,19 +20,22 @@ if varyAlphaGatherData
             [utraj,xtraj] = getTrajectory(x0,alpha);
             traj_list{idx3,1} = xtraj;
             traj_list{idx3,2} = utraj;
-            
-            data{idx3,1} = xtraj.eval(xtraj.getBreaks);
-            numbpts = size(data{idx3,1},2);
-            data{idx3,1} = [data{idx3,1}; ones(1,numbpts)*alpha];
-            data{idx3,2} = utraj.eval(xtraj.getBreaks);
-            idx3 = idx3+1;
         end
     end
-    x = cell2mat(data(:,1)'); x = x';
-    y = cell2mat(data(:,2)');
-    
+     
+    x=[];y=[];
+    for idx=1:size(train_alpha_list,2)
+        alpha = train_alpha_list(idx);
+        xtraj=traj_list{idx,1}.eval(traj_list{idx,1}.getBreaks);
+        x = [x [xtraj;alpha*ones(1,size(xtraj,2))]];
+        
+        utraj = traj_list{idx,2}.eval(traj_list{idx,1}.getBreaks);
+        y = [y utraj];
+    end
+    x=[x [data{1,1}; ones(1,size(data{1,1},2))*10]]; y=[y data{1,2}];
+    x = x';y=y';
     controller = TreeBagger(50,x,y,'Method','regression');
-    save('vary_alpha_supervised_results2','controller','data','traj_list','train_alpha_list');
+    save('vary_alpha_supervised_results4','controller','data','traj_list','train_alpha_list');
 end
 
 
