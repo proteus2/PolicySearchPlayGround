@@ -11,6 +11,7 @@ classdef MMDController
        data_mean;
        data_stddev;
        self_discrepancy;
+       n_dataset;
    end 
    methods
         function obj = MMDController()
@@ -25,6 +26,10 @@ classdef MMDController
 
         function obj = setNewController(obj,x_data,y_data)
             obj.n_mmd_itern = obj.n_mmd_itern + 1;
+            if obj.n_mmd_itern == 1
+                obj.n_dataset = size(x_data,2);
+            end
+               
             obj.data_sets_unnormalized{obj.n_mmd_itern,1} = x_data;
             obj.data_sets_unnormalized{obj.n_mmd_itern,2} = y_data;
           
@@ -39,12 +44,18 @@ classdef MMDController
             x_data=bsxfun(@minus,x_data,obj.data_mean{obj.n_mmd_itern,1});
             x_data=bsxfun(@rdivide,x_data,obj.data_stddev{obj.n_mmd_itern,1});
             
+%             if size(x_data,2) < obj.n_dataset
+%                 num_replicate = floor(obj.n_dataset/size(x_data,2));
+%                 x_data = repmat(x_data,1,num_replicate);
+%                 y_data = repmat(y_data,1,num_replicate);
+%             end
+            
             obj.data_sets{obj.n_mmd_itern,1} = x_data;
             obj.data_sets{obj.n_mmd_itern,2} = y_data;
             
             n_data = size(x_data,2);
             obj.self_discrepancy(obj.n_mmd_itern,1) = 1/n_data^2 * sum(sum(obj.computeKernel(obj.n_mmd_itern)));
-            obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression');
+            obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
         end
 
         function [min_d,min_idx] = checkDiscrepancy(obj,x)
@@ -60,7 +71,7 @@ classdef MMDController
             end
         end
 
-        function k = computeKernel(obj,data_idx,s)
+        function k = computeKernel(obj,data_idx,s,data_idx2)
             x=obj.data_sets{data_idx,1}; 
             n = size(x,2);
 
@@ -97,6 +108,43 @@ classdef MMDController
                 sum_dists = sum(dists);
                 sum_kernel = sum( exp(-sum_dists./(2)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
+            elseif nargin==4
+                x=obj.data_sets{data_idx,1}; 
+                n = size(x,2);
+                k = zeros(n,n);
+                for idx1=1:n   
+                    dists = (bsxfun(@minus,x(:,idx1),x)) ; 
+                    dists=dists.^2;
+                    dists(end,:) = dists(end,:)*2;
+                    k(idx1,:) = exp(-sum(dists)./(2));
+                end
+                a=1/n^2*sum(sum(k));
+                
+                
+                x2 = obj.data_sets{data_idx2,1};
+                m = size(x2,2);
+                k = zeros(m,m);
+                for idx1=1:m
+                    dists = (bsxfun(@minus,x2(:,idx1),x2)) ; 
+                    dists=dists.^2;
+                    dists(end,:) = dists(end,:)*2;
+                    k(idx1,:) = exp(-sum(dists)./(2));
+                end
+                c=1/m^2*sum(sum(k));
+                
+                k = zeros(n,m);
+                for idx1=1:n
+                    dists = (bsxfun(@minus,x(:,idx1),x2)) ; 
+                    dists = dists.^2;
+                    dists(end,:) = dists(end,:)*2;
+                    k(idx1,:) = exp(-sum(dists)./2);
+                end
+                b = -2/(m*n)*sum(sum(k));
+                
+                k = a+b+c;
+                
+                
+                
             end 
         end
         
@@ -113,7 +161,7 @@ classdef MMDController
             if nargin<3
                 [~,idx] = checkDiscrepancy(obj,x);
             end
-                        idx
+            idx
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
             

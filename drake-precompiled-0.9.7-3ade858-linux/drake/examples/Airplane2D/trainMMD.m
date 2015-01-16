@@ -38,7 +38,7 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
                     
     % set parameters
     dt=0.01; t=0:dt:tf; N = size(t,2);
-    beta = 0.97;0.96;500;0.85;500;0.78;0.7883;  0.729774137364830;%0.3300;
+    beta = 0.9891;0.96;500;0.85;500;0.78;0.7883;  0.729774137364830;%0.3300;
     gamma = 0;%3; %we want this because we only want to sample from where the controller makes mistakes
     d_list =[];
     for MMD_iteration = 2:n_mmd_itern
@@ -49,9 +49,9 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
             current_state = [x1(:,k);alpha];
             [d,min_idx] = checkDiscrepancy(controller,current_state); 
             d_list=[d_list d];
-            
+            d,min_idx
             dist_to_goal = norm(x1(1:2,k)-[5; 9]);
-            if dist_to_goal<=0.2
+            if dist_to_goal<=0.2494
                 % got to the goal
                 break
             end
@@ -60,12 +60,14 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
             if d > beta
                 d,x1(:,k)
                 ref_traj = controller.data_sets_unnormalized{1,1}; ref_traj = ref_traj(1:4,:);
+                
                 [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x1(:,k),alpha,false,ref_traj);
                 save(sprintf('traj%d',controller.n_mmd_itern),'x_traj_from_curr_loc','u_traj_from_curr_loc','F');
                 action_diff = u_traj_from_curr_loc.eval(0) - controller.predict(current_state,min_idx); 
                 action_diff
                 if norm(action_diff,1) > gamma
-                    control = u_traj_from_curr_loc.eval(0);
+                    %control = u_traj_from_curr_loc.eval(0);
+                    
                     temp_tf = x_traj_from_curr_loc.getBreaks;temp_tf = temp_tf(end);
                     t=x_traj_from_curr_loc.getBreaks;
                     t=0:0.01:tf;
@@ -85,6 +87,7 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
                     x = [x x_to_attach]; 
                     y = [y y_to_attach];
                     controller = setNewController(controller,x_to_attach,y_to_attach);
+                    control = controller.predict(current_state);
                 else
                     control = controller.predict(current_state);
                 end

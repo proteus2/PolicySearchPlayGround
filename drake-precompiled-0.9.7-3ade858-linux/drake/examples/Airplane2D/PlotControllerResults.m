@@ -1,5 +1,5 @@
 % Compare controllers
-x0 = [3.9;0;0;0];
+x0 = [4.3;1;0;0];
 rand_list = rand(1,100);
 alpha_list = rand_list*35 + (1-rand_list)*5;
 
@@ -28,12 +28,16 @@ for alpha = alpha_list
     apprxtraj_fname = strcat('./data_for_plots/test/',apprxtraj_fname);
     if ~exist(apprxtraj_fname,'file')
         tf = optimal_u.getBreaks; tf=tf(end);
-        load('vary_alpha_mmd_results_only_alpha=5_ver2');
+        load('vary_alpha_mmd_results_only_alpha=5_ver5.mat');
 %         mmd_ctrl=MMDController();
-%         mmd_ctrl = setNewController(mmd_ctrl,controller.data_sets_unnormalized{1,1},controller.data_sets_unnormalized{1,2});
+%         for idx=1:size(controller.data_sets_unnormalized,1)
+%             mmd_ctrl = setNewController(mmd_ctrl,controller.data_sets_unnormalized{idx,1},controller.data_sets_unnormalized{idx,2});
+%         end
+%         ctrl_list{1,1} = mmd_ctrl;
         ctrl_list{1,1} = controller;
         
-        load('vary_alpha_supervised_results_allalpha,iter=5');
+        load('vary_alpha_supervised_results_alpha=5,iter=5');
+        %load('vary_alpha_mmd_results_only_alpha=5_ver2.mat');
         ctrl_list{2,1} = controller;
 
         [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
@@ -54,8 +58,8 @@ for alpha = alpha_list
      hold on; scatter(optx(1,:),optx(2,:),'black');
      legend('mmd','sup','opt','Location','southwest');
 %      visualizeTraj(optimal_x,alpha);
-%      visualizeTraj(traj_list{1,1},alpha);
-%       visualizeTraj(traj_list{2,1},alpha);
+     visualizeTraj(traj_list{1,1},alpha);
+      visualizeTraj(traj_list{2,1},alpha);
 
 
 end
