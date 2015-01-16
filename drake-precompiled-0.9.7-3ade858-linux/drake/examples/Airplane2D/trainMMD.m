@@ -84,7 +84,7 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
                     
                     x = [x x_to_attach]; 
                     y = [y y_to_attach];
-                    controller = setNewController(controller,x,y);
+                    controller = setNewController(controller,x_to_attach,y_to_attach);
                 else
                     control = controller.predict(current_state);
                 end

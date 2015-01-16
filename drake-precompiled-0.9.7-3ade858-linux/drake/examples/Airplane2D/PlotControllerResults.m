@@ -1,5 +1,5 @@
 % Compare controllers
-x0 = [4.0;1;0;0];
+x0 = [3.9;0;0;0];
 rand_list = rand(1,100);
 alpha_list = rand_list*35 + (1-rand_list)*5;
 
@@ -28,7 +28,7 @@ for alpha = alpha_list
     apprxtraj_fname = strcat('./data_for_plots/test/',apprxtraj_fname);
     if ~exist(apprxtraj_fname,'file')
         tf = optimal_u.getBreaks; tf=tf(end);
-        load('vary_alpha_mmd_results_only_alpha=5');
+        load('vary_alpha_mmd_results_only_alpha=5_ver2');
 %         mmd_ctrl=MMDController();
 %         mmd_ctrl = setNewController(mmd_ctrl,controller.data_sets_unnormalized{1,1},controller.data_sets_unnormalized{1,2});
         ctrl_list{1,1} = controller;
