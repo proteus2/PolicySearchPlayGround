@@ -1,15 +1,12 @@
 function [x,y] = aggregateDataFromCell(data,alpha)
     n_batch = size(data,1);
     x=[];y=[];
-    x=data{1,1};
-    y=data{1,2};
 
-    dt=data{2,1}.getBreaks; dt=dt(end)-dt(end-1);
-    for idx = 2:n_batch
+    dt = 0.01;
+    for idx = 1:n_batch
         % get time idx
         xtraj = data{idx,1};
         tf = xtraj.getBreaks; 
-        dt=tf(end)-tf(end-1);
         tf=tf(end); 
         t = 0:dt:tf;
         

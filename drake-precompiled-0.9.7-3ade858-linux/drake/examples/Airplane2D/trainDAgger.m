@@ -1,20 +1,20 @@
 function [controller, dagger_data] = trainDAgger(x0,tf_list,init_traj_train_data,n_dagg_itern,train_alpha_list)   
     % get initial state and action trajectory
-    if exist('train_alpha_list','var')
-        x = init_traj_train_data{1,1}; 
-        alpha_to_attach = ones(1,size(x,2))*10;
-        x = [x;alpha_to_attach]';
-    else
-        x = init_traj_train_data{1,1}';
-    end
-    y = init_traj_train_data{1,2}';
+   
+    x = init_traj_train_data{1,1};
+    tf = x.getBreaks; tf=tf(end);
+    t=0:0.01:tf;
+    x = x.eval(t);
+    x = [x; 10*ones(1,size(x,2))];
+    y = init_traj_train_data{1,2};
+    y = y.eval(t);
+    x=x';y=y';
     
     % train initial Random Forest
     controller = TreeBagger(50,x,y,'Method','regression');
 
     % gather DAgger data
     dagger_data = init_traj_train_data;
-    n_dagg_itern = 5;
     n=1; n_alpha=size(train_alpha_list,2);
 
     for idx_alpha=1:n_alpha
@@ -22,7 +22,7 @@ function [controller, dagger_data] = trainDAgger(x0,tf_list,init_traj_train_data
         p = PlanePlant(alpha);
         dt=0.01; t=0:dt:tf_list(idx_alpha); N = size(t,2);
         x1=zeros(4,N); x1(:,1) = x0; 
-        for idx=2:n_dagg_itern;
+        for idx=1:n_dagg_itern;
             xtraj = zeros(4,N); xtraj(:,1) = x0; utraj = zeros(1,N);
 
             for k=1:N-1
@@ -31,15 +31,22 @@ function [controller, dagger_data] = trainDAgger(x0,tf_list,init_traj_train_data
     %             else
     %                 curr_state = x1(:,k);
     %              end
-
-                [u_traj_from_curr_loc,~,~] = getTrajectory(x1(:,k));
+                dist_to_goal = norm(x1(:,k)-[5; 9; 0; 0]);
+                if dist_to_goal<=0.5
+                    % got to the goal
+                    break
+                end
                 control = controller.predict(curr_state');
                 xdot = p.dynamics(0,x1(:,k),control);
                 xnew = x1(:,k) + xdot*dt;
                 x1(:,k+1)=xnew;
-
-                xtraj(:,k+1) = xnew;
-                utraj(:,k) = u_traj_from_curr_loc.eval(0); 
+                
+                if mod(k,10) == 0
+                    [u_traj_from_curr_loc,~,~] = getTrajectory(x1(:,k),alpha,false);
+                    xtraj(:,k+1) = xnew;
+                    utraj(:,k) = u_traj_from_curr_loc.eval(0); 
+                end 
+                
                 fprintf('Completed=%0.1f percent of alpha value = %0.2d and dagger iteration of %d\n', k/(N-1)*100, alpha, idx);
             end
             xtraj = PPTrajectory(foh(t,xtraj));

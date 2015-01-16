@@ -69,9 +69,9 @@ classdef MMDController
                 k = zeros(n,n);
                 for idx1=1:n   
                     dists = (bsxfun(@minus,x(:,idx1),x)) ; 
-                    dists(end,:) = dists(end,:)*2;
                     dists=dists.^2;
-                    k(idx1,:) = exp(-sum(dists)./(2*50));
+                    dists(end,:) = dists(end,:)*2;
+                    k(idx1,:) = exp(-sum(dists)./(2));
 %                     for idx2=1:n
 %                         k(idx1,idx2) = obj.kernel(x(:,idx1),x(:,idx2));
 %                     end
@@ -92,10 +92,10 @@ classdef MMDController
 %                 
 %                 dists2 = 2*(bsxfun(@minus,s(5,1),x(5,:))).^2;
                 dists = (bsxfun(@minus,s,x)) ; 
-                dists(end,:) = dists(end,:)*2;
                 dists=dists.^2;
+                dists(end,:) = dists(end,:)*2;
                 sum_dists = sum(dists);
-                sum_kernel = sum( exp(-sum_dists./(2*50)) );
+                sum_kernel = sum( exp(-sum_dists./(2)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
             end 
         end
@@ -113,6 +113,7 @@ classdef MMDController
             if nargin<3
                 [~,idx] = checkDiscrepancy(obj,x);
             end
+                        idx
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
             
