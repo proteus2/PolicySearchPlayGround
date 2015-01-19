@@ -38,7 +38,7 @@ function [controller,mmd_data] = trainMMD(x0,tf,p,init_traj_train_data,n_mmd_ite
                     
     % set parameters
     dt=0.01; t=0:dt:tf; N = size(t,2);
-    beta = 0.97;0.96;500;0.85;500;0.78;0.7883;  0.729774137364830;%0.3300;
+    beta = 0.90;500;0.85;500;0.78;0.7883;  0.729774137364830;%0.3300;
     gamma = 0;%3; %we want this because we only want to sample from where the controller makes mistakes
     d_list =[];
     for MMD_iteration = 2:n_mmd_itern
