@@ -20,7 +20,7 @@ for idx=1:N
     else
     	[controller,data] = trainMMD(x0,tf(idx),p,init_traj_train_data,n_mmd_itern,alpha,controller);
     end
-    save('vary_alpha_mmd_results_only_alpha=5_ver3','controller','data','train_alpha_list');
+    save('vary_alpha_mmd_results_only_alpha=5_ver6','controller','data','train_alpha_list');
 end
 train_time = toc
-save('vary_alpha_mmd_results_only_alpha=5_ver3','controller','data','train_alpha_list','train_time');
+save('vary_alpha_mmd_results_only_alpha=5_ver6','controller','data','train_alpha_list','train_time');

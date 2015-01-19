@@ -43,7 +43,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize)
     
     disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
     disp(disp_msg);
-    max_num_retries = 10;
+    max_num_retries = 5;
     n_retries = 0;
     if exist('uinit','var')
         initial_guess.u = uinit;
@@ -59,6 +59,10 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize)
         x_initial_guess = PPTrajectory(foh([0,tf0],[x0,xf]));
     end
 
+    
+    traj_list = cell(0,2);
+    F_list =[];
+    
     while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>-12) && (n_retries <=max_num_retries)
         
          if n_retries == 0
@@ -84,7 +88,16 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize)
         toc
         n_retries = n_retries+1
         F
+           traj_list{n_retries,1} = xtraj; traj_list{n_retries,2} = utraj;
+        F_list = [F_list; F];
     end
+    
+    
+    if n_retries == max_num_retries+1
+        [~,min_idx] = min(F_list);
+        xtraj = traj_list{min_idx,1}; utraj = traj_list{min_idx,2};
+    end
+    
     
 %     visualizeTraj(xtraj);
 end
