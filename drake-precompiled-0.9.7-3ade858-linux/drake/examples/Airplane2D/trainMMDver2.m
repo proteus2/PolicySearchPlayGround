@@ -92,9 +92,10 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
             end
             
             for mistake_idx=1:size(x,2)
-                [d,~] = checkDiscrepancy(controller,x(:,mistake_idx)); 
+                mistake_idx
+                [d,min_idx] = checkDiscrepancy(controller,x(:,mistake_idx)); 
                 if d > beta
-                    [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x(:,mistake_idx),alpha,false);
+                    [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x(1:4,mistake_idx),alpha,false);
                     t=x_traj_from_curr_loc.getBreaks();
                     [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
                     controller = setNewController(controller,x_to_attach,y_to_attach);                    
