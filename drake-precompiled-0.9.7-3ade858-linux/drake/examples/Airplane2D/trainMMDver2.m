@@ -6,7 +6,7 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
     ref_traj_list = cell(numel(alpha_list,2),1);
     tf_list = zeros(numel(alpha_list,2),1);
     
-    for idx=1:numel(alpha_list)-1
+    for idx=1:numel(alpha_list)
         alpha = alpha_list(idx);
         init_fname = sprintf('initial_mmd_traj_alpha=%d.mat',alpha);
         if ~exist(init_fname,'file')
@@ -31,11 +31,11 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
     
     
     % set parameters
-    beta = 0.92;
+    beta = 0.86;
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[];     
             
-            for alpha_idx=1:numel(alpha_list)-1
+            for alpha_idx=1:numel(alpha_list)
                 d_list =[];
                 alpha = alpha_list(alpha_idx);
                 
