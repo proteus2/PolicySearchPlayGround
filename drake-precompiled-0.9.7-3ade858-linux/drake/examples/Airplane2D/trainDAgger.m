@@ -1,17 +1,29 @@
-function [controller, dagger_data] = trainDAgger(x0,tf_list,init_traj_train_data,n_dagg_itern,train_alpha_list)   
-    % get initial state and action trajectory
-   
-    x = init_traj_train_data{1,1};
-    tf = x.getBreaks; tf=tf(end);
-    t=0:0.01:tf;
-    x = x.eval(t);
-    x = [x; 10*ones(1,size(x,2))];
-    y = init_traj_train_data{1,2};
-    y = y.eval(t);
-    x=x';y=y';
+function [controller, dagger_data] = trainDAgger(x0,init_traj_train_data,n_dagg_itern,train_alpha_list)   
+    % for all alpha values, get initial trajectories
+    tf_list = zeros(numel(alpha_list,2),1);
+    
+    for idx=1:numel(alpha_list)
+        alpha = alpha_list(idx);
+        init_fname = sprintf('initial_mmd_traj_alpha=%d.mat',alpha);
+        if ~exist(init_fname,'file')
+            [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
+            save(init_fname, 'xtraj','utraj');
+        else
+            load(init_fname);
+            if exist('u_traj_from_curr_loc','var')
+                xtraj = x_traj_from_curr_loc;
+                utraj = u_traj_from_curr_loc;
+            end
+        end
+        tf = xtraj.getBreaks(); tf=tf(end);
+        tf_list(idx) = tf;
+        t = xtraj.getBreaks();
+        [x_alpha,y_alpha] = turnTrajToData(xtraj,utraj,t,alpha);
+        x = [x x_alpha]; y = [y y_alpha];
+    end
     
     % train initial Random Forest
-    controller = TreeBagger(50,x,y,'Method','regression');
+    controller = TreeBagger(50,x',y','Method','regression');
 
     % gather DAgger data
     dagger_data = init_traj_train_data;

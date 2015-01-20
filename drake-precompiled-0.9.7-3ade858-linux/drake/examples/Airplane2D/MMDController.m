@@ -70,11 +70,11 @@ classdef MMDController
                 x_data=bsxfun(@minus,x_data,obj.data_mean{obj.n_mmd_itern,1});
                 x_data=bsxfun(@rdivide,x_data,obj.data_stddev{obj.n_mmd_itern,1});
 
-    %             if size(x_data,2) < obj.n_dataset
-    %                 num_replicate = floor(obj.n_dataset/size(x_data,2));
-    %                 x_data = repmat(x_data,1,num_replicate);
-    %                 y_data = repmat(y_data,1,num_replicate);
-    %             end
+%                 if size(x_data,2) < obj.n_dataset
+%                     num_replicate = floor(obj.n_dataset/size(x_data,2));
+%                     x_data = repmat(x_data,1,num_replicate);
+%                     y_data = repmat(y_data,1,num_replicate);
+%                 end
 
                 obj.data_sets{obj.n_mmd_itern,1} = x_data;
                 obj.data_sets{obj.n_mmd_itern,2} = y_data;
@@ -90,6 +90,11 @@ classdef MMDController
                         obj.max_d(obj.n_mmd_itern) = k;
                     end
                 end
+                
+                    num_replicate = 3;
+                    x_data = repmat(x_data,1,num_replicate);
+                    y_data = repmat(y_data,1,num_replicate);
+
                 obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
             end
 %         end
@@ -243,6 +248,7 @@ classdef MMDController
             if nargin<3
                 [~,idx,~] = checkDiscrepancy(obj,x);
             end
+            idx
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
             

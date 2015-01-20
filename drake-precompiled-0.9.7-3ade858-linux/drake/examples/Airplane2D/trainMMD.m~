@@ -31,7 +31,7 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
     
     
     % set parameters
-    %beta = 0.90; gamma = 1;
+    beta = 0.90; gamma = 1;
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[];     
             
@@ -94,8 +94,6 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                         
                         %TODO: Fix the ref traj to accommodate changes in
                         %alpha later
-                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x(1:4,mistake_idx),alpha,false);
-
 %                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x(1:4,mistake_idx),alpha,false,ref_traj);
                         t=x_traj_from_curr_loc.getBreaks();
                         [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
