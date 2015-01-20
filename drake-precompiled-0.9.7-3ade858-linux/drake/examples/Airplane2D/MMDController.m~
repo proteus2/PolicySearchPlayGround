@@ -115,7 +115,7 @@ classdef MMDController
             for idx=1:size(obj.data_sets,1)
                 curr_d = obj.computeKernel(idx,x);
                 if curr_d < obj.max_d(idx)
-                    candidates{size(candidates,1)+1,1} = idx; candidates{size(candidates,1),2} = curr_d;
+                    candidates{size(candidates,1)+1,1} = idx; candidates{idx,2} = curr_d;
                 end
                 
                 if curr_d < min_d
@@ -126,7 +126,6 @@ classdef MMDController
             
             if ~isempty(candidates)
                 [min_d,min_idx] = min(cell2mat(candidates(:,2)));
-                min_idx = candidates{min_idx,1};
                 emptyCandidates = false;
             else
                 emptyCandidates = true;

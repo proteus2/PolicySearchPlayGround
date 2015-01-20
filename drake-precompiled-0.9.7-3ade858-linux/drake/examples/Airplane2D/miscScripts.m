@@ -21,3 +21,6 @@ ref_traj = ref_traj_list{1,1};
 figure; scatter(ref_traj(1,:),ref_traj(2,:))
 hold on; scatter(x1(1,1:end),x1(2,1:end));
 hold on; scatter(x(1,:),x(2,:))
+hold on; scatter(x(1,mistake_idx),x(2,mistake_idx),1000)
+
+hold on; scatter(x_to_attach(1,:),x_to_attach(2,:))

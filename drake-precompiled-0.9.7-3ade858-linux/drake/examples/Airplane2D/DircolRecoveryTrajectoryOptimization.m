@@ -37,16 +37,18 @@ classdef DircolRecoveryTrajectoryOptimization < DircolTrajectoryOptimization
       obj = obj.addConstraint(BoundingBoxConstraint(0,inf),obj.xhat_x0_dist_inds);
       obj = obj.addConstraint(BoundingBoxConstraint(0,inf),obj.xhat_xg_dist_inds);
             
+      obj.xhat_inds = obj.x_inds(:,end);
+      
       % add xhat xg distance nonlinear constraint
       n_vars = nX + 1;
-      dist_inds{1} = {obj.x_inds(:,end);obj.xhat_xg_dist_inds};
-      cnstr = FunctionHandleConstraint(ones(1,1)*-Inf,zeros(1,1),n_vars,@obj.xhat_xg_dist_fcn);
+      dist_inds{1} = {obj.xhat_inds;obj.xhat_xg_dist_inds};
+      cnstr = FunctionHandleConstraint(ones(1,1)*-Inf,ones(1,1),n_vars,@obj.xhat_xg_dist_fcn);
       obj = obj.addConstraint(cnstr,dist_inds{1});
       
       % add xhat x0 distance nonlinear constraint
       n_vars = nX + nX + 1;
-      dist_inds{1} = {obj.x_inds(:,end);obj.x_inds(:,1);obj.xhat_x0_dist_inds};
-      cnstr = FunctionHandleConstraint(ones(1,1)*-Inf,zeros(1,1),n_vars,@obj.xhat_x0_dist_fcn);
+      dist_inds{1} = {obj.xhat_inds;obj.x_inds(:,1);obj.xhat_x0_dist_inds};
+      cnstr = FunctionHandleConstraint(ones(1,1)*-Inf,ones(1,1),n_vars,@obj.xhat_x0_dist_fcn);
       obj = obj.addConstraint(cnstr,dist_inds{1});
       
       % add xhat to be on reference traj constraint - postponed
@@ -61,16 +63,21 @@ classdef DircolRecoveryTrajectoryOptimization < DircolTrajectoryOptimization
       obj = obj.addCost(dist_cost_xg,{obj.xhat_xg_dist_inds});
     end
     
-%     function [f,df] = distance_cost_fcn_x0(obj,xhat,x0)
-%         f = 1/2*(xhat-x0)'*eye(4)*(xhat-x0) ;
-%         df = [(eye(4,4))*(xhat-x0); eye(4,4)*(xhat-x0)*-1]';
-%     end
-% 
-%    function [f,df] = distance_cost_fcn_xg(obj,xhat)
-%         xg = [5;9;0;0];
-%         f = 1/2*(xhat-xg)'*eye(4)*(xhat-xg);
-%         df = [(eye(4,4))*(xhat-xg);]';
-%    end
+
+   function [f,df] = xhat_xg_dist_fcn(obj,xhat,xhat_xg_dist)
+        xg = [5;9;0;0];
+        A = zeros(4,4); A(1,1) = 1.5; A(2,2) = 1.5;
+         
+        f = 1/2*(xhat-xg)'*A*(xhat-xg) - xhat_xg_dist;
+        df = [A*(xhat-xg); 1]';
+   end
+    
+   function [f,df] = xhat_x0_dist_fcn(obj,xhat,x0,xhat_x0_dist)
+        A = ones(4,4); A(1,1) = 1.5; A(2,2) = 1.5;
+
+        f = 1/2*(xhat-x0)'*A*(xhat-x0) - xhat_x0_dist;
+        df = [A*(xhat-x0); A*(xhat-x0)*-1; 1]';
+   end
     
     
    function [f,df] = distance_cost_fcn_x0(obj,xhat_x0_dist)
@@ -83,17 +90,6 @@ classdef DircolRecoveryTrajectoryOptimization < DircolTrajectoryOptimization
         df =1;
    end
    
-   function [f,df] = xhat_xg_dist_fcn(obj,xhat,xhat_xg_dist)
-        xg = [5;9;0;0];
-        f = 1/2*(xhat-xg)'*eye(4)*(xhat-xg) - xhat_xg_dist;
-        df = [(eye(4,4))*(xhat-xg); 1]';
-   end
-    
-   function [f,df] = xhat_x0_dist_fcn(obj,xhat,x0,xhat_x0_dist)
-        f = 1/2*(xhat-x0)'*eye(4)*(xhat-x0) - xhat_x0_dist;
-        df = [(eye(4,4))*(xhat-x0); eye(4,4)*(xhat-x0)*-1; 1]';
-   end
-    
     
    
   end

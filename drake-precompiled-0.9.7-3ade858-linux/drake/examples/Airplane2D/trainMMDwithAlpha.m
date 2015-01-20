@@ -1,5 +1,5 @@
 train_alpha_list = [5,7,12,14,15,18,20,22,24];
-train_alpha_list = [5,7];
+train_alpha_list = [5];
 
 n_mmd_itern = 5;
 x0 = [3.9;0;0;0];

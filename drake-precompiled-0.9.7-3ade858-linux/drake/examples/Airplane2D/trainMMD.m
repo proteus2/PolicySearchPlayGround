@@ -47,7 +47,7 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                 ref_traj = ref_traj_list{alpha_idx,1};
                 for k=1:N-1
                     current_state = [x1(:,k);alpha];
-                    [d,min_idx] = checkDiscrepancy(controller,current_state); 
+                    [d,min_idx,emptyCandidates] = checkDiscrepancy(controller,current_state); 
                     d_list=[d_list d];
                     
                     dist_to_goal = norm(x1(1:2,k)-[5; 9]);
@@ -56,20 +56,22 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                     end
 
                     % Check if the encountered state lies far from datasets
-                    if d > beta       
+                    if emptyCandidates       
                         d,current_state
-                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x1(:,k),alpha,false,ref_traj);
-                        t = x_traj_from_curr_loc.getBreaks();
-                        [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-                        action_diff = abs(u_traj_from_curr_loc.eval(0) - controller.predict(current_state,min_idx));
-                        
-                        if action_diff < gamma
-                            control = controller.predict(current_state,min_idx);
-                        else
-                            x = [x x_to_attach];
-                            y = [y y_to_attach];
-                            control = u_traj_from_curr_loc.eval(0);
-                        end
+                        x = [x current_state];
+%                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x1(:,k),alpha,false,ref_traj);
+%                         t = x_traj_from_curr_loc.getBreaks();
+%                         [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+%                         action_diff = abs(u_traj_from_curr_loc.eval(0) - controller.predict(current_state,min_idx));
+%                         
+%                         if action_diff < gamma
+%                             control = controller.predict(current_state,min_idx);
+%                         else
+%                             x = [x x_to_attach];
+%                             y = [y y_to_attach];
+%                             control = u_traj_from_curr_loc.eval(0);
+%                         end
+                        control = controller.predict(current_state,min_idx);
                     else
                         control = controller.predict(current_state,min_idx);
                     end
@@ -85,7 +87,20 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
             if isempty(x)
                 break
             else 
-                controller = setNewController(controller,x,y);
+                for mistake_idx=1:size(x,2)
+                    (mistake_idx/size(x,2))*100
+                    [min_d,min_idx,emptyCandidates] = checkDiscrepancy(controller,x(:,mistake_idx)); 
+                    if emptyCandidates
+                        
+                        %TODO: Fix the ref traj to accommodate changes in
+                        %alpha later
+                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x(1:4,mistake_idx),alpha,false,ref_traj);
+                        t=x_traj_from_curr_loc.getBreaks();
+                        [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                        controller = setNewController(controller,x_to_attach,y_to_attach);                    
+                    end
+                end
+%                 controller = setNewController(controller,x,y);
             end
     end   
     mmd_data = controller.data_sets_unnormalized;    

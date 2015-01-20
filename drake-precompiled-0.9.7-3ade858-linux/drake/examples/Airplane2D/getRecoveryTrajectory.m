@@ -101,7 +101,8 @@ end
         % minimize the max obstacle constraint
         [c,dc] = field.obstacleConstraint(x);
         [c,i]=max(c);
-        dc = dc(i,:);
+        c = 2*c;
+        dc = 2*dc(i,:);
         
         g = c + u'*R*u;
         %g = sum((R*u).*u,1);
@@ -111,8 +112,10 @@ end
       end
       
       function [h,dh] = finalCost(t,x)
+%         h = (norm(x-[5;9;0;0]))^2;
         h = t;
-        dh = [1,zeros(1,size(x,1))];
+        dh = [0,zeros(1,size(x,1))];
+%         dh = [0, 2*(x(1)-5), 2*(x(2)-9), 2*x(3), 2*x(4)];
       end
 
       function [J,dJ]=plotDircolTraj(t,x,u,plotdims)
