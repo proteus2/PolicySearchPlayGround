@@ -21,7 +21,7 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
         end
         tf = xtraj.getBreaks(); tf=tf(end);
         tf_list(idx) = tf;
-        t = 0:dt:tf;
+        t = xtraj.getBreaks();
         [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
         controller = setNewController(controller,x,y);
         
@@ -31,11 +31,11 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
     
     
     % set parameters
-    beta = 1.1;
+    beta = 0.92;
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[];     
             
-            for alpha_idx=1:numel(alpha_list)
+            for alpha_idx=1:numel(alpha_list)-1
                 d_list =[];
                 alpha = alpha_list(alpha_idx);
                 
@@ -47,7 +47,6 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
                 for k=1:N-1
                     current_state = [x1(:,k);alpha];
                     [d,min_idx] = checkDiscrepancy(controller,current_state); 
-                    d,current_state,min_idx
                     d_list=[d_list d];
                     
                     dist_to_goal = norm(x1(1:2,k)-[5; 9]);
@@ -57,32 +56,32 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
 
                     % Check if the encountered state lies far from datasets
                     if d > beta
+                        x = [x current_state];
                         % get the reference trajectory for this alpha value
                         %ref_traj = ref_traj_list{alpha_idx,1};
                         %[u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x1(:,k),alpha,false,ref_traj);
 
-                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
-                        %save(sprintf('traj%d',controller.n_mmd_itern),'x_traj_from_curr_loc','u_traj_from_curr_loc','F');
-
-                        temp_tf = x_traj_from_curr_loc.getBreaks; temp_tf = temp_tf(end);
-                        t=0:0.01:temp_tf;
-                        [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+%                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
+%                         %save(sprintf('traj%d',controller.n_mmd_itern),'x_traj_from_curr_loc','u_traj_from_curr_loc','F');
+% 
+%                         temp_tf = x_traj_from_curr_loc.getBreaks; temp_tf = temp_tf(end);
+%                         t=0:0.01:temp_tf;
+%                         [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+%                         
+%                         %trim data points that are repeated
+%                         x_to_attach = unique(x_to_attach','rows')';
+%                         y_to_attach = unique(y_to_attach','rows')';
+% 
+%                         x = [x x_to_attach]; 
+%                         y = [y y_to_attach];
+%                         action_diff = abs(u_traj_from_curr_loc.eval(0) - controller.predict(current_state))
+%                         controller = setNewController(controller,x_to_attach,y_to_attach);
+%                         %control = controller.predict(current_state);
+%                         control = u_traj_from_curr_loc.eval(0);
+%                         action_diff = abs(u_traj_from_curr_loc.eval(0) - controller.predict(current_state)) 
                         
-                        %trim data points that are repeated
-                        x_to_attach = unique(x_to_attach','rows')';
-                        y_to_attach = unique(y_to_attach','rows')';
-
-                        x = [x x_to_attach]; 
-                        y = [y y_to_attach];
-                        action_diff = abs(u_traj_from_curr_loc.eval(0) - controller.predict(current_state))
-                        controller = setNewController(controller,x_to_attach,y_to_attach);
-                        %control = controller.predict(current_state);
-                        control = u_traj_from_curr_loc.eval(0);
-                        action_diff = abs(u_traj_from_curr_loc.eval(0) - controller.predict(current_state)) 
-                        
-                    else
-                        control = controller.predict(current_state);
                     end
+                        control = controller.predict(current_state);
                     
                     % advance the dynamics
                     xdot = p.dynamics(0,x1(:,k),control);
@@ -91,8 +90,18 @@ function [controller,mmd_data] = trainMMDver2(x0,n_mmd_itern,alpha_list)
                     fprintf('Completed=%0.1f percent of alpha value = %0.2d and MMD iteration of %d\n', k/(N-1)*100, alpha, MMD_iteration);
                 end
             end
-
-            if isempty(y)
+            
+            for mistake_idx=1:size(x,2)
+                [d,~] = checkDiscrepancy(controller,x(:,mistake_idx)); 
+                if d > beta
+                    [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x(:,mistake_idx),alpha,false);
+                    t=x_traj_from_curr_loc.getBreaks();
+                    [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                    controller = setNewController(controller,x_to_attach,y_to_attach);                    
+                end
+            end
+                
+            if isempty(x)
                 break
             end
     end   

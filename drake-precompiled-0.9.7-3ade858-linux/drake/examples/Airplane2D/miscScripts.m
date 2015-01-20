@@ -15,5 +15,9 @@ legend('data1','data2')
 sum(exp(-dists1./2))
 sum(exp(-dists2./2))
 
-load('traj6.mat')
-visualizeTraj(x_traj_from_curr_loc,5);
+
+%% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
+ref_traj = ref_traj_list{1,1};
+figure; scatter(ref_traj(1,:),ref_traj(2,:))
+hold on; scatter(x1(1,1:end),x1(2,1:end));
+hold on; scatter(x(1,:),x(2,:))
