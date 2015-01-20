@@ -1,9 +1,10 @@
-function [controller, dagger_data] = trainDAgger(x0,init_traj_train_data,n_dagg_itern,train_alpha_list)   
+function [controller, dagger_data] = trainDAgger(x0,n_dagg_itern,train_alpha_list)   
     % for all alpha values, get initial trajectories
-    tf_list = zeros(numel(alpha_list,2),1);
+    tf_list = zeros(numel(train_alpha_list,2),1);
     
-    for idx=1:numel(alpha_list)
-        alpha = alpha_list(idx);
+    x=[];y=[];
+    for idx=1:numel(train_alpha_list)
+        alpha = train_alpha_list(idx);
         init_fname = sprintf('initial_mmd_traj_alpha=%d.mat',alpha);
         if ~exist(init_fname,'file')
             [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
@@ -26,7 +27,6 @@ function [controller, dagger_data] = trainDAgger(x0,init_traj_train_data,n_dagg_
     controller = TreeBagger(50,x',y','Method','regression');
 
     % gather DAgger data
-    dagger_data = init_traj_train_data;
     n=1; n_alpha=size(train_alpha_list,2);
 
     for idx_alpha=1:n_alpha
@@ -44,7 +44,7 @@ function [controller, dagger_data] = trainDAgger(x0,init_traj_train_data,n_dagg_
     %                 curr_state = x1(:,k);
     %              end
                 dist_to_goal = norm(x1(:,k)-[5; 9; 0; 0]);
-                if dist_to_goal<=0.5
+                if dist_to_goal<=0.4
                     % got to the goal
                     break
                 end
@@ -53,25 +53,25 @@ function [controller, dagger_data] = trainDAgger(x0,init_traj_train_data,n_dagg_
                 xnew = x1(:,k) + xdot*dt;
                 x1(:,k+1)=xnew;
                 
-                if mod(k,10) == 0
-                    [u_traj_from_curr_loc,~,~] = getTrajectory(x1(:,k),alpha,false);
-                    xtraj(:,k+1) = xnew;
-                    utraj(:,k) = u_traj_from_curr_loc.eval(0); 
-                end 
+                [u_traj_from_curr_loc,~,~] = getTrajectory(x1(:,k),alpha,false);
+                xtraj(:,k+1) = xnew;
+                utraj(:,k) = u_traj_from_curr_loc.eval(0); 
                 
                 fprintf('Completed=%0.1f percent of alpha value = %0.2d and dagger iteration of %d\n', k/(N-1)*100, alpha, idx);
             end
+            
             xtraj = PPTrajectory(foh(t,xtraj));
             utraj = PPTrajectory(foh(t,utraj));
 
             % aggregate data 
-            dagger_data{n+1,1} = xtraj;
-            dagger_data{n+1,2} = utraj;
+            dagger_data{n,1} = xtraj;
+            dagger_data{n,2} = utraj;
             n=n+1;
 
             % train using the aggregated dataset
-            [x,y] = aggregateDataFromCell(dagger_data,alpha);
-            controller = TreeBagger(50,x,y,'Method','regression');
+            t = xtraj.getBreaks();
+            [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
+            controller = TreeBagger(50,x',y','Method','regression');
         end  
         save('vary_alpha_dagger_results','controller','dagger_data','alpha');
     end
