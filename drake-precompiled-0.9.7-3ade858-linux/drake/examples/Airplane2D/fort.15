@@ -74,12 +74,23 @@
 
  Nonlinear constraints
  ---------------------
- Nonlinear constraints..       322       Major feasibility tol..  1.00E-06       Violation limit........  1.00E+06
- Nonlinear Jacobian vars       123
+ Nonlinear constraints..       322       Major feasibility tol..  1.00E-0limit.        50       Linesearch tolerance...    .90000       Verify level...........         0
+ Minor iterations limit.       500       Penalty parameter......  0.00E+00       Major Print Level......         1
+                                         Major optimality tol...  1.00E-06
+
+ Hessian Approximation
+ ---------------------
+ Limited-Memory Hessian.                 Hessian updates........        10       Hessian frequency......  99999999
+                                                                                 Hessian flush..........  99999999
+
+ Nonlinear constraints
+ ---------------------
+ Nonlinear constraints..       308       Major feasibility tol..  1.00E-06       Violation limit........  1.00E+06
+ Nonlinear Jacobian vars       117
 
  Miscellaneous
  -------------
- LU factor tolerance....      3.99       LU singularity tol.....  3.25E-11       Timing level...........         3
+ LU factor tolerance....      3.99       LU singularity tol.....  3.25E-11       Timing level...........         0
  LU update tolerance....      3.99       LU swap tolerance......  1.22E-04       Debug level............         0
  LU partial  pivoting...                 eps (machine precision)  2.22E-16       System information.....        No
                                                                                  Sticky parameters......        No
@@ -91,120 +102,112 @@
  Matrix statistics
  -----------------
                Total      Normal        Free       Fixed     Bounded
- Rows            356         256           1          99           0
- Columns         123          22         101           0           0
+ Rows            354         254           1          99           0
+ Columns         117          20          97           0           0
 
- No. of matrix elements                 1432     Density       3.270
+ No. of matrix elements                 1382     Density       3.337
  Biggest  constant element        1.0000E+00  (excluding fixed columns,
  Smallest constant element        1.0000E+00   free rows, and RHS)
 
  No. of objective coefficients             0
 
- Nonlinear constraints     322     Linear constraints      34
- Nonlinear variables       123     Linear variables         0
- Jacobian  variables       123     Objective variables    123
- Total constraints         356     Total variables        123
+ Nonlinear constraints     308     Linear constraints      46
+ Nonlinear variables       117     Linear variables         0
+ Jacobian  variables       117     Objective variables    117
+ Total constraints         354     Total variables        117
 1
  
 
  
- The user has defined    1477   out of    1477   first  derivatives
+ The user has defined    1421   out of    1421   first  derivatives
 
  Cheap test of user-supplied problem derivatives...
 
  The constraint gradients seem to be OK.
 
- -->  The largest discrepancy was    1.44E-04  in constraint   381
+ -->  The largest discrepancy was    1.48E-02  in constraint   151
  
 
  The objective  gradients seem to be OK.
 
- Gradient projected in one direction   1.59131421824E-01
- Difference approximation              1.44642434851E-01
+ Gradient projected in one direction   9.34840813458E-02
+ Difference approximation              5.34579037072E-02
 1
  
  
 
    Itns Major Minors    Step   nCon Feasible  Optimal  MeritFunction     L+U BSwap     nS  condHz Penalty
-     69     0     69              1  4.9E+00  1.4E-02  9.6636084E+07    1823           20 1.9E+08         _  r i
-     75     1      6 3.7E-03      2  5.0E+00  4.1E-03  9.6274857E+07    1684     1     21 2.9E+05         _n rli
-     76     2      1 9.3E-02      3  4.5E+00  1.0E+00  8.7417173E+07    1486           21 1.9E+05         _s  li
-     78     3      2 1.0E+00      5  1.4E+00  2.7E-01  4.2397829E+05    1542           20 2.0E+00         _n
+     88     0     88              1  7.9E-01  2.2E-02  6.6848042E+07    2189           13 1.3E+09         _  r i
+     90     1      2 8.4E-03      2  7.8E-01  2.4E-03  6.6287727E+07    1547     7     14 4.9E+05         _n rli
+     93     2      3 1.3E-02      3  7.5E-01  1.9E+00  6.5436274E+07    1596           14 6.8E+05         _s  li
+    182     3     89 9.7E-01      4  7.8E-01  1.9E-01  2.6151973E+06    1754           16 4.2E+04         _   li
 
     Itn       QPmult  QPstep   nInf   SumInf   rgNorm  Elastic QPobj   +SBS   -SBS    -BS    Pivot     L+U ncp    nS  condHz
-    178              1.0E+00     11  4.8E+01  1.9E-03  1.8220158E+07                                  2421        18 1.4E+10
+    282      1.6E+08 3.6E-01      6  6.8E+01  1.0E+08  2.5162187E+07    175    308    299 -2.3E+00    2650         9 1.3E+08
 
    Itns Major Minors    Step   nCon Feasible  Optimal  MeritFunction     L+U BSwap     nS  condHz Penalty
-    262     4    184 1.0E+00      6  5.6E-01  8.5E-02  4.7827770E+04    3227           21 1.3E+10         _    i
-
-    Itn       QPmult  QPstep   nInf   SumInf   rgNorm  Elastic QPobj   +SBS   -SBS    -BS    Pivot     L+U ncp    nS  condHz
-    362              1.0E+00      6  2.6E+01  1.8E-09  2.9139641E+06                                  2221        19 1.4E+03
-
-   Itns Major Minors    Step   nCon Feasible  Optimal  MeritFunction     L+U BSwap     nS  condHz Penalty
-    362     5    100 4.8E-01     16  1.3E+00  1.1E+00  8.0939317E+06    2221    17     19 1.4E+03 1.3E+04 _    i
-    399     6     37 1.0E+00     17  2.1E-01  3.3E-02  1.0436592E+06    1860           20 4.0E+03 2.7E+02 _    i
-    419     7     20 1.0E+00     18  1.3E-01  4.7E-02  6.5627888E+05    1866     5     19 1.3E+03 6.6E+01 _    i
-    448     8     29 7.1E-01     20  8.7E-02  5.3E-01  6.2814125E+05    1849     4     20 3.4E+04 3.9E+03 _    i
-    477     9     29 1.0E+00     22  6.7E-02  9.0E-01  3.8762122E+05    1869           20 4.6E+04 1.4E+02 _ M  i
-    487    10     10 1.0E+00     23  3.6E-02  1.3E-01  1.9200090E+05    1590           21 1.2E+06 7.2E+01 _    i
-    489    11      2 8.3E-15     33  3.6E-02  4.1E-01  1.9200090E+05    1590           20 3.1E+04 7.2E+01 _    i
-    543    12     54 1.0E+00     34  3.2E-02  4.1E-01  1.7546885E+05    2431           20 1.5E+07 7.2E+01 _    i
-    544    13      1 1.0E+00     35  2.9E-02  1.4E-01  1.6039646E+05    1441    ns Major Minors    Step   nCon Feasible  Optimal  MeritFunction     L+U BSwap     nS  condHz Penalty
-    372    20     12 1.0E+00     48  4.6E-02  4.2E-01  1.8031318E+05    1953    12     21 2.6E+03 1.1E+03 _    i
-    376    21      4 3.3E-01     52  4.2E-02  3.8E-01  2.2232095E+05    1733     4     18 3.1E+00 1.5E+05 _    i
-    382    22      6 1.0E+00     53  3.8E-02  6.5E-02  2.0156998E+05    1578     3     19 2.5E+04 1.4E+05 _    i
-    383    23      1 1.0E+00     54  3.5E-02  1.3E-01  1.8118758E+05    1499           19 1.3E+04 1.6E+04 _    i
-    387    24      4 1.0E+00     55  3.1E-02  6.6E-01  1.6998226E+05    1554           20 1.9E+04 8.0E+03 _  R i
-    390    25      3 1.0E+00     56  3.0E-02  1.2E-01  1.6794941E+05    1576           20 1.8E+04 1.1E+05 _s   i
-    391    26      1 1.0E+00     57  2.7E-02  4.5E-02  1.5543803E+05    1547           20 2.0E+04 2.0E+04 _    i
-    397    27      6 1.0E+00     59  2.5E-02  4.6E-01  1.5046155E+05    1643           19 5.2E+04 2.0E+04 _ M  i
-    408    28     11 1.0E+00     60  3.4E-02  4.3E-01  1.3748948E+05    1718           19 2.1E+04 2.0E+04 _    i
-    411    29      3 1.0E+00     61  1.4E-02  4.0E-01  1.2485822E+05    1581     5     19 1.2E+05 2.0E+04 _    i
-    416    30      5 1.0E+00     62  1.5E-02  5.2E-01  1.1127685E+05    1558           19 1.3E+02 2.0E+04 _    i
-    418    31      2 1.0E+00     63  1.5E-02  4.2E-01  9.8006127E+04    1616     2     18 3.1E+01 2.0E+04 _    i
-    420    32      2 1.0E+00     64  1.5E-02  3.6E-01  9.1543698E+04    1591           17 3.4E+01 2.0E+04 _    i
-    432    33     12 1.0E+00     65  1.5E-02  3.2E-02  8.8702542E+04    1785           18 1.6E+04 2.0E+04 _    i
-    433    34      1 1.0E+00     66  1.4E-02  5.5E-03  8.7245145E+04    1620           18 1.8E+04 2.0E+04 _    i
-    434    35      1 1.0E+00     67  1.4E-02  3.3E-03  8.6839785E+04    1620           18 2.5E+04 2.0E+04 _  R i
-    435    36      1 1.0E+00     68  1.4E-02  3.5E-03  8.6588497E+04    1620           18 2.6E+04 2.0E+04 _s   i
-    436    37      1 1.0E+00     69  1.4E-02  1.9E-03  8.6347716E+04    1620           18 2.7E+04 2.0E+04 _    i
-    437    38      1 1.0E+00     70  1.4E-02  4.7E-04  8.6130563E+04    1618           18 2.8E+04 2.0E+04 _    i
-    438    39      1 1.0E+00     71  1.4E-02  1.5E-03  8.5924534E+04    1618           18 2.7E+04 2.0E+04 _    i
+    310     4    128 1.0E+00      6  2.1E-01  4.4E-01 -1.8030958E+06    2874     3     16 1.7E+07 1.1E+02 _ m  i
+    366     5     56 1.0E+00      8  1.1E-01  4.1E-01  1.9764995E+05    2527           13 6.5E+08 1.0E+04 _ m  i
+    384     6     18 1.0E+00     10  8.2E-03  1.2E+00  1.5727103E+04    1833    10     10 1.9E+06 1.9E+02 _sM
+    450     7     66 9.2E-02     12  9.7E-03  3.8E-01  1.1323703E+04    2811           14 7.8E+08 5.3E+01 _
+    454     8      4 1.0E+00     13  8.4E-03  6.9E-01  6.2197808E+01    1788    13     11 1.7E+04 4.5E+01 _
+    470     9     16 1.2E-01     15  8.2E-03  4.0E-01  6.5835134E+01    1769           13 8.6E+05 4.9E+01 _
+    526    10     56 2.4E-02     18  8.6E-03  4.4E-01  5.8246004E+01    2538           14 2.5E+08 4.6E+01 _   Itns Major Minors    Step   nCon Feasible  Optimal  MeritFunction     L+U BSwap     nS  condHz Penalty
+     93    20      1 1.0E+00     21  1.8E-02  2.1E-02  6.2991804E+04    1240           22 1.1E+07 3.8E+01 _    i
+     95    21      2 1.0E+00     22  1.8E-02  2.8E-02  6.2978780E+04    1240           22 2.9E+07 3.8E+01 _    i
+     97    22      2 1.0E+00     23  1.7E-02  2.8E-02  6.2958495E+04    1240           22 9.9E+07 3.8E+01 _    i
+     98    23      1 1.0E+00     24  1.5E-02  1.1E-02  6.2940965E+04    1240           22 7.6E+04 3.8E+01 _  R i
+     99    24      1 1.0E+00     25  1.5E-02  3.1E-03  6.2936484E+04    1299     1     22 1.3E+02 3.8E+01 _s   i
+    100    25      1 1.0E+00     26  1.5E-02  2.7E-04  6.2935344E+04    1299           22 1.4E+02 3.8E+01 _    i
+    101    26      1 1.0E+00     27  1.5E-02  1.8E-03  6.2934932E+04    1299           22 4.0E+02 3.8E+01 _    i
+    102    27      1 1.0E+00     28  1.5E-02  6.3E-03  6.2931814E+04    1299           22 7.6E+02 3.8E+01 _    i
+    103    28      1 1.0E+00     29  1.5E-02  1.3E-02  6.2928055E+04    1299           22 7.8E+02 3.8E+01 _    i
+    104    29      1 1.0E+00     30  1.5E-02  9.1E-03  6.2923803E+04    1299           22 5.5E+02 3.8E+01 _    i
+    105    30      1 1.0E+00     31  1.5E-02  5.2E-03  6.2922130E+04    1299           22 3.4E+02 3.8E+01 _    i
+    106    31      1 1.0E+00     32  1.5E-02  1.2E-03  6.2921857E+04    1299           22 3.1E+02 3.8E+01 _    i
+    107    32      1 1.0E+00     33  1.5E-02  7.9E-05  6.2921846E+04    1299           22 3.4E+02 3.8E+01 _    i
+    108    33      1 1.0E+00     34  1.5E-02  2.7E-05  6.2921846E+04    1299           22 3.7E+02 3.8E+01 _    i
+    109    34      1 1.0E+00     35  1.5E-02  1.2E-05  6.2921846E+04    1299           22 3.9E+02 3.8E+01 _  R i
+    110    35      1 1.0E+00     36  1.5E-02  4.4E-04  6.2921845E+04    1299           22 1.3E+04 3.8E+01 _s   i
+    111    36      1 1.1E-01     38  1.5E-02  1.2E-03  6.2921360E+04    1299           22 5.6E+04 3.8E+01 _    i
+    112    37      1 1.0E+00     39  1.4E-02  7.7E-03  6.2918718E+04    1300           22 7.1E+04 3.8E+01 _    i
+    113    38      1 1.0E+00     40  1.4E-02  3.3E-04  6.2917904E+04    1246     1     22 1.4E+07 3.8E+01 _    i
+    114    39      1 1.0E+00     41  1.4E-02  7.4E-05  6.2917891E+04    1246           22 1.6E+07 3.8E+01 _    i
 
    Itns Major Minors    Step   nCon Feasible  Optimal  MeritFunction     L+U BSwap     nS  condHz Penalty
-    440    40      2 1.0E+00     72  1.4E-02  8.1E-03  8.5727996E+04    1545     8     17 1.4E+01 2.0E+04 _    i
-    441    41      1 1.0E+00     73  1.4E-02  2.0E-03  8.5629694E+04    1533           17 1.9E+01 3.7E+04 _    i
-    442    42      1 1.0E+00     74  1.4E-02  8.2E-04  8.5441401E+04    1533           17 3.4E+01 2.4E+04 _    i
-    443    43      1 1.0E+00     75  1.4E-02  2.0E-03  8.5299993E+04    1566     4     17 3.0E+01 2.4E+04 _    i
-    453    44     10 1.0E+00     77  1.4E-02  4.0E-02  8.5162357E+04    1690           18 1.8E+07 2.4E+04 _ M  i
-    475    45     22 1.8E-01     79  1.4E-02  4.7E-02  8.5009996E+04    1885           19 9.5E+04 2.4E+04 _    i
-    477    46      2 1.0E+00     80  1.4E-02  4.7E-02  8.5065255E+04    1520    10     18 3.4E+02 2.4E+04 _  R i
-    479    47      2 1.0E+00     81  1.4E-02  4.4E-02  8.4994489E+04    1534     1     19 2.7E+01 2.4E+04 _s   i
-    481    48      2 1.0E+00     82  1.4E-02  3.7E-02  8.4763789E+04    1562           18 1.7E+02 2.4E+04 _    i
-    482    49      1 5.9E-02     84  1.4E-02  5.2E-02  8.4548382E+04    1537           18 2.3E+02 2.4E+04 _    i
-    484    50      2 1.1E-01     86  1.4E-02  4.9E-02  8.4161799E+04    1604           17 2.5E+02 2.4E+04 _    i
+    115    40      1 1.0E+00     42  1.4E-02  7.6E-04  6.2917858E+04    1246           22 2.2E+07 3.8E+01 _    i
+    116    41      1 1.0E+00     43  1.4E-02  1.9E-03  6.2917783E+04    1246           22 3.7E+07 3.8E+01 _    i
+    117    42      1 1.0E+00     44  1.4E-02  3.8E-03  6.2917575E+04    1246           22 6.7E+07 3.8E+01 _    i
+    118    43      1 1.0E+00     45  1.3E-02  6.7E-03  6.2917052E+04    1246           22 1.2E+08 3.8E+01 _    i
+    119    44      1 1.0E+00     46  1.3E-02  1.1E-02  6.2915738E+04    1246           22 1.7E+08 3.8E+01 _    i
+    120    45      1 1.0E+00     47  1.1E-02  1.5E-02  6.2912742E+04    1246           22 1.6E+06 3.8E+01 _  R i
+    121    46      1 1.0E+00     48  1.1E-02  8.8E-03  6.2910855E+04    1246           22 1.2E+06 3.8E+01 _s   i
+    122    47      1 1.0E+00     49  1.1E-02  1.8E-03  6.2909788E+04    1246           22 1.3E+06 3.8E+01 _    i
+    123    48      1 1.0E+00     50  1.1E-02  7.9E-04  6.2909626E+04    1246           22 1.6E+06 3.8E+01 _    i
+    124    49      1 1.0E+00     51  1.1E-02  2.2E-03  6.2909393E+04    1246           22 2.6E+06 3.8E+01 _    i
+    125    50      1 1.0E+00     52  1.2E-02  4.6E-03  6.2908445E+04    1246           22 3.1E+06 3.8E+01 _    i
 1
  
  SNOPTA EXIT  30 -- resource limit error
  SNOPTA INFO  32 -- major iteration limit reached
 
  Problem name                         
- No. of iterations                 484   Objective value      2.9180368741E+01
- No. of infeasibilities              1   Sum of infeas        2.3607356853E+00
- Elastic weight                3.6E+04   Scaled Merit         2.3602638015E+00
+ No. of iterations                 125   Objective value     -1.8610453988E+01
+ No. of infeasibilities              2   Sum of infeas        1.5157356788E+00
+ Elastic weight                4.2E+04   Scaled Merit         1.5152874100E+00
  No. of major iterations            50   Linear objective     0.0000000000E+00
- Penalty parameter           2.368E+04   Nonlinear objective  2.9180368741E+01
- No. of calls to funobj             87   No. of calls to funcon             87
- No. of superbasics                 17   No. of basic nonlinears           105
+ Penalty parameter           3.823E+01   Nonlinear objective -1.8610453988E+01
+ No. of calls to funobj             53   No. of calls to funcon             53
+ No. of superbasics                 22   No. of basic nonlinears            99
  No. of degenerate steps             0   Percentage                        .00
- Max x                     103 2.8E+02   Max pi                    341 5.9E+05
- Max Primal infeas         126 2.4E+00   Max Dual infeas            86 2.9E+04
- Nonlinear constraint violn    2.4E+00
+ Max x                     102 4.9E+01   Max pi                      1 4.2E+04
+ Max Primal infeas         126 7.6E-01   Max Dual infeas           100 1.9E+02
+ Nonlinear constraint violn    7.6E-01
 1
  
- Name                                    Infeasibilities      1      2.3607E+00
+ Name                                    Infeasibilities      2      1.5157E+00
 
- Status         Optimal Soln             Iteration    484    Superbasics    17
+ Status         Optimal Soln             Iteration    125    Superbasics    22
 
  Objective               (Min)
  RHS
@@ -216,8 +219,8 @@
   Number  ...Row.. State  ...Activity...  Slack Activity  ..Lower Limit.  ..Upper Limit.  .Dual Activity    ..i
  
      124  r      1    BS          .               .                None            None         -1.0          1
-     125  r      2    UL        10.00008          .00008           None         10.00000    -22441.84963      2
-     126  r      3 I  BS         2.36074         2.36074           None           .         -35657.79329      3
+     125  r      2 I  BS          .75461          .75461           None           .         -41515.85019      2
+     126  r      3 I  BS          .76112          .76112           None           .         -41515.85019      3
      127  r      4 D  BS          .               .                None           .               .           4
      128  r      5 D  BS          .               .                None           .               .           5
      129  r      6 D  BS          .               .                None           .               .           6
@@ -230,473 +233,479 @@
      136  r     13 D  BS          .               .                None           .               .          13
      137  r     14 D  BS          .               .                None           .               .          14
      138  r     15 D  BS          .               .                None           .               .          15
-     139  r     16 I  BS         -.93518         -.93518           None           .               .          16
-     140  r     17    BS         -.99984         -.99984           None           .               .          17
-     141  r     18    BS         -.99988         -.99988           None           .               .          18
-     142  r     19    BS         -.99981         -.99981           None           .               .          19
-     143  r     20    BS         -.36978         -.36978           None           .               .          20
-     144  r     21    BS         -.91639         -.91639           None           .               .          21
-     145  r     22    BS         -.99949         -.99949           None           .               .          22
-     146  r     23    BS         -.95693         -.95693           None           .               .          23
-     147  r     24    BS         -.97292         -.97292           None           .               .          24
-     148  r     25    BS         -.96479         -.96479           None           .               .          25
-     149  r     26    BS         -.99499         -.99499           None           .               .          26
-     150  r     27    BS         -.99519         -.99519           None           .               .          27
-     151  r     28    BS         -.98272         -.98272           None           .               .          28
-     152  r     29    BS         -.99930         -.99930           None           .               .          29
-     153  r     30    BS         -.99997         -.99997           None           .               .          30
-     154  r     31    BS         -.99930         -.99930           None           .               .          31
-     155  r     32    BS         -.42779         -.42779           None           .               .          32
-     156  r     33    BS         -.67972         -.67972           None           .               .          33
-     157  r     34    BS         -.99913         -.99913           None           .               .          34
-     158  r     35    BS         -.96857         -.96857           None           .               .          35
-     159  r     36    BS         -.99265         -.99265           None           .               .          36
-     160  r     37    BS         -.98698         -.98698           None           .               .          37
-     161  r     38    BS         -.99851         -.99851           None           .               .          38
-     162  r     39    BS         -.98048         -.98048           None           .               .          39
-     163  r     40    BS         -.98074         -.98074           None           .               .          40
-     164  r     41    BS         -.99934         -.99934           None           .               .          41
-     165  r     42    BS         -.99998         -.99998           None           .               .          42
-     166  r     43    BS         -.99953         -.99953           None           .               .          43
-     167  r     44    BS         -.75275         -.75275           None           .               .          44
-     168  r     45    BS         -.75602         -.75602           None           .               .          45
-     169  r     46    BS         -.99967         -.99967           None           .               .          46
-     170  r     47    BS         -.98858         -.98858           None           .               .          47
-     171  r     48    BS         -.99610         -.99610           None           .               .          48
-     172  r     49    BS         -.97934         -.97934           None           .               .          49
-     173  r     50    BS         -.99791         -.99791           None           .               .          50
-     174  r     51    BS         -.98379         -.98379           None           .               .          51
-     175  r     52    BS         -.95996         -.95996           None           .               .          52
-     176  r     53    BS         -.99971         -.99971           None           .               .          53
-     177  r     54    BS         -.99993         -.99993           None           .               .          54
-     178  r     55    BS         -.99969         -.99969           None           .               .          55
-     179  r     56    BS         -.43089         -.43089           None           .               .          56
-     180  r     57    BS         -.85448         -.85448           None           .               .          57
-     181  r     58    BS         -.99940         -.99940           None           .               .          58
-     182  r     59    BS         -.96326         -.96326           None           .               .          59
-     183  r     60    BS         -.98479         -.98479           None           .               .          60
-     184  r     61    BS         -.97390         -.97390           None           .               .          61
-     185  r     62    BS         -.99673         -.99673           None           .               .          62
-     186  r     63    BS         -.99175         -.99175           None           .               .          63
-     187  r     64    BS         -.91297         -.91297           None           .               .          64
-     188  r     65    BS         -.99991         -.99991           None           .               .          65
-     189  r     66    BS         -.99975         -.99975           None           .               .          66
-     190  r     67    BS         -.99988         -.99988           None           .               .          67
-     191  r     68    BS         -.39484         -.39484           None           .               .          68
-     192  r     69    BS         -.95325         -.95325           None           .               .          69
-     193  r     70    BS         -.99946         -.99946           None           .               .          70
-     194  r     71    BS         -.94014         -.94014           None           .               .          71
-     195  r     72    BS         -.94252         -.94252           None           .               .          72
-     196  r     73    BS         -.96494         -.96494           None           .               .          73
-     197  r     74    BS         -.99372         -.99372           None           .               .          74
-     198  r     75    BS         -.99713         -.99713           None           .               .          75
-     199  r     76    BS         -.81157         -.81157           None           .               .          76
-     200  r     77    BS         -.99994         -.99994           None           .               .          77
-     201  r     78    BS         -.99987         -.99987           None           .               .          78
-     202  r     79    BS         -.99994         -.99994           None           .               .          79
-     203  r     80    BS         -.74061         -.74061           None           .               .          80
-     204  r     81    BS         -.96791         -.96791           None           .               .          81
-     205  r     82    BS         -.99984         -.99984           None           .               .          82
-     206  r     83    BS         -.98336         -.98336           None           .               .          83
-     207  r     84    BS         -.96767         -.96767           None           .               .          84
-     208  r     85    BS         -.88659         -.88659           None           .               .          85
-     209  r     86    BS         -.98342         -.98342           None           .               .          86
-     210  r     87    BS         -.99835         -.99835           None           .               .          87
-     211  r     88    BS         -.94567         -.94567           None           .               .          88
-     212  r     89    BS         -.99976         -.99976           None           .               .          89
-     213  r     90    BS         -.99996         -.99996           None           .               .          90
-     214  r     91    BS         -.99981         -.99981           None           .               .          91
-     215  r     92    BS         -.71645         -.71645           None           .               .          92
-     216  r     93    BS         -.89042         -.89042           None           .               .          93
-     217  r     94    BS         -.99974         -.99974           None           .               .          94
-     218  r     95    BS         -.98444         -.98444           None           .               .          95
-     219  r     96    BS         -.98980         -.98980           None           .               .          96
-     220  r     97    BS         -.95143         -.95143           None           .               .          97
-     221  r     98    BS         -.99463         -.99463           None           .               .          98
-     222  r     99    BS         -.99402         -.99402           None           .               .          99
-     223  r    100    BS         -.98492         -.98492           None           .               .         100
-     224  r    101    BS         -.99921         -.99921           None           .               .         101
-     225  r    102    BS         -.99997         -.99997           None           .               .         102
-     226  r    103    BS         -.99919         -.99919           None           .               .         103
-     227  r    104    BS         -.39298         -.39298           None           .               .         104
-     228  r    105    BS         -.64497         -.64497           None           .               .         105
-     229  r    106    BS         -.99901         -.99901           None           .               .         106
-     230  r    107    BS         -.96721         -.96721           None           .               .         107
-     231  r    108    BS         -.99301         -.99301           None           .               .         108
-     232  r    109    BS         -.98873         -.98873           None           .               .         109
-     233  r    110    BS         -.99871         -.99871           None           .               .         110
-     234  r    111    BS         -.97768         -.97768           None           .               .         111
-     235  r    112    BS         -.99641         -.99641           None           .               .         112
-     236  r    113    BS         -.99713         -.99713           None           .               .         113
-     237  r    114    BS         -.99999         -.99999           None           .               .         114
-     238  r    115    BS         -.99652         -.99652           None           .               .         115
-     239  r    116    BS         -.44943         -.44943           None           .               .         116
-     240  r    117    BS         -.10939         -.10939           None           .               .         117
-     241  r    118    BS         -.99722         -.99722           None           .               .         118
-     242  r    119    BS         -.96799         -.96799           None           .               .         119
-     243  r    120    BS         -.99675         -.99675           None           .               .         120
-     244  r    121    BS         -.99736         -.99736           None           .               .         121
-     245  r    122    BS         -.99970         -.99970           None           .               .         122
-     246  r    123    BS         -.91101         -.91101           None           .               .         123
-     247  r    124    BS         -.99861         -.99861           None           .               .         124
-     248  r    125    BS         -.99074         -.99074           None           .               .         125
-     249  r    126    BS        -1.00000        -1.00000           None           .               .         126
-     250  r    127    BS         -.99276         -.99276           None           .               .         127
-     251  r    128    BS         -.82001         -.82001           None           .               .         128
-     252  r    129 N  FR         -.12933         -.12933           None           .             -3.61616    129
-     253  r    130    BS         -.99848         -.99848           None           .               .         130
-     254  r    131    BS         -.99158         -.99158           None           .               .         131
-     255  r    132    BS         -.99919         -.99919           None           .               .         132
-     256  r    133    BS         -.99865         -.99865           None           .               .         133
-     257  r    134    BS         -.99986         -.99986           None           .               .         134
-     258  r    135    BS         -.78192         -.78192           None           .               .         135
-     259  r    136    BS         -.99747         -.99747           None           .               .         136
-     260  r    137    BS         -.99542         -.99542           None           .               .         137
-     261  r    138    BS        -1.00000        -1.00000           None           .               .         138
-     262  r    139    BS         -.99747         -.99747           None           .               .         139
-     263  r    140    BS         -.87990         -.87990           None           .               .         140
-     264  r    141    BS         -.62404         -.62404           None           .               .         141
-     265  r    142    BS         -.99960         -.99960           None           .               .         142
-     266  r    143    BS         -.99595         -.99595           None           .               .         143
-     267  r    144    BS         -.99937         -.99937           None           .               .         144
-     268  r    145    BS         -.99674         -.99674           None           .               .         145
-     269  r    146    BS         -.99967         -.99967           None           .               .         146
-     270  r    147    BS         -.90430         -.90430           None           .               .         147
-     271  r    148    BS         -.98957         -.98957           None           .               .         148
-     272  r    149    BS         -.99883         -.99883           None           .               .         149
-     273  r    150    BS         -.99999         -.99999           None           .               .         150
-     274  r    151    BS         -.99925         -.99925           None           .               .         151
-     275  r    152    BS         -.79528         -.79528           None           .               .         152
-     276  r    153    BS         -.68442         -.68442           None           .               .         153
-     277  r    154    BS         -.99967         -.99967           None           .               .         154
-     278  r    155    BS         -.99213         -.99213           None           .               .         155
-     279  r    156    BS         -.99792         -.99792           None           .               .         156
-     280  r    157    BS         -.98751         -.98751           None           .               .         157
-     281  r    158    BS         -.99876         -.99876           None           .               .         158
-     282  r    159    BS         -.97244         -.97244           None           .               .         159
-     283  r    160    BS         -.98369         -.98369           None           .               .         160
-     284  r    161    BS         -.99926         -.99926           None           .               .         161
-     285  r    162    BS         -.99997         -.99997           None           .               .         162
-     286  r    163    BS         -.99926         -.99926           None           .               .         163
-     287  r    164 N  FR         -.41231         -.41231           None           .           -714.43153    164
-     288  r    165    BS         -.66542         -.66542           None           .               .         165
-     289  r    166    BS         -.99908         -.99908           None           .               .         166
-     290  r    167    BS         -.96791         -.96791           None           .               .         167
-     291  r    168    BS         -.99279         -.99279           None           .               .         168
-     292  r    169    BS         -.98776         -.98776           None           .               .         169
-     293  r    170    BS         -.99860         -.99860           None           .               .         170
-     294  r    171    BS         -.97934         -.97934           None           .               .         171
-     295  r    172    BS         -.99521         -.99521           None           .               .         172
-     296  r    173    BS         -.99812         -.99812           None           .               .         173
-     297  r    174    BS         -.99998         -.99998           None           .               .         174
-     298  r    175    BS         -.99738         -.99738           None           .               .         175
-     299  r    176    BS         -.27534         -.27534           None           .               .         176
-     300  r    177    BS         -.33462         -.33462           None           .               .         177
-     301  r    178    BS         -.99677         -.99677           None           .               .         178
-     302  r    179    BS         -.94997         -.94997           None           .               .         179
-     303  r    180    BS         -.99478         -.99478           None           .               .         180
-     304  r    181    BS         -.99685         -.99685           None           .               .         181
-     305  r    182    BS         -.99962         -.99962           None           .               .         182
-     306  r    183    BS         -.93557         -.93557           None           .               .         183
-     307  r    184    BS         -.99741         -.99741           None           .               .         184
-     308  r    185    BS         -.99513         -.99513           None           .               .         185
-     309  r    186    BS         -.99999         -.99999           None           .               .         186
-     310  r    187    BS         -.99581         -.99581           None           .               .         187
-     311  r    188    BS         -.68873         -.68873           None           .               .         188
-     312  r    189   SBS         -.03327         -.03327           None           .               .00000    189
-     313  r    190    BS         -.99844         -.99844           None           .               .         190
-     314  r    191    BS         -.98625         -.98625           None           .               .         191
-     315  r    192    BS         -.99849         -.99849           None           .               .         192
-     316  r    193    BS         -.99766         -.99766           None           .               .         193
-     317  r    194    BS         -.99976         -.99976           None           .               .         194
-     318  r    195    BS         -.87565         -.87565           None           .               .         195
-     319  r    196    BS         -.99121         -.99121           None           .               .         196
-     320  r    197    BS         -.99851         -.99851           None           .               .         197
-     321  r    198    BS         -.99999         -.99999           None           .               .         198
-     322  r    199    BS         -.99883         -.99883           None           .               .         199
-     323  r    200    BS         -.61197         -.61197           None           .               .         200
-     324  r    201    BS         -.47785         -.47785           None           .               .         201
-     325  r    202    BS         -.99928         -.99928           None           .               .         202
-     326  r    203    BS         -.98457         -.98457           None           .               .         203
-     327  r    204    BS         -.99706         -.99706           None           .               .         204
-     328  r    205    BS         -.99164         -.99164           None           .               .         205
-     329  r    206    BS         -.99914         -.99914           None           .               .         206
-     330  r    207    BS         -.96245         -.96245           None           .               .         207
-     331  r    208    BS         -.99212         -.99212           None           .               .         208
-     332  r    209    BS         -.99883         -.99883           None           .               .         209
-     333  r    210    BS         -.99997         -.99997           None           .               .         210
-     334  r    211    BS         -.99842         -.99842           None           .               .         211
-     335  r    212    BS         -.03648         -.03648           None           .               .         212
-     336  r    213    BS         -.50545         -.50545           None           .               .         213
-     337  r    214    BS         -.99758         -.99758           None           .               .         214
-     338  r    215    BS         -.94241         -.94241           None           .               .         215
-     339  r    216    BS         -.99242         -.99242           None           .               .         216
-     340  r    217    BS         -.99498         -.99498           None           .               .         217
-     341  r    218    BS         -.99938         -.99938           None           .               .         218
-     342  r    219    BS         -.96050         -.96050           None           .               .         219
-     343  r    220    BS         -.99511         -.99511           None           .               .         220
-     344  r    221    BS         -.99925         -.99925           None           .               .         221
-     345  r    222    BS         -.99992         -.99992           None           .               .         222
-     346  r    223    BS         -.99828         -.99828           None           .               .         223
-     347  r    224    UL         -.03044         -.03044           None           .          -1416.02978    224
-     348  r    225    BS         -.77850         -.77850           None           .               .         225
-     349  r    226    BS         -.99212         -.99212           None           .               .         226
-     350  r    227    BS         -.80413         -.80413           None           .               .         227
-     351  r    228    BS         -.98425         -.98425           None           .               .         228
-     352  r    229    BS         -.99776         -.99776           None           .               .         229
-     353  r    230    BS         -.99966         -.99966           None           .               .         230
-     354  r    231    BS         -.96780         -.96780           None           .               .         231
-     355  r    232    BS         -.99128         -.99128           None           .               .         232
-     356  r    233    BS         -.99982         -.99982           None           .               .         233
-     357  r    234    BS         -.99964         -.99964           None           .               .         234
-     358  r    235    BS         -.99951         -.99951           None           .               .         235
-     359  r    236    BS         -.22971         -.22971           None           .               .         236
-     360  r    237    BS         -.94189         -.94189           None           .               .         237
-     361  r    238    BS         -.99278         -.99278           None           .               .         238
-     362  r    239    BS         -.45501         -.45501           None           .               .         239
-     363  r    240    BS         -.93604         -.93604           None           .               .         240
-     364  r    241    BS         -.99737         -.99737           None           .               .         241
-     365  r    242    BS         -.99945         -.99945           None           .               .         242
-     366  r    243    BS         -.99216         -.99216           None           .               .         243
-     367  r    244    BS         -.98311         -.98311           None           .               .         244
-     368  r    245    BS         -.99996         -.99996           None           .               .         245
-     369  r    246    BS         -.99840         -.99840           None           .               .         246
-     370  r    247    BS         -.99988         -.99988           None           .               .         247
-     371  r    248    BS         -.64613         -.64613           None           .               .         248
-     372  r    249    BS         -.98614         -.98614           None           .               .         249
-     373  r    250    BS         -.99422         -.99422           None           .               .         250
-     374  r    251    BS         -.49279         -.49279           None           .               .         251
-     375  r    252    BS         -.76420         -.76420           None           .               .         252
-     376  r    253    BS         -.99718         -.99718           None           .               .         253
-     377  r    254    BS         -.99924         -.99924           None           .               .         254
-     378  r    255    BS         -.99821         -.99821           None           .               .         255
-     379  r    256    EQ          .00000          .00000          .               .            -43.34928    256
-     380  r    257    EQ          .00000          .00000          .               .             32.29279    257
-     381  r    258    EQ          .00000          .00000          .               .             -5.75969    258
-     382  r    259    EQ          .00000          .00000          .               .              -.72913    259
-     383  r    260    EQ          .00000          .00000          .               .            -43.40499    260
-     384  r    261    EQ          .00000          .00000          .               .             32.22652    261
-     385  r    262    EQ          .00000          .00000          .               .             -7.12514    262
-     386  r    263 A  EQ          .00000          .00000          .               .               .11850    263
-     387  r    264    EQ          .00000          .00000          .               .            -43.51857    264
-     388  r    265    EQ          .00000          .00000          .               .             31.98546    265
-     389  r    266    EQ          .00000          .00000          .               .              5.62326    266
-     390  r    267    EQ          .00000          .00000          .               .               .81793    267
-     391  r    268    EQ          .00000          .00000          .               .            -43.54187    268
-     392  r    269    EQ          .00002          .00002          .               .             31.94399    269
-     393  r    270    EQ          .00000          .00000          .               .             10.58209    270
-     394  r    271    EQ          .00000          .00000          .               .             -1.04892    271
-     395  r    272    EQ         -.00002         -.00002          .               .            -43.65232    272
-     396  r    273    EQ          .00003          .00003          .               .             31.78062    273
-     397  r    274    EQ          .00000          .00000          .               .            -15.15796    274
-     398  r    275 A  EQ          .               .               .               .              -.16930    275
-     399  r    276    EQ         -.00004         -.00004          .               .            -43.79606    276
-     400  r    277    EQ         -.00006         -.00006          .               .             31.78328    277
-     401  r    278 A  EQ          .00000          .00000          .               .               .25172    278
-     402  r    279    EQ          .00000          .00000          .               .              1.64620    279
-     403  r    280    EQ          .00006          .00006          .               .            -44.18665    280
-     404  r    281    EQ         -.00005         -.00005          .               .             31.67877    281
-     405  r    282    EQ          .00000          .00000          .               .             23.39923    282
-     406  r    283 A  EQ          .00000          .00000          .               .              -.58935    283
-     407  r    284    EQ          .00004          .00004          .               .            -44.37836    284
-     408  r    285    EQ          .00001          .00001          .               .             31.66891    285
-     409  r    286    EQ          .00000          .00000          .               .              6.47226    286
-     410  r    287    EQ          .00000          .00000          .               .             -3.21700    287
-     411  r    288    EQ          .00001          .00001          .               .            -44.49231    288
-     412  r    289    EQ          .00000          .00000          .               .             32.02325    289
-     413  r    290    EQ          .00000          .00000          .               .            -22.72914    290
-     414  r    291    EQ          .00000          .00000          .               .             -1.99198    291
-     415  r    292    EQ          .00003          .00003          .               .            -48.74559    292
-     416  r    293    EQ         -.00013         -.00013          .               .             32.51712    293
-     417  r    294    EQ          .00000          .00000          .               .            -26.92367    294
-     418  r    295    EQ          .00000          .00000          .               .              2.19001    295
-     419  r    296    EQ         -.00074         -.00074          .               .            -86.12304    296
-     420  r    297    EQ         -.00047         -.00047          .               .             23.20153    297
-     421  r    298    EQ          .00000          .00000          .               .             15.73252    298
-     422  r    299    EQ          .00000          .00000          .               .              3.40550    299
-     423  r    300    EQ         -.00223         -.00223          .               .            -95.57280    300
-     424  r    301    EQ          .00149          .00149          .               .             24.97410    301
-     425  r    302    EQ          .00000          .00000          .               .             33.10752    302
-     426  r    303    EQ          .00000          .00000          .               .             -1.20621    303
-     427  r    304    EQ          .00029          .00029          .               .            -95.96084    304
-     428  r    305    EQ          .00498          .00498          .               .             26.12787    305
-     429  r    306    EQ          .00000          .00000          .               .            -19.46809    306
-     430  r    307    EQ          .00000          .00000          .               .             -2.87692    307
-     431  r    308    EQ          .00680          .00680          .               .           -172.53109    308
-     432  r    309    EQ          .00211          .00211          .               .           -110.47581    309
-     433  r    310    EQ          .00000          .00000          .               .            -52.96792    310
-     434  r    311    EQ          .00000          .00000          .               .              3.99009    311
-     435  r    312    EQ          .00263          .00263          .               .           -170.02312    312
-     436  r    313    EQ         -.00776         -.00776          .               .           -103.72834    313
-     437  r    314    EQ          .00000          .00000          .               .             51.73927    314
-     438  r    315    EQ          .00000          .00000          .               .              5.32626    315
-     439  r    316    EQ         -.00431         -.00431          .               .           -173.63552    316
-     440  r    317    EQ         -.00082         -.00082          .               .           -182.79286    317
-     441  r    318    EQ          .00000          .00000          .               .             62.28518    318
-     442  r    319    EQ          .00000          .00000          .               .             -6.47561    319
-     443  r    320    EQ         -.00006         -.00006          .               .           -179.71249    320
-     444  r    321    EQ          .00057          .00057          .               .           -182.78867    321
-     445  r    322    EQ          .00000          .00000          .               .            -71.30003    322
-     446  r    323    EQ          .00000          .00000          .               .             -7.07952    323
-     447  r    324    EQ          .00007          .00007          .               .           -539.73987    324
-     448  r    325    EQ          .00077          .00077          .               .          -3047.29722    325
-     449  r    326    EQ          .00000          .00000          .               .            179.17833    326
-     450  r    327    EQ          .00000          .00000          .               .               .78118    327
-     451  r    328    EQ         -.00123         -.00123          .               .           3771.74499    328
-     452  r    329    EQ          .00195          .00195          .               .          -4527.10733    329
-     453  r    330 A  EQ          .00000          .00000          .               .              -.23883    330
-     454  r    331    EQ          .00000          .00000          .               .            -10.56332    331
-     455  r    332    EQ         -.00032         -.00032          .               .           3761.71013    332
-     456  r    333    EQ          .00041          .00041          .               .          -4529.85503    333
-     457  r    334    EQ          .00000          .00000          .               .           -198.81203    334
-     458  r    335    EQ          .00000          .00000          .               .             16.02663    335
-     459  r    336    UL         3.00000          .                None          3.00000    -36056.26912    336
-     460  r    337    BS        -3.00000        -3.00000           None           .               .         337
-     461  r    338    EQ          .               .               .               .          33525.36887    338
-     462  r    339    EQ          .               .               .               .          66432.77910    339
-     463  r    340    EQ          .               .               .               .          99966.09454    340
-     464  r    341    EQ          .               .               .               .         135156.87599    341
-     465  r    342    EQ          .               .               .               .         171542.37418    342
-     466  r    343    EQ          .               .               .               .         207575.44893    343
-     467  r    344    EQ          .               .               .               .         243485.19597    344
-     468  r    345    EQ          .               .               .               .         279676.80757    345
-     469  r    346    EQ          .               .               .               .         315620.44975    346
-     470  r    347    EQ          .               .               .               .         351409.60945    347
-     471  r    348    EQ          .               .               .               .         388654.57173    348
-     472  r    349    EQ          .               .               .               .         426550.20963    349
-     473  r    350    EQ          .               .               .               .         465118.20525    350
-     474  r    351    EQ          .               .               .               .         496462.36674    351
-     475  r    352    EQ          .               .               .               .         528214.36889    352
-     476  r    353    EQ          .               .               .               .         563473.49502    353
-     477  r    354    EQ          .               .               .               .         589628.18460    354
-     478  r    355    EQ          .               .               .               .         505757.92178    355
-     479  r    356    EQ          .               .               .               .         255048.47569    356
+     139  r     16 I  BS         -.99839         -.99839           None           .               .          16
+     140  r     17    BS        -1.00000        -1.00000           None           .               .          17
+     141  r     18    BS         -.98236         -.98236           None           .               .          18
+     142  r     19    BS         -.99999         -.99999           None           .               .          19
+     143  r     20    BS         -.99456         -.99456           None           .               .          20
+     144  r     21    BS         -.99977         -.99977           None           .               .          21
+     145  r     22    BS         -.99117         -.99117           None           .               .          22
+     146  r     23    BS         -.90625         -.90625           None           .               .          23
+     147  r     24    BS         -.95097         -.95097           None           .               .          24
+     148  r     25    BS         -.99992         -.99992           None           .               .          25
+     149  r     26    BS         -.99997         -.99997           None           .               .          26
+     150  r     27    BS         -.99994         -.99994           None           .               .          27
+     151  r     28    BS         -.99849         -.99849           None           .               .          28
+     152  r     29    BS        -1.00000        -1.00000           None           .               .          29
+     153  r     30    BS         -.98225         -.98225           None           .               .          30
+     154  r     31    BS         -.99999         -.99999           None           .               .          31
+     155  r     32    BS         -.99493         -.99493           None           .               .          32
+     156  r     33    BS         -.99978         -.99978           None           .               .          33
+     157  r     34    BS         -.99119         -.99119           None           .               .          34
+     158  r     35    BS         -.91203         -.91203           None           .               .          35
+     159  r     36    BS         -.95395         -.95395           None           .               .          36
+     160  r     37    BS         -.99992         -.99992           None           .               .          37
+     161  r     38    BS         -.99997         -.99997           None           .               .          38
+     162  r     39    BS         -.99994         -.99994           None           .               .          39
+     163  r     40    BS         -.99859         -.99859           None           .               .          40
+     164  r     41    BS        -1.00000        -1.00000           None           .               .          41
+     165  r     42    BS         -.98213         -.98213           None           .               .          42
+     166  r     43    BS         -.99999         -.99999           None           .               .          43
+     167  r     44    BS         -.99527         -.99527           None           .               .          44
+     168  r     45    BS         -.99980         -.99980           None           .               .          45
+     169  r     46    BS         -.99123         -.99123           None           .               .          46
+     170  r     47    BS         -.91753         -.91753           None           .               .          47
+     171  r     48    BS         -.95674         -.95674           None           .               .          48
+     172  r     49    BS         -.99993         -.99993           None           .               .          49
+     173  r     50    BS         -.99997         -.99997           None           .               .          50
+     174  r     51    BS         -.99995         -.99995           None           .               .          51
+     175  r     52    BS         -.99868         -.99868           None           .               .          52
+     176  r     53    BS        -1.00000        -1.00000           None           .               .          53
+     177  r     54    BS         -.98199         -.98199           None           .               .          54
+     178  r     55    BS         -.99999         -.99999           None           .               .          55
+     179  r     56    BS         -.99559         -.99559           None           .               .          56
+     180  r     57    BS         -.99981         -.99981           None           .               .          57
+     181  r     58    BS         -.99128         -.99128           None           .               .          58
+     182  r     59    BS         -.92275         -.92275           None           .               .          59
+     183  r     60    BS         -.95937         -.95937           None           .               .          60
+     184  r     61    BS         -.99993         -.99993           None           .               .          61
+     185  r     62    BS         -.99997         -.99997           None           .               .          62
+     186  r     63    BS         -.99995         -.99995           None           .               .          63
+     187  r     64    BS         -.99877         -.99877           None           .               .          64
+     188  r     65    BS        -1.00000        -1.00000           None           .               .          65
+     189  r     66    BS         -.98183         -.98183           None           .               .          66
+     190  r     67    BS         -.99999         -.99999           None           .               .          67
+     191  r     68    BS         -.99589         -.99589           None           .               .          68
+     192  r     69    BS         -.99982         -.99982           None           .               .          69
+     193  r     70    BS         -.99135         -.99135           None           .               .          70
+     194  r     71    BS         -.92770         -.92770           None           .               .          71
+     195  r     72    BS         -.96183         -.96183           None           .               .          72
+     196  r     73    BS         -.99994         -.99994           None           .               .          73
+     197  r     74    BS         -.99997         -.99997           None           .               .          74
+     198  r     75    BS         -.99995         -.99995           None           .               .          75
+     199  r     76    BS         -.99885         -.99885           None           .               .          76
+     200  r     77    BS        -1.00000        -1.00000           None           .               .          77
+     201  r     78    BS         -.98165         -.98165           None           .               .          78
+     202  r     79    BS         -.99999         -.99999           None           .               .          79
+     203  r     80    BS         -.99618         -.99618           None           .               .          80
+     204  r     81    BS         -.99983         -.99983           None           .               .          81
+     205  r     82    BS         -.99144         -.99144           None           .               .          82
+     206  r     83    BS         -.93238         -.93238           None           .               .          83
+     207  r     84    BS         -.96415         -.96415           None           .               .          84
+     208  r     85    BS         -.99994         -.99994           None           .               .          85
+     209  r     86    BS         -.99998         -.99998           None           .               .          86
+     210  r     87    BS         -.99996         -.99996           None           .               .          87
+     211  r     88    BS         -.99892         -.99892           None           .               .          88
+     212  r     89    BS        -1.00000        -1.00000           None           .               .          89
+     213  r     90    BS         -.98145         -.98145           None           .               .          90
+     214  r     91    BS         -.99999         -.99999           None           .               .          91
+     215  r     92    BS         -.99644         -.99644           None           .               .          92
+     216  r     93    BS         -.99984         -.99984           None           .               .          93
+     217  r     94    BS         -.99155         -.99155           None           .               .          94
+     218  r     95    BS         -.93681         -.93681           None           .               .          95
+     219  r     96    BS         -.96632         -.96632           None           .               .          96
+     220  r     97    BS         -.99995         -.99995           None           .               .          97
+     221  r     98    BS         -.99998         -.99998           None           .               .          98
+     222  r     99    BS         -.99996         -.99996           None           .               .          99
+     223  r    100    BS         -.99899         -.99899           None           .               .         100
+     224  r    101    BS        -1.00000        -1.00000           None           .               .         101
+     225  r    102    BS         -.98123         -.98123           None           .               .         102
+     226  r    103    BS         -.99999         -.99999           None           .               .         103
+     227  r    104    BS         -.99669         -.99669           None           .               .         104
+     228  r    105    BS         -.99985         -.99985           None           .               .         105
+     229  r    106    BS         -.99167         -.99167           None           .               .         106
+     230  r    107    BS         -.94098         -.94098           None           .               .         107
+     231  r    108    BS         -.96836         -.96836           None           .               .         108
+     232  r    109    BS         -.99995         -.99995           None           .               .         109
+     233  r    110    BS         -.99998         -.99998           None           .               .         110
+     234  r    111    BS         -.99996         -.99996           None           .               .         111
+     235  r    112    BS         -.99906         -.99906           None           .               .         112
+     236  r    113    BS        -1.00000        -1.00000           None           .               .         113
+     237  r    114    BS         -.98100         -.98100           None           .               .         114
+     238  r    115    BS         -.99999         -.99999           None           .               .         115
+     239  r    116    BS         -.99692         -.99692           None           .               .         116
+     240  r    117    BS         -.99986         -.99986           None           .               .         117
+     241  r    118    BS         -.99180         -.99180           None           .               .         118
+     242  r    119    BS         -.94491         -.94491           None           .               .         119
+     243  r    120    BS         -.97027         -.97027           None           .               .         120
+     244  r    121    BS         -.99995         -.99995           None           .               .         121
+     245  r    122    BS         -.99998         -.99998           None           .               .         122
+     246  r    123    BS         -.99996         -.99996           None           .               .         123
+     247  r    124    BS         -.99912         -.99912           None           .               .         124
+     248  r    125    BS        -1.00000        -1.00000           None           .               .         125
+     249  r    126    BS         -.98078         -.98078           None           .               .         126
+     250  r    127    BS         -.99999         -.99999           None           .               .         127
+     251  r    128    BS         -.99714         -.99714           None           .               .         128
+     252  r    129    BS         -.99987         -.99987           None           .               .         129
+     253  r    130    BS         -.99195         -.99195           None           .               .         130
+     254  r    131    BS         -.94860         -.94860           None           .               .         131
+     255  r    132    BS         -.97206         -.97206           None           .               .         132
+     256  r    133    BS         -.99996         -.99996           None           .               .         133
+     257  r    134    BS         -.99998         -.99998           None           .               .         134
+     258  r    135    BS         -.99996         -.99996           None           .               .         135
+     259  r    136    BS         -.99917         -.99917           None           .               .         136
+     260  r    137    BS        -1.00000        -1.00000           None           .               .         137
+     261  r    138    BS         -.98056         -.98056           None           .               .         138
+     262  r    139    BS         -.99999         -.99999           None           .               .         139
+     263  r    140    BS         -.99734         -.99734           None           .               .         140
+     264  r    141    BS         -.99988         -.99988           None           .               .         141
+     265  r    142    BS         -.99210         -.99210           None           .               .         142
+     266  r    143    BS         -.95207         -.95207           None           .               .         143
+     267  r    144    BS         -.97375         -.97375           None           .               .         144
+     268  r    145    BS         -.99996         -.99996           None           .               .         145
+     269  r    146    BS         -.99998         -.99998           None           .               .         146
+     270  r    147    BS         -.99997         -.99997           None           .               .         147
+     271  r    148    BS         -.99922         -.99922           None           .               .         148
+     272  r    149    BS        -1.00000        -1.00000           None           .               .         149
+     273  r    150    BS         -.98034         -.98034           None           .               .         150
+     274  r    151    BS         -.99999         -.99999           None           .               .         151
+     275  r    152    BS         -.99752         -.99752           None           .               .         152
+     276  r    153    BS         -.99989         -.99989           None           .               .         153
+     277  r    154    BS         -.99227         -.99227           None           .               .         154
+     278  r    155    BS         -.95533         -.95533           None           .               .         155
+     279  r    156    BS         -.97534         -.97534           None           .               .         156
+     280  r    157    BS         -.99996         -.99996           None           .               .         157
+     281  r    158    BS         -.99998         -.99998           None           .               .         158
+     282  r    159    BS         -.99997         -.99997           None           .               .         159
+     283  r    160    BS         -.99927         -.99927           None           .               .         160
+     284  r    161    BS        -1.00000        -1.00000           None           .               .         161
+     285  r    162    BS         -.98014         -.98014           None           .               .         162
+     286  r    163    BS         -.99999         -.99999           None           .               .         163
+     287  r    164    BS         -.99770         -.99770           None           .               .         164
+     288  r    165    BS         -.99990         -.99990           None           .               .         165
+     289  r    166    BS         -.99244         -.99244           None           .               .         166
+     290  r    167    BS         -.95838         -.95838           None           .               .         167
+     291  r    168    BS         -.97683         -.97683           None           .               .         168
+     292  r    169    BS         -.99997         -.99997           None           .               .         169
+     293  r    170    BS         -.99998         -.99998           None           .               .         170
+     294  r    171    BS         -.99997         -.99997           None           .               .         171
+     295  r    172    BS         -.99932         -.99932           None           .               .         172
+     296  r    173    BS        -1.00000        -1.00000           None           .               .         173
+     297  r    174    BS         -.97994         -.97994           None           .               .         174
+     298  r    175    BS         -.99999         -.99999           None           .               .         175
+     299  r    176    BS         -.99786         -.99786           None           .               .         176
+     300  r    177    BS         -.99990         -.99990           None           .               .         177
+     301  r    178    BS         -.99262         -.99262           None           .               .         178
+     302  r    179    BS         -.96123         -.96123           None           .               .         179
+     303  r    180    BS         -.97823         -.97823           None           .               .         180
+     304  r    181    BS         -.99997         -.99997           None           .               .         181
+     305  r    182    BS         -.99999         -.99999           None           .               .         182
+     306  r    183    BS         -.99997         -.99997           None           .               .         183
+     307  r    184    BS         -.99936         -.99936           None           .               .         184
+     308  r    185    BS        -1.00000        -1.00000           None           .               .         185
+     309  r    186    BS         -.97975         -.97975           None           .               .         186
+     310  r    187    BS        -1.00000        -1.00000           None           .               .         187
+     311  r    188    BS         -.99801         -.99801           None           .               .         188
+     312  r    189    BS         -.99991         -.99991           None           .               .         189
+     313  r    190    BS         -.99281         -.99281           None           .               .         190
+     314  r    191    BS         -.96390         -.96390           None           .               .         191
+     315  r    192    BS         -.97955         -.97955           None           .               .         192
+     316  r    193    BS         -.99997         -.99997           None           .               .         193
+     317  r    194    BS         -.99999         -.99999           None           .               .         194
+     318  r    195    BS         -.99997         -.99997           None           .               .         195
+     319  r    196    BS         -.99940         -.99940           None           .               .         196
+     320  r    197    BS        -1.00000        -1.00000           None           .               .         197
+     321  r    198    BS         -.97957         -.97957           None           .               .         198
+     322  r    199    BS        -1.00000        -1.00000           None           .               .         199
+     323  r    200    BS         -.99815         -.99815           None           .               .         200
+     324  r    201    BS         -.99992         -.99992           None           .               .         201
+     325  r    202    BS         -.99300         -.99300           None           .               .         202
+     326  r    203    BS         -.96639         -.96639           None           .               .         203
+     327  r    204    BS         -.98079         -.98079           None           .               .         204
+     328  r    205    BS         -.99997         -.99997           None           .               .         205
+     329  r    206    BS         -.99999         -.99999           None           .               .         206
+     330  r    207    BS         -.99998         -.99998           None           .               .         207
+     331  r    208    BS         -.99944         -.99944           None           .               .         208
+     332  r    209    BS        -1.00000        -1.00000           None           .               .         209
+     333  r    210    BS         -.97941         -.97941           None           .               .         210
+     334  r    211    BS        -1.00000        -1.00000           None           .               .         211
+     335  r    212    BS         -.99828         -.99828           None           .               .         212
+     336  r    213    BS         -.99992         -.99992           None           .               .         213
+     337  r    214    BS         -.99320         -.99320           None           .               .         214
+     338  r    215    BS         -.96872         -.96872           None           .               .         215
+     339  r    216    BS         -.98196         -.98196           None           .               .         216
+     340  r    217    BS         -.99997         -.99997           None           .               .         217
+     341  r    218    BS         -.99999         -.99999           None           .               .         218
+     342  r    219    BS         -.99998         -.99998           None           .               .         219
+     343  r    220    BS         -.99947         -.99947           None           .               .         220
+     344  r    221    BS        -1.00000        -1.00000           None           .               .         221
+     345  r    222    BS         -.97926         -.97926           None           .               .         222
+     346  r    223    BS        -1.00000        -1.00000           None           .               .         223
+     347  r    224    BS         -.99841         -.99841           None           .               .         224
+     348  r    225    BS         -.99993         -.99993           None           .               .         225
+     349  r    226    BS         -.99340         -.99340           None           .               .         226
+     350  r    227    BS         -.97090         -.97090           None           .               .         227
+     351  r    228    BS         -.98306         -.98306           None           .               .         228
+     352  r    229    BS         -.99998         -.99998           None           .               .         229
+     353  r    230    BS         -.99999         -.99999           None           .               .         230
+     354  r    231    BS         -.99998         -.99998           None           .               .         231
+     355  r    232    BS         -.99951         -.99951           None           .               .         232
+     356  r    233    BS        -1.00000        -1.00000           None           .               .         233
+     357  r    234    BS         -.97913         -.97913           None           .               .         234
+     358  r    235    BS        -1.00000        -1.00000           None           .               .         235
+     359  r    236    BS         -.99852         -.99852           None           .               .         236
+     360  r    237    BS         -.99993         -.99993           None           .               .         237
+     361  r    238    BS         -.99360         -.99360           None           .               .         238
+     362  r    239    BS         -.97293         -.97293           None           .               .         239
+     363  r    240    BS         -.98409         -.98409           None           .               .         240
+     364  r    241    BS         -.99998         -.99998           None           .               .         241
+     365  r    242    BS         -.99999         -.99999           None           .               .         242
+     366  r    243    BS         -.99998         -.99998           None           .               .         243
+     367  r    244    BS         -.99954         -.99954           None           .               .         244
+     368  r    245    BS        -1.00000        -1.00000           None           .               .         245
+     369  r    246    BS         -.97902         -.97902           None           .               .         246
+     370  r    247    BS        -1.00000        -1.00000           None           .               .         247
+     371  r    248    BS         -.99863         -.99863           None           .               .         248
+     372  r    249    BS         -.99994         -.99994           None           .               .         249
+     373  r    250    BS         -.99380         -.99380           None           .               .         250
+     374  r    251    BS         -.97482         -.97482           None           .               .         251
+     375  r    252    BS         -.98507         -.98507           None           .               .         252
+     376  r    253    BS         -.99998         -.99998           None           .               .         253
+     377  r    254    BS         -.99999         -.99999           None           .               .         254
+     378  r    255    BS         -.99998         -.99998           None           .               .         255
+     379  r    256    EQ          .00000          .00000          .               .              7.92415    256
+     380  r    257    EQ          .00000          .00000          .               .             -2.12048    257
+     381  r    258    EQ          .00000          .00000          .               .             -2.19542    258
+     382  r    259 A  EQ         -.00003         -.00003          .               .              -.01107    259
+     383  r    260    EQ          .00000          .00000          .               .              7.92407    260
+     384  r    261    EQ          .00000          .00000          .               .             -2.11984    261
+     385  r    262    EQ          .00000          .00000          .               .             -1.89063    262
+     386  r    263 A  EQ         -.00004         -.00004          .               .              -.00018    263
+     387  r    264    EQ          .00000          .00000          .               .              7.92401    264
+     388  r    265    EQ          .00000          .00000          .               .             -2.11925    265
+     389  r    266    EQ          .00000          .00000          .               .             -1.58552    266
+     390  r    267 A  EQ         -.00003         -.00003          .               .               .00908    267
+     391  r    268    EQ          .00000          .00000          .               .              7.92396    268
+     392  r    269    EQ          .00000          .00000          .               .             -2.11869    269
+     393  r    270    EQ          .00000          .00000          .               .             -1.28012    270
+     394  r    271 A  EQ         -.00002         -.00002          .               .               .01671    271
+     395  r    272    EQ          .00000          .00000          .               .              7.92391    272
+     396  r    273    EQ          .00000          .00000          .               .             -2.11816    273
+     397  r    274    EQ          .00000          .00000          .               .              -.97446    274
+     398  r    275 A  EQ         -.00002         -.00002          .               .               .02272    275
+     399  r    276    EQ          .00000          .00000          .               .              7.92387    276
+     400  r    277    EQ          .00000          .00000          .               .             -2.11767    277
+     401  r    278    EQ          .00000          .00000          .               .              -.66860    278
+     402  r    279 A  EQ         -.00002         -.00002          .               .               .02709    279
+     403  r    280    EQ          .00000          .00000          .               .              7.92384    280
+     404  r    281    EQ          .00000          .00000          .               .             -2.11721    281
+     405  r    282    EQ          .00000          .00000          .               .              -.36258    282
+     406  r    283 A  EQ         -.00002         -.00002          .               .               .02984    283
+     407  r    284    EQ          .00000          .00000          .               .              7.92381    284
+     408  r    285    EQ          .00000          .00000          .               .             -2.11677    285
+     409  r    286    EQ          .00000          .00000          .               .              -.05647    286
+     410  r    287 A  EQ         -.00001         -.00001          .               .               .03095    287
+     411  r    288    EQ          .00000          .00000          .               .              7.92379    288
+     412  r    289    EQ          .00000          .00000          .               .             -2.11637    289
+     413  r    290    EQ          .00000          .00000          .               .               .24969    290
+     414  r    291 A  EQ         -.00001         -.00001          .               .               .03043    291
+     415  r    292    EQ          .00000          .00000          .               .              7.92377    292
+     416  r    293    EQ          .00001          .00001          .               .             -2.11599    293
+     417  r    294    EQ          .00000          .00000          .               .               .55585    294
+     418  r    295 A  EQ         -.00001         -.00001          .               .               .02828    295
+     419  r    296    EQ          .00000          .00000          .               .              7.92376    296
+     420  r    297    EQ          .00001          .00001          .               .             -2.11563    297
+     421  r    298    EQ          .00000          .00000          .               .               .86197    298
+     422  r    299 A  EQ         -.00001         -.00001          .               .               .02450    299
+     423  r    300    EQ          .00000          .00000          .               .              7.92374    300
+     424  r    301    EQ          .00001          .00001          .               .             -2.11530    301
+     425  r    302    EQ          .00000          .00000          .               .              1.16802    302
+     426  r    303 A  EQ          .00000          .00000          .               .               .01909    303
+     427  r    304    EQ          .00000          .00000          .               .              7.92373    304
+     428  r    305    EQ          .00001          .00001          .               .             -2.11499    305
+     429  r    306    EQ          .00000          .00000          .               .              1.47397    306
+     430  r    307 A  EQ          .00000          .00000          .               .               .01204    307
+     431  r    308    EQ          .00000          .00000          .               .              7.92373    308
+     432  r    309    EQ          .00002          .00002          .               .             -2.11470    309
+     433  r    310    EQ          .00000          .00000          .               .              1.77980    310
+     434  r    311 A  EQ          .00001          .00001          .               .               .00337    311
+     435  r    312    EQ          .00001          .00001          .               .              7.92372    312
+     436  r    313    EQ          .00002          .00002          .               .             -2.11443    313
+     437  r    314    EQ          .00000          .00000          .               .              2.08550    314
+     438  r    315 A  EQ          .00001          .00001          .               .              -.00694    315
+     439  r    316    EQ          .00001          .00001          .               .              7.92371    316
+     440  r    317    EQ          .00003          .00003          .               .             -2.11418    317
+     441  r    318    EQ          .00000          .00000          .               .              2.39108    318
+     442  r    319 A  EQ          .00002          .00002          .               .              -.01888    319
+     443  r    320    EQ          .00001          .00001          .               .              7.92371    320
+     444  r    321    EQ          .00003          .00003          .               .             -2.11394    321
+     445  r    322    EQ          .00000          .00000          .               .              2.69653    322
+     446  r    323 A  EQ          .00003          .00003          .               .              -.03244    323
+     447  r    324    EQ          .00001          .00001          .               .              7.92371    324
+     448  r    325    EQ          .00004          .00004          .               .             -2.11373    325
+     449  r    326    EQ          .00000          .00000          .               .              3.00185    326
+     450  r    327    EQ          .00004          .00004          .               .              -.04764    327
+     451  r    328    EQ          .00001          .00001          .               .              7.92371    328
+     452  r    329    EQ          .00004          .00004          .               .             -2.11352    329
+     453  r    330    EQ          .00000          .00000          .               .              3.30703    330
+     454  r    331    EQ          .00006          .00006          .               .              -.06447    331
+     455  r    332    EQ          .00001          .00001          .               .              7.92371    332
+     456  r    333    EQ          .00004          .00004          .               .             -2.11333    333
+     457  r    334    EQ          .00000          .00000          .               .              3.61209    334
+     458  r    335    EQ          .00004          .00004          .               .              -.08293    335
+     459  r    336    BS          .10652        -2.89348           None          3.00000          .         336
+     460  r    337    BS         -.10652         -.10652           None           .               .         337
+     461  r    338    EQ          .               .               .               .            311.92428    338
+     462  r    339    EQ          .               .               .               .            596.70136    339
+     463  r    340    EQ          .               .               .               .            863.85792    340
+     464  r    341    EQ          .               .               .               .           1088.97888    341
+     465  r    342    EQ          .               .               .               .           1262.30232    342
+     466  r    343    EQ          .               .               .               .           1381.78145    343
+     467  r    344    EQ          .               .               .               .           1450.09068    344
+     468  r    345    EQ          .               .               .               .           1473.12140    345
+     469  r    346    EQ          .               .               .               .           1459.00865    346
+     470  r    347    EQ          .               .               .               .           1417.26994    347
+     471  r    348    EQ          .               .               .               .           1357.85045    348
+     472  r    349    EQ          .               .               .               .           1289.96459    349
+     473  r    350    EQ          .               .               .               .           1220.67488    350
+     474  r    351    EQ          .               .               .               .           1153.17927    351
+     475  r    352    EQ          .               .               .               .           1084.79754    352
+     476  r    353    EQ          .               .               .               .           1004.65170    353
+     477  r    354    EQ          .               .               .               .            890.99102    354
+     478  r    355    EQ          .               .               .               .            707.88910    355
+     479  r    356    EQ          .               .               .               .            400.04831    356
 1
  
  Section 2 - Columns
 
   Number  .Column. State  ...Activity...  .Obj Gradient.  ..Lower Limit.  ..Upper Limit.  Reduced Gradnt    m+j
  
-       1  x      1    BS          .15000          .               .                None          -.16450    357
-       2  x      2    BS          .15000          .               .                None           .14365    358
-       3  x      3    BS          .15000          .               .                None           .56829    359
-       4  x      4    BS          .15000          .               .                None         -2.74216    360
-       5  x      5    BS          .15000          .               .                None          -.69272    361
-       6  x      6    BS          .15000          .               .                None          6.38752    362
-       7  x      7    BS          .15000          .               .                None         -1.34596    363
-       8  x      8    BS          .15000          .               .                None         -4.71951    364
-       9  x      9    BS          .15000          .               .                None         -7.60843    365
-      10  x     10    BS          .15000          .               .                None        -14.91769    366
-      11  x     11    BS          .15000          .               .                None        -33.24205    367
-      12  x     12    BS          .15000          .               .                None         18.91082    368
-      13  x     13    BS          .15000          .               .                None         97.52081    369
-      14  x     14    BS          .15000          .               .                None       -192.75975    370
-      15  x     15    BS          .15000          .               .                None       -443.17100    371
-      16  x     16    BS          .15000          .               .                None       -115.44325    372
-      17  x     17    BS          .15000          .               .                None       -200.45558    373
-      18  x     18    BS          .15000          .               .                None      -3723.80231    374
-      19  x     19    BS          .15000          .               .                None       -338.24532    375
-      20  x     20    BS          .15000          .               .                None       -454.93913    376
-      21  x     21    BS         4.11898          .                None            None          -.55705    377
-      22  x     22    BS         3.64436          .                None            None          -.66273    378
-      23  x     23    BS        -8.63164          .                None            None         -1.10385    379
-      24  x     24    BS          .48201          .                None            None         -1.39399    380
-      25  x     25    BS         4.73178          .                None            None         -1.13586    381
-      26  x     26    BS         3.21776          .                None            None         -2.41062    382
-      27  x     27    BS        -8.55157          .                None            None          -.51840    383
-      28  x     28    BS        -9.86619          .                None            None           .41621    384
-      29  x     29    BS         4.50463          .                None            None          -.23301    385
-      30  x     30    BS         2.74675          .                None            None          -.41466    386
-      31  x     31    BS       -11.50719          .                None            None          -.10223    387
-      32  x     32    BS       -18.52819          .                None            None          2.17837    388
-      33  x     33    BS         4.34109          .                None            None         -1.10443    389
-      34  x     34    BS         3.42982          .                None            None         -1.63376    390
-      35  x     35    BS       -12.57656          .                None            None          2.47890    391
-      36  x     36    BS         3.47908          .                None            None          3.54780    392
-      37  x     37    BS         3.95423          .                None            None         -1.43745    393
-      38  x     38    BS         3.99132          .                None            None           .02666    394
-      39  x     39    BS       -11.08923          .                None            None          1.22081    395
-      40  x     40    BS        12.97100          .                None            None           .01410    396
-      41  x     41    BS         3.52495          .                None            None         -3.90587    397
-      42  x     42    BS         3.50110          .                None            None         -1.04515    398
-      43  x     43    BS        -9.25145          .                None            None           .66368    399
-      44  x     44    BS        11.13915          .                None            None           .38759    400
-      45  x     45    BS         4.07474          .                None            None         -1.91706    401
-      46  x     46    BS         3.07515          .                None            None          -.09865    402
-      47  x     47    BS        -7.91377          .                None            None          5.98199    403
-      48  x     48    BS         5.98155          .                None            None           .08416    404
-      49  x     49    BS         4.80423          .                None            None         -1.13952    405
-      50  x     50    BS         3.22549          .                None            None          3.54345    406
-      51  x     51    BS        -7.57823          .                None            None          1.38624    407
-      52  x     52    BS        -1.60094          .                None            None          -.75997    408
-      53  x     53    BS         5.53683          .                None            None        -42.53281    409
-      54  x     54    BS         3.21537          .                None            None          4.93872    410
-      55  x     55    BS        -8.30634          .                None            None         -5.59128    411
-      56  x     56    BS        -7.42911          .                None            None         -1.04518    412
-      57  x     57    BS         5.86760          .                None            None       -364.84477    413
-      58  x     58    BS         2.59959          .                None            None        -67.31637    414
-      59  x     59    BS        -9.60573          .                None            None         -3.19011    415
-      60  x     60    BS        -9.23268          .                None            None          -.59242    416
-      61  x     61    BS         5.33952          .                None            None        -94.49751    417
-      62  x     62    BS         2.14564          .                None            None         17.72563    418
-      63  x     63    BS       -10.94112          .                None            None        -12.58998    419
-      64  x     64    BS        -8.33575          .                None            None           .02451    420
-      65  x     65    BS         4.72859          .                None            None         -3.88042    421
-      66  x     66    BS         2.50804          .                None            None         11.53776    422
-      67  x     67    BS       -12.08666          .                None            None        -30.49426    423
-      68  x     68    BS        -7.04291          .                None            None          -.00673    424
-      69  x     69    BS         4.76276          .                None            None       -110.27058    425
-      70  x     70    BS         3.22209          .                None            None       -182.80354    426
-      71  x     71    BS       -13.16715          .                None            None         -3.87993    427
-      72  x     72    BS        -8.01322          .                None            None           .42940    428
-      73  x     73    BS         5.42252          .                None            None         25.07979    429
-      74  x     74    BS         3.42756          .                None            None         67.47467    430
-      75  x     75    BS       -14.57617          .                None            None         13.10192    431
-      76  x     76    BS       -10.69451          .                None            None          -.77648    432
-      77  x     77    BS         5.60321          .                None            None        -36.12408    433
-      78  x     78    BS         2.79335          .                None            None       -790.64522    434
-      79  x     79    BS       -16.34208          .                None            None        -35.39299    435
-      80  x     80    BS       -12.70748          .                None            None          3.31465    436
-      81  x     81    BS         4.96594          .                None            None        -60.76967    437
-      82  x     82    BS         2.82050          .                None            None           .04197    438
-      83  x     83    BS       -18.31968          .                None            None         -2.79396    439
-      84  x     84    BS       -13.34570          .                None            None        -21.31679    440
-      85  x     85    BS         5.17652          .                None            None      -3600.27383    441
-      86  x     86 N  BS         3.48159          .                None            None     -28645.08551    442
-      87  x     87    BS       -19.62688          .                None            None       -901.26123    443
-      88  x     88    BS          .39438          .                None            None         95.42589    444
-      89  x     89    BS         5.40566          .                None            None       -839.93954    445
-      90  x     90    BS         4.15709          .                None            None        245.36176    446
-      91  x     91    BS       -18.54725          .                None            None      -5280.11294    447
-      92  x     92    BS         7.21680          .                None            None         38.62000    448
-      93  x     93    BS         4.99685          .                None            None       -100.34854    449
-      94  x     94    BS         4.77912          .                None            None        -27.47695    450
-      95  x     95    BS       -18.17733          .                None            None      -4055.68444    451
-      96  x     96    BS         -.27059          .                None            None        124.85319    452
-      97  x     97    BS         4.54413          .                None            None       4915.57943    453
-      98  x     98    BS         5.37707          .                None            None       -962.96851    454
-      99  x     99    BS       -18.19731          .                None            None       1203.75933    455
-     100  x    100    BS          .86429          .                None            None          1.10788    456
-     101  x    101 N SBS       -39.59442          .                None            None          -.65484    457
-     102  x    102    BS       140.04871          .                None            None          -.48357    458
-     103  x    103 N SBS      -278.02473          .                None            None           .94136    459
-     104  x    104   SBS       162.53140          .                None            None          -.08026    460
-     105  x    105 N SBS       130.89884          .                None            None         -1.39629    461
-     106  x    106 N SBS        -4.33990          .                None            None          1.39661    462
-     107  x    107 N SBS       -20.08470          .                None            None          1.22666    463
-     108  x    108 N SBS       -48.68336          .                None            None         -3.17214    464
-     109  x    109 N SBS       -52.41653          .                None            None         -4.45427    465
-     110  x    110    BS       -25.29232          .                None            None           .06987    466
-     111  x    111    BS         1.24466          .                None            None          4.99643    467
-     112  x    112 N SBS        10.71446          .                None            None          1.97524    468
-     113  x    113 N SBS         6.52336          .                None            None         -4.04815    469
-     114  x    114   SBS       -19.46082          .                None            None           .20675    470
-     115  x    115 N SBS       -16.28970          .                None            None          8.95052    471
-     116  x    116    BS       -10.54993          .                None            None          -.66428    472
-     117  x    117 N SBS         2.04031          .                None            None        -12.67107    473
-     118  x    118    BS       181.16073          .                None            None          -.02729    474
-     119  x    119 N SBS       -90.19504          .                None            None        -10.70068    475
-     120  x    120   SBS        -9.63692          .                None            None           .37423    476
-     121  x    121 N SBS        24.76865          .                None            None         15.74769    477
-     122  x    122    LL          .               .               .                None      35657.79329    478
-     123  x    123    LL          .               .               .                None      22441.84963    479
+       1  x      1    BS          .00533          .               .                None         -2.23057    357
+       2  x      2    BS          .00533          .               .                None         -2.69964    358
+       3  x      3    BS          .00533          .               .                None         -2.20290    359
+       4  x      4    BS          .00533          .               .                None         -2.00633    360
+       5  x      5    BS          .00533          .               .                None         -1.87211    361
+       6  x      6    BS          .00533          .               .                None         -1.74867    362
+       7  x      7    BS          .00533          .               .                None         -1.62507    363
+       8  x      8    BS          .00533          .               .                None         -1.50239    364
+       9  x      9    BS          .00533          .               .                None         -1.38437    365
+      10  x     10    BS          .00533          .               .                None         -1.27302    366
+      11  x     11    BS          .00533          .               .                None         -1.16633    367
+      12  x     12    BS          .00533          .               .                None         -1.05789    368
+      13  x     13    BS          .00533          .               .                None          -.93813    369
+      14  x     14    BS          .00533          .               .                None          -.79594    370
+      15  x     15    BS          .00533          .               .                None          -.61829    371
+      16  x     16    BS          .00533          .               .                None          -.38367    372
+      17  x     17    BS          .00533          .               .                None          -.04080    373
+      18  x     18    BS          .00533          .               .                None           .55313    374
+      19  x     19    BS          .00533          .               .                None          1.83975    375
+      20  x     20    BS          .00533          .               .                None          -.24349    376
+      21  x     21    BS         4.69093          .                None            None          -.02106    377
+      22  x     22    BS         7.57807          .                None            None           .17768    378
+      23  x     23    BS         -.35833          .                None            None           .11225    379
+      24  x     24   SBS         2.11110          .                None            None           .00159    380
+      25  x     25    BS         4.70380          .                None            None          -.01798    381
+      26  x     26    BS         7.61306          .                None            None           .16743    382
+      27  x     27    BS         -.34648          .                None            None           .11226    383
+      28  x     28    BS         2.32079          .                None            None           .00110    384
+      29  x     29    BS         4.71624          .                None            None          -.01529    385
+      30  x     30    BS         7.64820          .                None            None           .15757    386
+      31  x     31    BS         -.33376          .                None            None           .11219    387
+      32  x     32    BS         2.44560          .                None            None           .00068    388
+      33  x     33    BS         4.72822          .                None            None          -.01295    389
+      34  x     34    BS         7.68351          .                None            None           .14811    390
+      35  x     35    BS         -.32055          .                None            None           .11205    391
+      36  x     36    BS         2.50629          .                None            None           .00030    392
+      37  x     37    BS         4.73973          .                None            None          -.01092    393
+      38  x     38    BS         7.71897          .                None            None           .13906    394
+      39  x     39    BS         -.30715          .                None            None           .11185    395
+      40  x     40    BS         2.51605          .                None            None          -.00005    396
+      41  x     41    BS         4.75076          .                None            None          -.00916    397
+      42  x     42    BS         7.75458          .                None            None           .13044    398
+      43  x     43    BS         -.29382          .                None            None           .11160    399
+      44  x     44    BS         2.48411          .                None            None          -.00038    400
+      45  x     45    BS         4.76133          .                None            None          -.00765    401
+      46  x     46    BS         7.79034          .                None            None           .12223    402
+      47  x     47    BS         -.28075          .                None            None           .11132    403
+      48  x     48    BS         2.41757          .                None            None          -.00071    404
+      49  x     49    BS         4.77143          .                None            None          -.00635    405
+      50  x     50    BS         7.82622          .                None            None           .11444    406
+      51  x     51    BS         -.26812          .                None            None           .11103    407
+      52  x     52    BS         2.32235          .                None            None          -.00103    408
+      53  x     53    BS         4.78109          .                None            None          -.00524    409
+      54  x     54    BS         7.86223          .                None            None           .10706    410
+      55  x     55    BS         -.25606          .                None            None           .11073    411
+      56  x     56    BS         2.20380          .                None            None          -.00137    412
+      57  x     57    BS         4.79032          .                None            None          -.00430    413
+      58  x     58    BS         7.89835          .                None            None           .10009    414
+      59  x     59    BS         -.24468          .                None            None           .11045    415
+      60  x     60    BS         2.06703          .                None            None          -.00173    416
+      61  x     61    BS         4.79916          .                None            None          -.00349    417
+      62  x     62    BS         7.93457          .                None            None           .09350    418
+      63  x     63    BS         -.23406          .                None            None           .11019    419
+      64  x     64    BS         1.91718          .                None            None          -.00214    420
+      65  x     65    BS         4.80762          .                None            None          -.00281    421
+      66  x     66    BS         7.97088          .                None            None           .08730    422
+      67  x     67    BS         -.22427          .                None            None           .10998    423
+      68  x     68    BS         1.75957          .                None            None          -.00261    424
+      69  x     69    BS         4.81575          .                None            None          -.00223    425
+      70  x     70    BS         8.00727          .                None            None           .08147    426
+      71  x     71    BS         -.21532          .                None            None           .10979    427
+      72  x     72    BS         1.59980          .                None            None          -.00315    428
+      73  x     73    BS         4.82357          .                None            None          -.00174    429
+      74  x     74    BS         8.04372          .                None            None           .07599    430
+      75  x     75    BS         -.20722          .                None            None           .10965    431
+      76  x     76    BS         1.44386          .                None            None          -.00379    432
+      77  x     77    BS         4.83110          .                None            None          -.00133    433
+      78  x     78    BS         8.08024          .                None            None           .07086    434
+      79  x     79    BS         -.19992          .                None            None           .10954    435
+      80  x     80    BS         1.29814          .                None            None          -.00453    436
+      81  x     81    BS         4.83838          .                None            None          -.00099    437
+      82  x     82    BS         8.11680          .                None            None           .06604    438
+      83  x     83    BS         -.19336          .                None            None           .10945    439
+      84  x     84    BS         1.16949          .                None            None          -.00539    440
+      85  x     85    BS         4.84544          .                None            None          -.00070    441
+      86  x     86    BS         8.15341          .                None            None           .06153    442
+      87  x     87    BS         -.18742          .                None            None           .10936    443
+      88  x     88    BS         1.06525          .                None            None          -.00640    444
+      89  x     89    BS         4.85228          .                None            None          -.00046    445
+      90  x     90    BS         8.19006          .                None            None           .05731    446
+      91  x     91    BS         -.18196          .                None            None           .10926    447
+      92  x     92    BS          .99342          .                None            None          -.00761    448
+      93  x     93    BS         4.85893          .                None            None          -.00026    449
+      94  x     94    BS         8.22674          .                None            None           .05336    450
+      95  x     95    BS         -.17677          .                None            None           .10910    451
+      96  x     96    BS          .96304          .                None            None          -.00912    452
+      97  x     97    BS         4.86540          .                None            None        -25.86018    453
+      98  x     98    BS         8.26346          .                None            None        -81.43104    454
+      99  x     99    BS         -.17165          .                None            None          7.16661    455
+     100  x    100 N  BS          .95873          .                None            None       -192.99336    456
+     101  x    101   SBS        22.18725          .                None            None          -.00976    457
+     102  x    102   SBS        48.54572          .                None            None          -.00823    458
+     103  x    103   SBS        30.19527          .                None            None           .00688    459
+     104  x    104   SBS        16.67408          .                None            None           .01955    460
+     105  x    105   SBS         6.11428          .                None            None           .02978    461
+     106  x    106   SBS        -2.45081          .                None            None           .03756    462
+     107  x    107 N SBS        -9.54190          .                None            None           .04290    463
+     108  x    108 N SBS       -15.44464          .                None            None           .04580    464
+     109  x    109 N SBS       -20.31024          .                None            None           .04624    465
+     110  x    110 N SBS       -24.20727          .                None            None           .04424    466
+     111  x    111   SBS       -27.15060          .                None            None           .03979    467
+     112  x    112   SBS       -29.11884          .                None            None           .03290    468
+     113  x    113   SBS       -30.06565          .                None            None           .02355    469
+     114  x    114   SBS       -29.92759          .                None            None           .01176    470
+     115  x    115   SBS       -28.62987          .                None            None          -.00248    471
+     116  x    116   SBS       -26.09031          .                None            None          -.01916    472
+     117  x    117   SBS       -22.22051          .                None            None          -.03829    473
+     118  x    118 N SBS       -16.92038          .                None            None          -.05986    474
+     119  x    119 N SBS       -10.05341          .                None            None          -.08388    475
+     120  x    120 N SBS        -1.35356          .                None            None          -.11035    476
+     121  x    121 N SBS         -.26699          .                None            None          -.06460    477
+     122  x    122    LL          .               .               .                None      41515.85019    478
+     123  x    123    LL          .               .               .                None      41515.85019    479
+ 
+ Time for MPS input                              .00 seconds
+ Time for solving problem              ************* seconds
+ Time for solution output                        .00 seconds
+ Time for constraint functions         ************* seconds
+ Time for objective function                     .00 seconds

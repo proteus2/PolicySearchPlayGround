@@ -13,6 +13,7 @@ classdef MMDController
        self_discrepancy;
        n_dataset;
        mmd_threshold;
+       max_d;
    end 
    methods
         function obj = MMDController()
@@ -24,6 +25,7 @@ classdef MMDController
             obj.data_stddev = cell(0,1);       
             obj.self_discrepancy = zeros(0,1);
             obj.mmd_threshold = 0.311;
+            obj.max_d = -Inf;
         end
 
         function obj = setNewController(obj,x_data,y_data)
@@ -79,6 +81,14 @@ classdef MMDController
 
                 n_data = size(x_data,2);
                 obj.self_discrepancy(obj.n_mmd_itern,1) = 1/n_data^2 * sum(sum(obj.computeKernel(obj.n_mmd_itern)));
+                
+                
+                for idx = 1:size(obj.data_sets_unnormalized{obj.n_mmd_itern,1},2)
+                    k = obj.computeKernel(obj.n_mmd_itern,obj.data_sets_unnormalized{obj.n_mmd_itern,1}(:,idx)); 
+                    if k>obj.max_d
+                        obj.max_d = k;
+                    end
+                end
                 obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
             end
 %         end
