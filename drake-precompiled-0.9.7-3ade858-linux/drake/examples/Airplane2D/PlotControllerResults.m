@@ -28,7 +28,7 @@ for alpha = alpha_list
     apprxtraj_fname = strcat('./data_for_plots/test/',apprxtraj_fname);
     if ~exist(apprxtraj_fname,'file')
         tf = optimal_u.getBreaks; tf=tf(end);
-        load('vary_alpha_mmd_results_allalpha_max_d_ver2.mat')
+        load('vary_alpha_mmd_results_allalpha_max_d_ver3_no_repmat.mat')
 %         mmd_ctrl=MMDController();
 %         for idx=1:size(controller.data_sets_unnormalized,1)
 %             mmd_ctrl = setNewController(mmd_ctrl,controller.data_sets_unnormalized{idx,1},controller.data_sets_unnormalized{idx,2});
