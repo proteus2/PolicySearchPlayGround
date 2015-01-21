@@ -63,8 +63,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize)
     traj_list = cell(0,2);
     F_list =[];
     
-    while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>-12) && (n_retries <=max_num_retries) ...
-            && info ~= 1 && info~=4 && info~=5 && info~=6
+    while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>-12) && (n_retries <=max_num_retries) ...&& info ~= 1 && info~=4 && info~=5 && info~=6
         
          if n_retries == 0
             initial_guess.x = x_initial_guess;

@@ -50,10 +50,10 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                     [d,min_idx,emptyCandidates] = checkDiscrepancy(controller,current_state); 
                     d_list=[d_list d];
                     
-                    dist_to_goal = norm(x1(1:2,k)-[5; 9]);
-                    if dist_to_goal<=0.4
-                        break
-                    end
+%                     dist_to_goal = norm(x1(1:2,k)-[5; 9]);
+%                     if dist_to_goal<=0.3
+%                         break
+%                     end
 
                     % Check if the encountered state lies far from datasets
                     if emptyCandidates       

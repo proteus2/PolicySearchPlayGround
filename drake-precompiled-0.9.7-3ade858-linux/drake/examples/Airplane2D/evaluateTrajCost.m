@@ -22,7 +22,7 @@ R = 0.0001;
 dc = dc(i,:);
 
 xg=[5;9;0;0];
-g = c + u'*R*u; + norm(xg(1:2,:)-x(1:2,:));
+g = c + u'*R*u + norm(xg(1:2,:)-x(1:2,:));
 %g = c + norm(xg-x);
 %g = sum((R*u).*u,1);
 dg = [0,dc,2*u'*R];
