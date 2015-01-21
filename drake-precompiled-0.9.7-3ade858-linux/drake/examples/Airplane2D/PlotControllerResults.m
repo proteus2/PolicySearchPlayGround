@@ -3,7 +3,7 @@ x0 = [3.9;0;0;0];
 rand_list = rand(1,100);
 alpha_list = rand_list*35 + (1-rand_list)*5;
 
-alpha_list = 5;
+alpha_list = 8;
 for alpha = alpha_list
     optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
     optimaltraj_fname = strcat('./data_for_plots/test/',optimaltraj_fname);
