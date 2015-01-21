@@ -36,8 +36,6 @@ classdef MMDController
             
             % Check the mmd discrepancy between the new data and the existing data
             [min_mmd,min_mmd_idx] = obj.computeMMD(x_data);
-            
-            
             % if the mmd value is less than the set treshold, then aggregate the data. Retrain the controller
 %             if (min_mmd < obj.mmd_threshold)
 %                 obj.data_sets_unnormalized{min_mmd_idx,1} = [obj.data_sets_unnormalized{min_mmd_idx,1} x_data];
@@ -55,6 +53,8 @@ classdef MMDController
 %                 obj.controllers{min_mmd_idx,1} = TreeBagger(50,obj.data_sets{min_mmd_idx,1}',obj.data_sets{min_mmd_idx,2}','Method','regression','MinLeaf',1);
 %             % else, create a new controller
 %             else
+                neg_theta_idx = (x_data(3,:) < 0);
+                x_data(3,neg_theta_idx) = x_data(3,neg_theta_idx) + 2*pi;
                 obj.n_mmd_itern = obj.n_mmd_itern + 1;
                 obj.data_sets_unnormalized{obj.n_mmd_itern,1} = x_data;
                 obj.data_sets_unnormalized{obj.n_mmd_itern,2} = y_data;
@@ -202,6 +202,21 @@ classdef MMDController
                 k = zeros(n,n);
                 for idx1=1:n   
                     dists = (bsxfun(@minus,x(:,idx1),x)) ; 
+                    theta_stddev = obj.data_stddev{data_idx,1}(3);
+                    
+                    th_dist_idx_pos = find((dists(3,:))*theta_stddev  > pi);
+                    while ~isempty(th_dist_idx_pos)
+                        dists(3,th_dist_idx_pos) = (dists(3,th_dist_idx_pos)*theta_stddev   - 2*pi)./theta_stddev  ;
+                        th_dist_idx_pos = find(dists(3,:)*theta_stddev  > pi);
+                    end
+
+
+                    th_dist_idx_neg =  (dists(3,:))*theta_stddev  < -pi;
+                    while ~isempty(th_dist_idx_neg)
+                        dists(3,th_dist_idx_neg) = (dists(3,th_dist_idx_neg)*theta_stddev   + 2*pi)./theta_stddev ;
+                        th_dist_idx_neg =  find(dists(3,:)*theta_stddev  < -pi);
+                    end
+                
                     dists=dists.^2;
                     dists(end,:) = dists(end,:)*2;
                     k(idx1,:) = exp(-sum(dists)./(2));
@@ -212,8 +227,9 @@ classdef MMDController
             elseif nargin==3
                 % Compute equation (4) in my RSS paper
                 data_mean = obj.data_mean{data_idx,1};
+                data_stddev = obj.data_stddev{data_idx,1};
                 s = s-data_mean;
-                s = s./obj.data_stddev{data_idx,1};
+                s = s./data_stddev;
                 
 %                 sum_kernel=0;
                 % replace this
@@ -225,6 +241,21 @@ classdef MMDController
 %                 
 %                 dists2 = 2*(bsxfun(@minus,s(5,1),x(5,:))).^2;
                 dists = (bsxfun(@minus,s,x)) ; 
+                theta_stddev = obj.data_stddev{data_idx,1}(3);
+                
+                th_dist_idx_pos = find((dists(3,:))*theta_stddev  > pi);
+                while ~isempty(th_dist_idx_pos)
+                    dists(3,th_dist_idx_pos) = (dists(3,th_dist_idx_pos)*theta_stddev   - 2*pi)./theta_stddev  ;
+                    th_dist_idx_pos = find(dists(3,:)*theta_stddev  > pi);
+                end
+
+
+                th_dist_idx_neg =  (dists(3,:))*theta_stddev  < -pi;
+                while ~isempty(th_dist_idx_neg)
+                    dists(3,th_dist_idx_neg) = (dists(3,th_dist_idx_neg)*theta_stddev   + 2*pi)./theta_stddev ;
+                    th_dist_idx_neg =  find(dists(3,:)*theta_stddev  < -pi);
+                end
+                    
                 dists=dists.^2;
                 dists(end,:) = dists(end,:)*2;
                 sum_dists = sum(dists);
