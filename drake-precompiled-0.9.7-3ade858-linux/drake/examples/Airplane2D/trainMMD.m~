@@ -1,6 +1,6 @@
 function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
-    load('RF_seed');
-    controller = MMDController(RF_seed);
+    load("
+    controller = MMDController();
     dt = 0.01;    
     
     % for all alpha values, get initial trajectories

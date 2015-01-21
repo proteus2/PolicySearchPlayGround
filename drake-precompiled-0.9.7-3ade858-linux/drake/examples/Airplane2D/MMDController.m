@@ -14,9 +14,10 @@ classdef MMDController
        n_dataset;
        mmd_threshold;
        max_d;
+       RF_seed;
    end 
    methods
-        function obj = MMDController()
+        function obj = MMDController(RF_seed)
             obj.n_mmd_itern = 0;
             obj.controllers = cell(0,1);
             obj.data_sets = cell(0,2);
@@ -26,6 +27,7 @@ classdef MMDController
             obj.self_discrepancy = zeros(0,1);
             obj.mmd_threshold = 0.311;
             obj.max_d = -Inf;
+            obj.RF_seed = RF_seed;
         end
 
         function obj = setNewController(obj,x_data,y_data)
@@ -94,7 +96,7 @@ classdef MMDController
                     num_replicate = 10;
                     x_data = repmat(x_data,1,num_replicate);
                     y_data = repmat(y_data,1,num_replicate);
-
+                rng(obj.RF_seed);
                 obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
             end
 %         end
