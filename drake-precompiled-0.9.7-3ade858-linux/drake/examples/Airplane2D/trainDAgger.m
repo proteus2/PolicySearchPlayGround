@@ -11,7 +11,7 @@ function [controller, dagger_data] = trainDAgger(x0,n_dagg_itern,train_alpha_lis
             save(init_fname, 'xtraj','utraj');
         else
             load(init_fname);
-            if exist('u_traj_from_curr_loc','var')
+            if exist('u_traj_from_curr_loc','var') && ~exist('utraj','var');
                 xtraj = x_traj_from_curr_loc;
                 utraj = u_traj_from_curr_loc;
             end

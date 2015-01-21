@@ -14,7 +14,7 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
             save(init_fname, 'xtraj','utraj');
         else
             load(init_fname);
-            if exist('u_traj_from_curr_loc','var')
+            if exist('u_traj_from_curr_loc','var') && ~exist('utraj','var');
                 xtraj = x_traj_from_curr_loc;
                 utraj = u_traj_from_curr_loc;
             end
@@ -39,7 +39,7 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                 d_list =[];
                 alpha = alpha_list(alpha_idx);
                 
-                tf = tf_list(1);
+                tf = tf_list(alpha_idx);
                 N  = numel(0:dt:tf);
                 x1=zeros(4,N); x1(:,1) = x0; % state simulation
                 p = PlanePlant(alpha);
