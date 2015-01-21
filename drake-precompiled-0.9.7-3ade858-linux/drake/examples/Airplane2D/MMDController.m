@@ -53,8 +53,8 @@ classdef MMDController
 %                 obj.controllers{min_mmd_idx,1} = TreeBagger(50,obj.data_sets{min_mmd_idx,1}',obj.data_sets{min_mmd_idx,2}','Method','regression','MinLeaf',1);
 %             % else, create a new controller
 %             else
-                neg_theta_idx = (x_data(3,:) < 0);
-                x_data(3,neg_theta_idx) = x_data(3,neg_theta_idx) + 2*pi;
+%                 neg_theta_idx = (x_data(3,:) < 0);
+%                 x_data(3,neg_theta_idx) = x_data(3,neg_theta_idx) + 2*pi;
                 obj.n_mmd_itern = obj.n_mmd_itern + 1;
                 obj.data_sets_unnormalized{obj.n_mmd_itern,1} = x_data;
                 obj.data_sets_unnormalized{obj.n_mmd_itern,2} = y_data;
@@ -91,7 +91,7 @@ classdef MMDController
                     end
                 end
                 
-                    num_replicate = 5;
+                    num_replicate = 1;
                     x_data = repmat(x_data,1,num_replicate);
                     y_data = repmat(y_data,1,num_replicate);
 
