@@ -32,6 +32,6 @@ end
 
 function [h,dh] = finalCost(t,x)
 xg=[5;9;0;0];
-h = 10*(norm(xg(1:2,:)-x(1:2,:)));
+h = 100*(norm(xg(1:2,:)-x(1:2,:)));
 dh = [1,zeros(1,size(x,1))];
 end

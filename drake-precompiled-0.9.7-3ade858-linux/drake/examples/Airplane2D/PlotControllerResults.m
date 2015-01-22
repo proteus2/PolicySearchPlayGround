@@ -1,11 +1,10 @@
 % Compare controllers
 x0 = [3.9;0;0;0];
 rand_list = rand(1,50);
-alpha_list = rand_list*10 + (1-rand_list)*3;
+alpha_list = rand_list*30 + (1-rand_list)*4;
 
 
 load('cost_list_all_alpha','alpha_list')
-alpha_list=[4,8,9,10];
 cost_list_all_alpha = {};
 alpha_idx = 1;
 for alpha = alpha_list
@@ -34,8 +33,8 @@ for alpha = alpha_list
 
     apprxtraj_fname = sprintf('appx_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
     
-    train_file1 = 'mmd_results_repmat=1,a=5,7,24';
-    train_file2 = 'vary_alpha_supervised_results_alpha=5,7,24,iter=5';
+    train_file1 = 'mmd_results_repmat=1,a=all';
+    train_file2 = 'vary_alpha_supervised_results_alpha=all,iter=5';
     apprxtraj_fname = strcat('./data_for_plots/test/',train_file1,'_',train_file2,'_',apprxtraj_fname);
     
     if ~exist(apprxtraj_fname,'file')

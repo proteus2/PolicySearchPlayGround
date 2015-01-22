@@ -1,6 +1,6 @@
 varyAlphaGatherData = true;
 if varyAlphaGatherData 
-    train_alpha_list = [5,7];
+    train_alpha_list = [5,7,12,14,15,18,20,22,24];
     N = size(train_alpha_list,2);
     traj_list = cell(N,2);
     alpha_vals = zeros(N,1);
@@ -36,7 +36,7 @@ if varyAlphaGatherData
 
     x=[];y=[];
     for idx=1:numel(train_alpha_list)
-        alpha = alpha_list(idx);
+        alpha = train_alpha_list(idx);
         init_fname = sprintf('initial_mmd_traj_alpha=%d.mat',alpha);
         if ~exist(init_fname,'file')
             [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
@@ -59,7 +59,7 @@ if varyAlphaGatherData
     load('RF_seed');
     rng(RF_seed);
     controller = TreeBagger(50,x,y,'Method','regression');
-    save('vary_alpha_supervised_results_alpha=5,7,24,iter=5','controller','traj_list','train_alpha_list');
+    save('vary_alpha_supervised_results_alpha=all,iter=5','controller','traj_list','train_alpha_list');
 end
 
 
