@@ -1,4 +1,4 @@
-fname = 'cost_list_all_alpha_test_a=[4,30]';
+fname = 'cost_list_all_alpha_a=[4,30]';
 load(fname);
 
 temp1 = alpha_list;

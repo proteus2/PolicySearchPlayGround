@@ -94,7 +94,7 @@ classdef MMDController
                     end
                 end
                 
-                    num_replicate = 1;
+                    num_replicate = 10;
                     x_data = repmat(x_data,1,num_replicate);
                     y_data = repmat(y_data,1,num_replicate);
                 rng(obj.RF_seed);

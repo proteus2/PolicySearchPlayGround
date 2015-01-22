@@ -4,4 +4,4 @@ n_mmd_itern = 50;
 x0 = [3.9;0;0;0];
 
 [controller,data] = trainMMD(x0,n_mmd_itern,train_alpha_list);
-save('mmd_results_repmat=1,a=5,7,24','controller','data','train_alpha_list');
+save('mmd_results_repmat=10,a=5,7,24','controller','data','train_alpha_list');
