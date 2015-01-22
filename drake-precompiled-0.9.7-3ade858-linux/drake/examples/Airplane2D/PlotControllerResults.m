@@ -3,6 +3,8 @@ x0 = [3.9;0;0;0];
 rand_list = rand(1,50);
 alpha_list = rand_list*10 + (1-rand_list)*3;
 
+
+load('cost_list_all_alpha','alpha_list')
 cost_list_all_alpha = {};
 alpha_idx = 1;
 for alpha = alpha_list
@@ -34,13 +36,7 @@ for alpha = alpha_list
     if ~exist(apprxtraj_fname,'file')
         tf = optimal_u.getBreaks; tf=tf(end);
         load(train_file1);
-            load('RF_seed');
-        controller2 = MMDController(RF_seed);
-        controller2= controller2.setNewController(controller.data_sets_unnormalized{1,1},controller.data_sets_unnormalized{1,2});
-        controller2= controller2.setNewController(controller.data_sets_unnormalized{2,1},controller.data_sets_unnormalized{2,2});
-        controller2= controller2.setNewController(controller.data_sets_unnormalized{3,1},controller.data_sets_unnormalized{3,2});
-        
-        ctrl_list{1,1} = controller2;
+        ctrl_list{1,1} = controller;
         
         load(train_file2);
         ctrl_list{2,1} = controller;
@@ -78,32 +74,32 @@ for alpha = alpha_list
 %      visualizeTraj(traj_list{1,1},alpha);
 %      visualizeTraj(traj_list{2,1},alpha);
 end
-save('cost_list_all_alpha','cost_list_all_alpha','alpha_list');
+save('cost_list_all_alpha_ver2','cost_list_all_alpha','alpha_list');
 % 
-% traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
-% 
-% ctrl1_cost = zeros(size(cost_list_all_alpha,1),2);
-% ctrl2_cost = zeros(size(cost_list_all_alpha,1),2);
-% 
-% for idx = 1:size(cost_list_all_alpha,1)
-%     traj_opt_cost(idx,1) = cost_list_all_alpha{idx,1}(1);
-%     traj_opt_cost(idx,2) = cost_list_all_alpha{idx,1}(2);
-%     
-%     ctrl1_cost(idx,1) = cost_list_all_alpha{idx,2}(1,1);
-%     ctrl1_cost(idx,2) = cost_list_all_alpha{idx,2}(1,2);
-%     
-%     ctrl2_cost(idx,1) = cost_list_all_alpha{idx,2}(2,1);
-%     ctrl2_cost(idx,2) = cost_list_all_alpha{idx,2}(2,2);
-% end
-% 
-% topt_mean = mean(traj_opt_cost);
-% topt_std = std(traj_opt_cost);
-% 
-% c1_mean = mean(ctrl1_cost);
-% c1_std = std(ctrl1_cost);
-% c2_mean = mean(ctrl2_cost);
-% c2_std = std(ctrl2_cost);
-% 
-% 
-% figure;bar([topt_mean(1) c1_mean(1) c2_mean(1)]);
-% figure;bar([topt_mean(2) c1_mean(2) c2_mean(2)]);
+traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
+
+ctrl1_cost = zeros(size(cost_list_all_alpha,1),2);
+ctrl2_cost = zeros(size(cost_list_all_alpha,1),2);
+
+for idx = 1:size(cost_list_all_alpha,1)
+    traj_opt_cost(idx,1) = cost_list_all_alpha{idx,1}(1);
+    traj_opt_cost(idx,2) = cost_list_all_alpha{idx,1}(2);
+    
+    ctrl1_cost(idx,1) = cost_list_all_alpha{idx,2}(1,1);
+    ctrl1_cost(idx,2) = cost_list_all_alpha{idx,2}(1,2);
+    
+    ctrl2_cost(idx,1) = cost_list_all_alpha{idx,2}(2,1);
+    ctrl2_cost(idx,2) = cost_list_all_alpha{idx,2}(2,2);
+end
+
+topt_mean = mean(traj_opt_cost);
+topt_std = std(traj_opt_cost);
+
+c1_mean = mean(ctrl1_cost);
+c1_std = std(ctrl1_cost);
+c2_mean = mean(ctrl2_cost);
+c2_std = std(ctrl2_cost);
+
+
+figure;bar([topt_mean(1) c1_mean(1) c2_mean(1)]);
+figure;bar([topt_mean(2) c1_mean(2) c2_mean(2)]);
