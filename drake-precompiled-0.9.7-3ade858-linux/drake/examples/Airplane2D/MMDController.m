@@ -283,7 +283,6 @@ classdef MMDController
             if nargin<3
                 [~,idx,~] = checkDiscrepancy(obj,x);
             end
-            idx
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
             
