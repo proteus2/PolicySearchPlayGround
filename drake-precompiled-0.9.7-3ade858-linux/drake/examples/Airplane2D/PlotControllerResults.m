@@ -1,10 +1,10 @@
-fname = 'cost_list_all_alpha_a=[4,30]';
+fname = 'cost_list_all_alpha_a=[4,30]_repmat=10';
 load(fname);
 
 temp1 = alpha_list;
 temp2 = cost_list_all_alpha;
 
-fname2 = 'cost_list_all_alpha_a=[3,10]';
+fname2 = 'cost_list_all_alpha_a=[3,10]_repmat=10';
 load(fname2);
 
 alpha_list = [alpha_list temp1];

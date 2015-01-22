@@ -7,6 +7,7 @@ alpha_list = rand_list*30 + (1-rand_list)*4;
 
 load('cost_list_all_alpha_a=[3,10]_repmat=1','alpha_list');
 cost_list_all_alpha = {};
+alpha_list = 40;
 alpha_idx = 1;
 for alpha = alpha_list
     optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
@@ -83,10 +84,10 @@ for alpha = alpha_list
 %      ylabel('Average Rewards')
 %      xlabel('Algorithms')
 %      visualizeTraj(optimal_x,alpha);
-%      visualizeTraj(traj_list{1,1},alpha);
+      visualizeTraj(traj_list{1,1},alpha);
 %      visualizeTraj(traj_list{2,1},alpha);
 end
-save('cost_list_all_alpha_a=[3,10]_repmat=10','cost_list_all_alpha','alpha_list');
+% save('cost_list_all_alpha_a=[3,10]_repmat=10','cost_list_all_alpha','alpha_list');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
