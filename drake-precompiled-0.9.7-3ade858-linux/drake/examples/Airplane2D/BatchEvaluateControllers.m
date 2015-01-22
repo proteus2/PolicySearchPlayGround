@@ -5,7 +5,7 @@ x0 = [3.9;0;0;0];
 rand_list = rand(1,100);
 alpha_list = rand_list*30 + (1-rand_list)*4;
 
-load('cost_list_all_alpha_a=[4,30]_repmat=1','alpha_list');
+load('cost_list_all_alpha_a=[3,10]_repmat=1','alpha_list');
 cost_list_all_alpha = {};
 alpha_idx = 1;
 for alpha = alpha_list
@@ -86,7 +86,7 @@ for alpha = alpha_list
 %      visualizeTraj(traj_list{1,1},alpha);
 %      visualizeTraj(traj_list{2,1},alpha);
 end
-save('cost_list_all_alpha_a=[4,30]_repmat=10','cost_list_all_alpha','alpha_list');
+save('cost_list_all_alpha_a=[3,10]_repmat=10','cost_list_all_alpha','alpha_list');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
