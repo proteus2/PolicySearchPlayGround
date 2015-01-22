@@ -122,7 +122,7 @@ classdef MMDController
             candidates = {};
             for idx=1:size(obj.data_sets,1)
                 curr_d = obj.computeKernel(idx,x);
-                if curr_d < obj.max_d(idx)
+                if curr_d <= obj.max_d(idx)
                     candidates{size(candidates,1)+1,1} = idx; candidates{size(candidates,1),2} = curr_d;
                 end
                 
@@ -261,7 +261,7 @@ classdef MMDController
                 end
                     
                 dists=dists.^2;
-                dists(end,:) = dists(end,:);
+                dists(end,:) = dists(end,:)*2;
                 sum_dists = sum(dists);
                 sum_kernel = sum( exp(-sum_dists./(2*100)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);

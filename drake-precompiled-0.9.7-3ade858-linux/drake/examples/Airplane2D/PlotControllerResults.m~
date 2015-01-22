@@ -1,9 +1,11 @@
 % Compare controllers
 x0 = [3.9;0;0;0];
-rand_list = rand(20,1);
+rand_list = rand(1,50);
 alpha_list = rand_list*10 + (1-rand_list)*3;
 
-alpha_list = 10;
+
+load('cost_list_all_alpha','alpha_list')
+alpha_list=[5,7];
 cost_list_all_alpha = {};
 alpha_idx = 1;
 for alpha = alpha_list
@@ -35,8 +37,6 @@ for alpha = alpha_list
     if ~exist(apprxtraj_fname,'file')
         tf = optimal_u.getBreaks; tf=tf(end);
         load(train_file1);
-        controller2 = MMDController();
-        
         ctrl_list{1,1} = controller;
         
         load(train_file2);
@@ -48,9 +48,10 @@ for alpha = alpha_list
         load(apprxtraj_fname)
     end
     cost_list_all_alpha{alpha_idx,1} = traj_opt_cost;
-    cost_list_all_alpha{alpha_idx,2} = cost_list;
+    cost_list_all_alpha{alpha_idx,2} = cost_list(1,:);
+    cost_list_all_alpha{alpha_idx,3} = cost_list(2,:);
     alpha_idx = alpha_idx+1;
-    
+%     
      x1 = traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
      x2 = traj_list{2,1}.eval(traj_list{1,1}.getBreaks);
      optx = optimal_x.eval(optimal_x.getBreaks);
@@ -75,8 +76,8 @@ for alpha = alpha_list
      visualizeTraj(traj_list{1,1},alpha);
      visualizeTraj(traj_list{2,1},alpha);
 end
-save('cost_list_all_alpha','cost_list_all_alpha','alpha_list');
-
+%save('cost_list_all_alpha_ver2','cost_list_all_alpha','alpha_list');
+% 
 traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 
 ctrl1_cost = zeros(size(cost_list_all_alpha,1),2);
@@ -86,11 +87,11 @@ for idx = 1:size(cost_list_all_alpha,1)
     traj_opt_cost(idx,1) = cost_list_all_alpha{idx,1}(1);
     traj_opt_cost(idx,2) = cost_list_all_alpha{idx,1}(2);
     
-    ctrl1_cost(idx,1) = cost_list_all_alpha{idx,2}(1,1);
-    ctrl1_cost(idx,2) = cost_list_all_alpha{idx,2}(1,2);
+    ctrl1_cost(idx,1) = cost_list_all_alpha{idx,2}(1);
+    ctrl1_cost(idx,2) = cost_list_all_alpha{idx,2}(2);
     
-    ctrl2_cost(idx,1) = cost_list_all_alpha{idx,2}(2,1);
-    ctrl2_cost(idx,2) = cost_list_all_alpha{idx,2}(2,2);
+    ctrl2_cost(idx,1) = cost_list_all_alpha{idx,3}(1);
+    ctrl2_cost(idx,2) = cost_list_all_alpha{idx,3}(2);
 end
 
 topt_mean = mean(traj_opt_cost);

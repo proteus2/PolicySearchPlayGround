@@ -5,8 +5,9 @@ alpha_list = rand_list*10 + (1-rand_list)*3;
 
 
 load('cost_list_all_alpha','alpha_list')
-alpha_list=4;
+alpha_list=[5,7];
 cost_list_all_alpha = {};
+alpha_idx = 1;
 for alpha = alpha_list
     optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
     optimaltraj_fname = strcat('./data_for_plots/test/',optimaltraj_fname);
@@ -50,7 +51,7 @@ for alpha = alpha_list
     cost_list_all_alpha{alpha_idx,2} = cost_list(1,:);
     cost_list_all_alpha{alpha_idx,3} = cost_list(2,:);
     alpha_idx = alpha_idx+1;
-    
+%     
      x1 = traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
      x2 = traj_list{2,1}.eval(traj_list{1,1}.getBreaks);
      optx = optimal_x.eval(optimal_x.getBreaks);

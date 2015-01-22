@@ -58,7 +58,7 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                     if dist_to_goal<=0.3
                         break
                     end
-
+  
                     % Check if the encountered state lies far from datasets
                     if emptyCandidates       
                         d,current_state
@@ -75,7 +75,12 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
 %                             y = [y y_to_attach];
 %                             control = u_traj_from_curr_loc.eval(0);
 %                         end
-                        control = controller.predict(current_state,min_idx);
+                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
+                        t=x_traj_from_curr_loc.getBreaks();
+                        [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                        controller = setNewController(controller,x_to_attach,y_to_attach);    
+%                         control = controller.predict(current_state,min_idx);
+                        control = controller.predict(current_state);
                     else
                         control = controller.predict(current_state,min_idx);
                     end
@@ -91,21 +96,21 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
             if isempty(x)
                 break
             else 
-                for mistake_idx=1:size(x,2)
-                    (mistake_idx/size(x,2))*100
-                    [min_d,min_idx,emptyCandidates] = checkDiscrepancy(controller,x(:,mistake_idx)); 
-                    if emptyCandidates
-                        
-                        %TODO: Fix the ref traj to accommodate changes in
-                        %alpha later
-                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x(1:4,mistake_idx),alpha,false);
-
-%                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x(1:4,mistake_idx),alpha,false,ref_traj);
-                        t=x_traj_from_curr_loc.getBreaks();
-                        [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-                        controller = setNewController(controller,x_to_attach,y_to_attach);                    
-                    end
-                end
+%                 for mistake_idx=1:size(x,2)
+%                     (mistake_idx/size(x,2))*100
+%                     [min_d,min_idx,emptyCandidates] = checkDiscrepancy(controller,x(:,mistake_idx)); 
+%                     if emptyCandidates
+%                         
+%                         %TODO: Fix the ref traj to accommodate changes in
+%                         %alpha later
+%                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x(1:4,mistake_idx),alpha,false);
+% 
+% %                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x(1:4,mistake_idx),alpha,false,ref_traj);
+%                         t=x_traj_from_curr_loc.getBreaks();
+%                         [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+%                         controller = setNewController(controller,x_to_attach,y_to_attach);                    
+%                     end
+%                 end
 %                 controller = setNewController(controller,x,y);
             end
     end   

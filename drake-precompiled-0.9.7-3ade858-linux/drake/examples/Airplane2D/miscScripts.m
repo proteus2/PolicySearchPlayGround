@@ -20,11 +20,14 @@ sum(exp(-dists2./2))
 ref_traj = ref_traj_list{1,1};
 figure; scatter(ref_traj(1,:),ref_traj(2,:),'black')
 hold on; scatter(x2(1,1:end),x2(2,1:end),'red');
+if ~isempty(x)
 hold on; scatter(x(1,:),x(2,:),'blue')
-
+end
 ref_traj = ref_traj_list{2,1};
 figure; scatter(ref_traj(1,:),ref_traj(2,:),'black')
 hold on; scatter(x1(1,1:end),x1(2,1:end),'red');
+if ~isempty(x)
 hold on; scatter(x(1,:),x(2,:),'blue')
-
+end
+%%
 hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
