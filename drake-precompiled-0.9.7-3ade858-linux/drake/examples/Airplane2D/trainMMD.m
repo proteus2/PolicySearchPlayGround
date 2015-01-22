@@ -55,7 +55,7 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                     d_list=[d_list d];
                     
                     dist_to_goal = norm(x1(1:2,k)-[5; 9]);
-                    if dist_to_goal<=0.3
+                    if dist_to_goal<=0.1
                         break
                     end
   
