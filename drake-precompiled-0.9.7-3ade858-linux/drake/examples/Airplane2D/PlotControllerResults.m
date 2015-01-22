@@ -1,10 +1,9 @@
 % Compare controllers
 x0 = [3.9;0;0;0];
-rand_list = rand(1,100);
-alpha_list = rand_list*35 + (1-rand_list)*5;
+rand_list = rand(1,50);
+alpha_list = rand_list*10 + (1-rand_list)*3;
 
 cost_list_all_alpha = {};
-alpha_list = 7;
 alpha_idx = 1;
 for alpha = alpha_list
     optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
@@ -28,14 +27,20 @@ for alpha = alpha_list
 
     apprxtraj_fname = sprintf('appx_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
     
-    train_file1 = 'mmd_results_repmat=10,a=5,7';
-    train_file2 = 'vary_alpha_supervised_results_allalpha,iter=5.mat';
+    train_file1 = 'mmd_results_repmat=5,a=5,7,mmd_itern=50';
+    train_file2 = 'vary_alpha_supervised_results_alpha=5,7,iter=5';
     apprxtraj_fname = strcat('./data_for_plots/test/',train_file1,'_',train_file2,'_',apprxtraj_fname);
     
     if ~exist(apprxtraj_fname,'file')
         tf = optimal_u.getBreaks; tf=tf(end);
         load(train_file1);
-        ctrl_list{1,1} = controller;
+            load('RF_seed');
+        controller2 = MMDController(RF_seed);
+        controller2= controller2.setNewController(controller.data_sets_unnormalized{1,1},controller.data_sets_unnormalized{1,2});
+        controller2= controller2.setNewController(controller.data_sets_unnormalized{2,1},controller.data_sets_unnormalized{2,2});
+        controller2= controller2.setNewController(controller.data_sets_unnormalized{3,1},controller.data_sets_unnormalized{3,2});
+        
+        ctrl_list{1,1} = controller2;
         
         load(train_file2);
         ctrl_list{2,1} = controller;
@@ -49,28 +54,56 @@ for alpha = alpha_list
     cost_list_all_alpha{alpha_idx,2} = cost_list;
     alpha_idx = alpha_idx+1;
     
-     x1 = traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
-     x2 = traj_list{2,1}.eval(traj_list{1,1}.getBreaks);
-     optx = optimal_x.eval(optimal_x.getBreaks);
-     
-     figure; scatter(x1(1,:),x1(2,:),'r');
-     hold on; scatter(x2(1,:),x2(2,:),'blue');
-     hold on; scatter(optx(1,:),optx(2,:),'black');
-     legend('mmd','sup','opt','Location','southwest');
-
-     figure;bar(-[cost_list(1,1),cost_list(2,1),traj_opt_cost(1,1)])
-     ax = gca;
-     ax.XTickLabel = {'mmd','supervised','trajopt'};
-     ylabel('Accumulated Rewards')
-     xlabel('Algorithms')
-     
-     figure;bar(-[cost_list(1,2),cost_list(2,2),traj_opt_cost(1,2)])
-     ax = gca;
-     ax.XTickLabel = {'mmd','supervised','trajopt'};
-     ylabel('Average Rewards')
-     xlabel('Algorithms')
-     
-     visualizeTraj(traj_list{1,1},alpha);
-      visualizeTraj(traj_list{2,1},alpha);
+%      x1 = traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
+%      x2 = traj_list{2,1}.eval(traj_list{1,1}.getBreaks);
+%      optx = optimal_x.eval(optimal_x.getBreaks);
+%      
+%      figure; scatter(x1(1,:),x1(2,:),'r');
+%      hold on; scatter(x2(1,:),x2(2,:),'blue');
+%      hold on; scatter(optx(1,:),optx(2,:),'black');
+%      legend('mmd','sup','opt','Location','southwest');
+% 
+%      figure;bar(-[cost_list(1,1),cost_list(2,1),traj_opt_cost(1,1)])
+%      ax = gca;
+%      ax.XTickLabel = {'mmd','supervised','trajopt'};
+%      ylabel('Accumulated Rewards')
+%      xlabel('Algorithms')
+%      
+%      figure;bar(-[cost_list(1,2),cost_list(2,2),traj_opt_cost(1,2)])
+%      ax = gca;
+%      ax.XTickLabel = {'mmd','supervised','trajopt'};
+%      ylabel('Average Rewards')
+%      xlabel('Algorithms')
+%      
+%      visualizeTraj(traj_list{1,1},alpha);
+%      visualizeTraj(traj_list{2,1},alpha);
 end
 save('cost_list_all_alpha','cost_list_all_alpha','alpha_list');
+% 
+% traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
+% 
+% ctrl1_cost = zeros(size(cost_list_all_alpha,1),2);
+% ctrl2_cost = zeros(size(cost_list_all_alpha,1),2);
+% 
+% for idx = 1:size(cost_list_all_alpha,1)
+%     traj_opt_cost(idx,1) = cost_list_all_alpha{idx,1}(1);
+%     traj_opt_cost(idx,2) = cost_list_all_alpha{idx,1}(2);
+%     
+%     ctrl1_cost(idx,1) = cost_list_all_alpha{idx,2}(1,1);
+%     ctrl1_cost(idx,2) = cost_list_all_alpha{idx,2}(1,2);
+%     
+%     ctrl2_cost(idx,1) = cost_list_all_alpha{idx,2}(2,1);
+%     ctrl2_cost(idx,2) = cost_list_all_alpha{idx,2}(2,2);
+% end
+% 
+% topt_mean = mean(traj_opt_cost);
+% topt_std = std(traj_opt_cost);
+% 
+% c1_mean = mean(ctrl1_cost);
+% c1_std = std(ctrl1_cost);
+% c2_mean = mean(ctrl2_cost);
+% c2_std = std(ctrl2_cost);
+% 
+% 
+% figure;bar([topt_mean(1) c1_mean(1) c2_mean(1)]);
+% figure;bar([topt_mean(2) c1_mean(2) c2_mean(2)]);

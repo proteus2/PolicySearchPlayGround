@@ -1,10 +1,10 @@
 varyAlphaGatherData = true;
 if varyAlphaGatherData 
-    train_alpha_list = [5];
+    train_alpha_list = [5,7];
     N = size(train_alpha_list,2);
     traj_list = cell(N,2);
     alpha_vals = zeros(N,1);
-    n_supp_itern = 5;
+    n_supp_itern = 2;
     
     
     x0 = [3.9;0;0;0];
@@ -37,7 +37,7 @@ if varyAlphaGatherData
     
     x = x';y=y';
     controller = TreeBagger(50,x,y,'Method','regression');
-    save('vary_alpha_supervised_results_alpha=5,iter=5','controller','traj_list','train_alpha_list');
+    save('vary_alpha_supervised_results_alpha=5,7,iter=5','controller','traj_list','train_alpha_list');
 end
 
 

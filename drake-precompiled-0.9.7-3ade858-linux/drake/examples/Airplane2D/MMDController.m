@@ -82,6 +82,7 @@ classdef MMDController
                 obj.data_sets{obj.n_mmd_itern,2} = y_data;
 
                 n_data = size(x_data,2);
+                G = obj.computeKernel(obj.n_mmd_itern);
                 obj.self_discrepancy(obj.n_mmd_itern,1) = 1/n_data^2 * sum(sum(obj.computeKernel(obj.n_mmd_itern)));
                 
                 % compute the maximum distance to the center of the dataset
@@ -221,7 +222,8 @@ classdef MMDController
                 
                     dists=dists.^2;
                     dists(end,:) = dists(end,:)*2;
-                    k(idx1,:) = exp(-sum(dists)./(2));
+%                     k(idx1,:) = -sum(dists)./(2);
+                    k(idx1,:) = exp(-sum(dists)./(2*100));
 %                     for idx2=1:n
 %                         k(idx1,idx2) = obj.kernel(x(:,idx1),x(:,idx2));
 %                     end
@@ -259,9 +261,9 @@ classdef MMDController
                 end
                     
                 dists=dists.^2;
-                dists(end,:) = dists(end,:)*2;
+                dists(end,:) = dists(end,:);
                 sum_dists = sum(dists);
-                sum_kernel = sum( exp(-sum_dists./(2)) );
+                sum_kernel = sum( exp(-sum_dists./(2*100)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
             
                 
