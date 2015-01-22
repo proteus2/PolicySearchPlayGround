@@ -51,7 +51,8 @@ for alpha = alpha_list
         load(apprxtraj_fname)
     end
     cost_list_all_alpha{alpha_idx,1} = traj_opt_cost;
-    cost_list_all_alpha{alpha_idx,2} = cost_list;
+    cost_list_all_alpha{alpha_idx,2} = cost_list(1,:);
+    cost_list_all_alpha{alpha_idx,3} = cost_list(2,:);
     alpha_idx = alpha_idx+1;
     
 %      x1 = traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
