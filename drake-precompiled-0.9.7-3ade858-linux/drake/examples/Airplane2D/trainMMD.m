@@ -1,6 +1,6 @@
-function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
+function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
     load('RF_seed');
-    controller = MMDController(RF_seed);
+    controller = MMDAggregateController(RF_seed);
     dt = 0.01;    
     
     % for all alpha values, get initial trajectories
@@ -9,22 +9,26 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
     
     for idx=1:numel(alpha_list)
         alpha = alpha_list(idx);
-        init_fname = sprintf('initial_mmd_traj_alpha=%d.mat',alpha);
-        if ~exist(init_fname,'file')
-            [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
-            save(init_fname, 'xtraj','utraj');
-        else
-            load(init_fname);
-            if exist('u_traj_from_curr_loc','var') && ~exist('utraj','var');
-                xtraj = x_traj_from_curr_loc;
-                utraj = u_traj_from_curr_loc;
+        for x0_idx=1:numel(x0_list)
+            x0=x0_list{1,x0_idx};
+            init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4));
+            if ~exist(init_fname,'file')
+                [utraj,xtraj,~] = getTrajectory(x0,alpha,true);
+                save(init_fname, 'xtraj','utraj');
+            else
+                load(init_fname);
+                if exist('u_traj_from_curr_loc','var') && ~exist('utraj','var');
+                    xtraj = x_traj_from_curr_loc;
+                    utraj = u_traj_from_curr_loc;
+                end
             end
+            
+            tf = xtraj.getBreaks(); tf=tf(end);
+            tf_list(idx) = tf;
+            t = xtraj.getBreaks();
+            [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
+            controller = setNewController(controller,x,y);
         end
-        tf = xtraj.getBreaks(); tf=tf(end);
-        tf_list(idx) = tf;
-        t = xtraj.getBreaks();
-        [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
-        controller = setNewController(controller,x,y);
         
         % get reference trajectory
         ref_traj_list{idx,1} = x(1:4,:); 
@@ -55,7 +59,7 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
                     d_list=[d_list d];
                     
                     dist_to_goal = norm(x1(1:2,k)-[5; 9]);
-                    if dist_to_goal<=0.1
+                    if dist_to_goal<=0.3
                         break
                     end
   
@@ -75,10 +79,10 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
 %                             y = [y y_to_attach];
 %                             control = u_traj_from_curr_loc.eval(0);
 %                         end
-%                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
-%                         t=x_traj_from_curr_loc.getBreaks();
-%                         [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-%                         controller = setNewController(controller,x_to_attach,y_to_attach);    
+                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
+                        t=x_traj_from_curr_loc.getBreaks();
+                        [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                        controller = setNewController(controller,x_to_attach,y_to_attach);    
 %                         control = controller.predict(current_state,min_idx);
                         control = controller.predict(current_state);
                     else

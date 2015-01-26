@@ -93,12 +93,12 @@ classdef MMDController
                         obj.max_d(obj.n_mmd_itern) = k;
                     end
                 end
-                
-                    num_replicate = 10;
-                    x_data = repmat(x_data,1,num_replicate);
-                    y_data = repmat(y_data,1,num_replicate);
+%                 
+%                     num_replicate = 10;
+%                     x_data = repmat(x_data,1,num_replicate);
+%                     y_data = repmat(y_data,1,num_replicate);
                 rng(obj.RF_seed);
-                obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
+                obj.controllers{obj.n_mmd_itern,1} = fitcknn(x_data',y_data');%TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
             end
 %         end
     
@@ -290,6 +290,48 @@ classdef MMDController
             u = ctrller.predict(x');
         end
         
+        function obj = setNewController2(obj,x_data,y_data)
+            
+            if obj.n_mmd_itern == 0
+                obj.n_dataset = size(x_data,2);
+            end
+            obj.n_mmd_itern = obj.n_mmd_itern + 1;
+            obj.data_sets_unnormalized{obj.n_mmd_itern,1} = x_data;
+            obj.data_sets_unnormalized{obj.n_mmd_itern,2} = y_data;
 
+            % Get the data collected so far, and aggregate them
+            
+            
+            % Train the new classifier
+            mu = mean(x_data,2);
+            sigma = std(x_data',1)';
+            if any(sigma==0) == 1
+                sigma(sigma==0) = 1;
+            end
+            x_data=bsxfun(@minus,x_data,obj.data_mean{obj.n_mmd_itern,1});
+            x_data=bsxfun(@rdivide,x_data,obj.data_stddev{obj.n_mmd_itern,1});
+
+            obj.data_sets{obj.n_mmd_itern,1} = x_data;
+            obj.data_sets{obj.n_mmd_itern,2} = y_data;
+
+            n_data = size(x_data,2);
+            G = obj.computeKernel(obj.n_mmd_itern);
+            obj.self_discrepancy(obj.n_mmd_itern,1) = 1/n_data^2 * sum(sum(obj.computeKernel(obj.n_mmd_itern)));
+
+            % compute the maximum distance to the center of the dataset
+            obj.max_d(obj.n_mmd_itern) = -Inf;
+            for idx = 1:size(obj.data_sets_unnormalized{obj.n_mmd_itern,1},2)
+                k = obj.computeKernel(obj.n_mmd_itern,obj.data_sets_unnormalized{obj.n_mmd_itern,1}(:,idx)); 
+                if k>obj.max_d(obj.n_mmd_itern)
+                    obj.max_d(obj.n_mmd_itern) = k;
+                end
+            end
+%                 
+%                     num_replicate = 10;
+%                     x_data = repmat(x_data,1,num_replicate);
+%                     y_data = repmat(y_data,1,num_replicate);
+            rng(obj.RF_seed);
+            obj.controllers{obj.n_mmd_itern,1} = fitcknn(x_data',y_data');%TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
+        end
    end    
 end

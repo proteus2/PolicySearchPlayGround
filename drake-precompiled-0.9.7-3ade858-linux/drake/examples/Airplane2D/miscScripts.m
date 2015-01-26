@@ -24,6 +24,5 @@ if ~isempty(x)
 hold on; scatter(x(1,1),x(2,1),100,'magenta','filled')
 end
 
-end
 %%
 hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
