@@ -12,7 +12,7 @@ function [xtraj,utraj] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
         end
         if strcmp(class(u),'TreeBagger')
             control = u.predict(curr_state');
-        elseif strcmp(class(u),'MMDController')
+        elseif strcmp(class(u),'MMDController') ||strcmp(class(u),'MMDAggregateController')
             control = u.predict(curr_state);
         elseif strcmp(class(u),'network')
             control = u(curr_state);
