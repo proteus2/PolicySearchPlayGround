@@ -75,10 +75,10 @@ function [controller,mmd_data] = trainMMD(x0,n_mmd_itern,alpha_list)
 %                             y = [y y_to_attach];
 %                             control = u_traj_from_curr_loc.eval(0);
 %                         end
-                        [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
-                        t=x_traj_from_curr_loc.getBreaks();
-                        [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-                        controller = setNewController(controller,x_to_attach,y_to_attach);    
+%                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
+%                         t=x_traj_from_curr_loc.getBreaks();
+%                         [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+%                         controller = setNewController(controller,x_to_attach,y_to_attach);    
 %                         control = controller.predict(current_state,min_idx);
                         control = controller.predict(current_state);
                     else
