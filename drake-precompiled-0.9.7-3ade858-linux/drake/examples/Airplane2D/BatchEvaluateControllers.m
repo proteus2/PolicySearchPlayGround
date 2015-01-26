@@ -7,7 +7,7 @@ alpha_list = rand_list*30 + (1-rand_list)*4;
 
 load('cost_list_all_alpha_a=[3,10]_repmat=1','alpha_list');
 cost_list_all_alpha = {};
-alpha_list = 40;
+alpha_list = 28;
 alpha_idx = 1;
 for alpha = alpha_list
     optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
@@ -51,7 +51,7 @@ for alpha = alpha_list
         save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
     else
         load(apprxtraj_fname)
-        tf = optimal_u.getBreaks; tf=tf(end)+0.01;
+        tf = optimal_u.getBreaks; tf=tf(end)-0.37;
         [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
         save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
     end
