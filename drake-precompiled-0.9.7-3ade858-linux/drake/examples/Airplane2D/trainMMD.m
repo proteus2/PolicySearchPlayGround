@@ -16,7 +16,6 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
         for x0_idx=1:size(x0_list,2)
             x0=x0_list(:,x0_idx);
             init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4));
-            init_fname
             if ~exist(init_fname,'file')
                 if exist('xtraj','var') % if initial training is done
                     p = PlanePlant(alpha);

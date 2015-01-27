@@ -28,7 +28,7 @@ end
 train_alpha_list
 train_x0_list
 
-aggregate=true
+aggregate=false
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
 if aggregate
