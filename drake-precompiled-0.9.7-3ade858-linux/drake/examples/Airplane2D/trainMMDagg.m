@@ -7,7 +7,7 @@ function [controller,mmd_data] = trainMMDagg(x0_list,n_mmd_itern,alpha_list)
     ref_traj_list = cell(numel(alpha_list,2),1);
     tf_list = zeros(numel(alpha_list,2),1);
     
-    for idx=1:numel(alpha_list)
+   for idx=1:numel(alpha_list)
         alpha = alpha_list(idx);
         for x0_idx=1:size(x0_list,2)
             x0=x0_list(:,x0_idx);
@@ -41,10 +41,9 @@ function [controller,mmd_data] = trainMMDagg(x0_list,n_mmd_itern,alpha_list)
             t = xtraj.getBreaks();
             [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
             controller = setNewController(controller,x,y);
-            ref_traj_list{idx,1} = x(1:4,:); 
+            ref_traj_list{x0_idx,1} = x(1:4,:); 
         end
         
-        % get reference trajectory
     end
     
     

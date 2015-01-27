@@ -1,7 +1,7 @@
 % Compare controllers
 clear all;
 close all;
-x0 = [3.5;0;0;0];
+x0 = [4;0;0;0];
 rand_list = rand(1,100);
 alpha_list = rand_list*30 + (1-rand_list)*4;
 
@@ -13,7 +13,7 @@ cost_list_all_alpha = {};
 
 alpha_list = alpha_list(81);
 
-alpha_list =5;
+alpha_list =10;
 alpha_idx =    1;
 for alpha = alpha_list
     optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
@@ -49,7 +49,7 @@ for alpha = alpha_list
     
     train_files={'mmd_results_repmat=1,a=all,algo=nearest_neighbor,aggregation','mmd_results_repmat=1,a=all_nearest_neighbor',...
                      'mmd_results_repmat=1,a=all,algo=RF,aggregation','mmd_results_repmat=10,a=all'};
-    train_files={'mmd_results_x0=2,4_init_at_alpha_R>0_agg','mmd_results_x0=2,4_init_at_alpha_R>0'};
+    train_files={'mmd_results_init_at_alpha_R>0_agg','mmd_results_init_at_alpha_R>0'};
     n_files = size(train_files,2);
     
     %apprxtraj_fname = strcat('./data_for_plots/test/',train_file1,'_',train_file2,'_',train_file3,'_',apprxtraj_fname);
@@ -108,9 +108,9 @@ for alpha = alpha_list
 %      ax.XTickLabel = {'mmd','supervised','trajopt'};
 %      ylabel('Average Rewards')
 %      xlabel('Algorithms')
-%       %visualizeTraj(optimal_x,alpha);
-%       visualizeTraj(traj_list{1,1},alpha);
-%      visualizeTraj(traj_list{2,1},alpha);
+       %visualizeTraj(optimal_x,alpha);
+       visualizeTraj(traj_list{1,1},alpha);
+      visualizeTraj(traj_list{2,1},alpha);
 %      visualizeTraj(traj_list{3,1},alpha);
 
 %       visualizeTraj(traj_list{4,1},alpha);

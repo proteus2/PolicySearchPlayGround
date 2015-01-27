@@ -94,7 +94,7 @@ classdef MMDController
                     end
                 end
                 
-                    num_replicate = 10;
+                    num_replicate = 5;
                     x_data = repmat(x_data,1,num_replicate);
                     y_data = repmat(y_data,1,num_replicate);
                 rng(obj.RF_seed);
@@ -283,6 +283,7 @@ classdef MMDController
             if nargin<3
                 [~,idx,~] = checkDiscrepancy(obj,x);
             end
+            idx
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
             
