@@ -109,8 +109,8 @@ for alpha = alpha_list
 %      ylabel('Average Rewards')
 %      xlabel('Algorithms')
        %visualizeTraj(optimal_x,alpha);
-       visualizeTraj(traj_list{1,1},alpha);
-      visualizeTraj(traj_list{2,1},alpha);
+       %visualizeTraj(traj_list{1,1},alpha);
+      %visualizeTraj(traj_list{2,1},alpha);
 %      visualizeTraj(traj_list{3,1},alpha);
 
 %       visualizeTraj(traj_list{4,1},alpha);
