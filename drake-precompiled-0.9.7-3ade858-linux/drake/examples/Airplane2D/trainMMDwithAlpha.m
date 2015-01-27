@@ -24,6 +24,8 @@ else
     load('train_x0_list')
 end
 
+train_alpha_list
+train_x0_list
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list);
 save('mmd_results_init_at_alpha_R>0','controller','data','train_alpha_list','train_x0_list');
 
