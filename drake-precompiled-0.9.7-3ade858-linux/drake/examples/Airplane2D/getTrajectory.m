@@ -1,4 +1,4 @@
-function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit)
+function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit)
     if nargin < 2
         p = PlanePlant();
     else
@@ -10,7 +10,11 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit)
     
    % x0=[0;0;0;0];
     xf = [5; 9; 0; 0];
-    tf0 = .7;
+    if ~exist('tf','var')
+        tf0 = .7;
+    else
+        tf0=tf;
+    end
 
     N = 21;
     prog = DircolTrajectoryOptimization(p,N,[0.2 3]);
@@ -59,29 +63,37 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit)
         x_initial_guess = PPTrajectory(foh([0,tf0],[x0,xf]));
     end
 
+    if ~exist('F_limit','var')
+        F_limit = -12;
+    end
     
     traj_list = cell(0,2);
     F_list =[];
     
-    while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>-12) && (n_retries <=max_num_retries) ...
+    while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>F_limit) && (n_retries <=max_num_retries) ...
             && info ~= 1 && info~=4 && info~=5 && info~=6
         
          if n_retries == 0
             initial_guess.x = x_initial_guess;
          else
-            initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
-            initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));
-            initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
-
-    
-%              if info ==41 || info == 42 
-%                                   initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
-% initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));
-%     initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
-% %                 initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1).*randi(10,4,1) zeros(4,1)] ));
-%              else
-%                  initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
-%              end
+%             if exist('xinit','var') && info ~= 32
+%                 t = xinit.getBreaks();
+%                 xinit = xinit.eval(t);
+%                 uinit = uinit.eval(t);
+%                 
+%                 xinit = xinit+rand(4,N);
+%                 uinit = uinit+rand(1,N);
+%                 
+%                 xinit = PPTrajectory(foh(t,xinit));
+%                 uinit = PPTrajectory(foh(t,uinit));
+%                 
+%                 initial_guess.x = xinit;
+%                 initial_guess.u = uinit;
+%             else
+                initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
+                initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));
+                initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
+%             end
         end
         tic
         [xtraj,utraj,~,F,info]=solveTraj(prog,tf0,initial_guess);
@@ -108,7 +120,7 @@ end
 
       function [g,dg] = cost(dt,x,u,field)
         R = 0.0001;
-        
+        R=0;
         % minimize the max obstacle constraint
         [c,dc] = field.obstacleConstraint(x);
         [c,i]=max(c);

@@ -13,7 +13,7 @@ end
 
 
 
-function [g,dg] = cost(dt,x,u,field)
+function [g] = cost(dt,x,u,field)
 R = 0.0001;
 
 % minimize the max obstacle constraint
@@ -21,7 +21,7 @@ R = 0.0001;
 [c,i]=max(c);
 dc = dc(i,:);
 
-g = (c); %+ u'*R*u);
+g = (c);% + u'*R*u;
 %g = c + norm(xg-x);
 %g = sum((R*u).*u,1);
 dg = [0,dc,2*u'*R];

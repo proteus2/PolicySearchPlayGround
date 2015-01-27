@@ -93,12 +93,12 @@ classdef MMDController
                         obj.max_d(obj.n_mmd_itern) = k;
                     end
                 end
-%                 
-%                     num_replicate = 10;
-%                     x_data = repmat(x_data,1,num_replicate);
-%                     y_data = repmat(y_data,1,num_replicate);
+                
+                    num_replicate = 10;
+                    x_data = repmat(x_data,1,num_replicate);
+                    y_data = repmat(y_data,1,num_replicate);
                 rng(obj.RF_seed);
-                obj.controllers{obj.n_mmd_itern,1} = fitcknn(x_data',y_data');%TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
+                obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
             end
 %         end
     
