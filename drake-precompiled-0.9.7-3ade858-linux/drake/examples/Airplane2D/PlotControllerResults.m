@@ -44,16 +44,6 @@ c4_CI = 1.96*c4_std/sqrt(n);
 
 topt_CI = 1.96*topt_std/sqrt(n);
 
-<<<<<<< HEAD
-figure;bar(-[c1_mean(1,1),c2_mean(1,1),topt_mean(1,1)],'black') 
-hold on; errorbar([-c1_mean(1,1),-c2_mean(1,1),-topt_mean(1,1)],[c1_CI(1),c2_CI(1),topt_CI(1)],'o');
-
- ax = gca;
- ax.XTickLabel = {'mmd','supervised','trajopt'};
- ylabel('Accumulated Rewards','FontSize',24)
- xlabel('Algorithms','FontSize',24)
- title('Mean of Accumulated Rewards for 150 Different Random Models','FontSize',24)
-=======
 figure;bar(-[c1_mean(1,1),c2_mean(1,1),c3_mean(1,1),c4_mean(1,1),topt_mean(1,1)]) 
 hold on; errorbar([-c1_mean(1,1),-c2_mean(1,1),-c3_mean(1,1),-c4_mean(1,1),-topt_mean(1,1)],[c1_CI(1),c2_CI(1),c3_CI(1),c4_CI(1),topt_CI(1)],'o');
 
@@ -68,5 +58,4 @@ hold on; errorbar([-c1_mean(1,1),-c2_mean(1,1),-c3_mean(1,1),-c4_mean(1,1),-topt
  ylabel('Accumulated Rewards')
  xlabel('Algorithms')
      
->>>>>>> b22c35be381c177f4120c8a58db12220866e0993
      
