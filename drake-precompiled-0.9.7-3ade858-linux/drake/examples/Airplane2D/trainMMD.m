@@ -9,7 +9,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
     
     for idx=1:numel(alpha_list)
         alpha = alpha_list(idx);
-        for x0_idx=1:numel(x0_list)
+	for x0_idx=1:size(x0_list,2)
             x0=x0_list(:,x0_idx);
             init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4));
             init_fname
@@ -21,7 +21,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
                     dt=tf/21;
                     tf = t(end-1);
                     %[xinit,uinit] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
-                                        [utraj,xtraj,~] = getTrajectory(x0,alpha,true);
+                                        [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
 
                     %[utraj,xtraj,~] = getTrajectory(x0,alpha,true,xinit,uinit,tf);
                 else
@@ -54,8 +54,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
             x = []; y=[];     
             for x0_idx=1:size(x0_list,2)
                 x0 = x0_list(:,x0_idx);
-                for alpha_idx=1:1
-                %for alpha_idx=1:numel(alpha_list)
+                for alpha_idx=1:numel(alpha_list)
                     d_list =[];
                     alpha = alpha_list(alpha_idx);
 
