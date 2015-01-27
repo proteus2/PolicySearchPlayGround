@@ -1,6 +1,10 @@
-function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
+function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggregate)
     load('RF_seed');
-    controller = MMDController(RF_seed);
+    if aggregate
+        controller = MMDAggregateController(RF_seed);
+    else
+        controller = MMDController(RF_seed);
+    end
     dt = 0.01;    
     
     % for all alpha values, get initial trajectories
@@ -9,7 +13,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
     
     for idx=1:numel(alpha_list)
         alpha = alpha_list(idx);
-        for x0_idx=1:numel(x0_list)
+        for x0_idx=1:size(x0_list,2)
             x0=x0_list(:,x0_idx);
             init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4));
             init_fname
@@ -21,7 +25,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
                     dt=tf/21;
                     tf = t(end-1);
                     %[xinit,uinit] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
-                                        [utraj,xtraj,~] = getTrajectory(x0,alpha,true);
+                                        [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
 
                     %[utraj,xtraj,~] = getTrajectory(x0,alpha,true,xinit,uinit,tf);
                 else
@@ -39,9 +43,9 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(idx) = tf;
             t = xtraj.getBreaks();
-            [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
-            controller = setNewController(controller,x,y);
-            ref_traj_list{idx,1} = x(1:4,:); 
+            [x,y] = turnTrajToData(xtraj,utraj,t,alpha,x0);
+            %controller = setNewController(controller,x,y);
+            ref_traj_list{x0_idx,1} = x(1:4,:); 
         end
         
         % get reference trajectory
@@ -54,22 +58,19 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
             x = []; y=[];     
             for x0_idx=1:size(x0_list,2)
                 x0 = x0_list(:,x0_idx);
-                for alpha_idx=1:1
-                %for alpha_idx=1:numel(alpha_list)
+                for alpha_idx=1:numel(alpha_list)
                     d_list =[];
                     alpha = alpha_list(alpha_idx);
 
                     tf = tf_list(alpha_idx);
                     N  = numel(0:dt:tf);
-                    if exist('x1','var')
-                        x2 = x1;
-                    end
+                   
                     x1=zeros(4,N); x1(:,1) = x0; % state simulation
                     p = PlanePlant(alpha);
 
                     ref_traj = ref_traj_list{alpha_idx,1};
                     for k=1:N-1
-                        current_state = [x1(:,k);alpha];
+                        current_state = [x1(:,k);alpha;x0];
                         [d,min_idx,emptyCandidates] = checkDiscrepancy(controller,current_state); 
                         d_list=[d_list d];
 
@@ -96,7 +97,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list)
     %                         end
                             [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
                             t=x_traj_from_curr_loc.getBreaks();
-                            [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                            [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha,x0);
                             controller = setNewController(controller,x_to_attach,y_to_attach);    
     %                         control = controller.predict(current_state,min_idx);
                             control = controller.predict(current_state);

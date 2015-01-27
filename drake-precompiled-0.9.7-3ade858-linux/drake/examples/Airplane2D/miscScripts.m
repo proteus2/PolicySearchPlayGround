@@ -17,13 +17,13 @@ sum(exp(-dists2./2))
 
 
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
-ref_traj = ref_traj_list{1,1};
-figure; scatter(ref_traj(1,:),ref_traj(2,:),'black')
- hold on; scatter(x1(1,1:end),x1(2,1:end),'blue');
- hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
+ref_traj = ref_traj_list{2,1};
+figure; hold on; scatter(ref_traj(1,:),ref_traj(2,:),'black')
+figure; scatter(x1(1,1:end),x1(2,1:end),'blue');
+%  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
 
 if ~isempty(x)
-hold on; scatter(x(1,1),x(2,1),100,'magenta','filled')
+hold on; scatter(x(1,:),x(2,:),100,'magenta','filled')
 end
 
 %%

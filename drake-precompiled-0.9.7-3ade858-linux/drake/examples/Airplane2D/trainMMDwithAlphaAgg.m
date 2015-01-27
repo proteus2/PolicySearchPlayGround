@@ -26,9 +26,10 @@ else
 end
 
 
-
+train_x0_list = [[2;0;0;0] [4;0;0;0]];
+train_alpha_list =10;
 train_alpha_list
 train_x0_list
 
-[controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list);
+[controller,data] = trainMMDagg(train_x0_list,n_mmd_itern,train_alpha_list);
 save('mmd_results_init_at_alpha_R>0_agg','controller','data','train_alpha_list','train_x0_list');
