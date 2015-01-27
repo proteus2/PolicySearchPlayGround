@@ -25,12 +25,10 @@ else
 end
 
 
-
-train_x0_list = [[2;0;0;0] [4;0;0;0]];
-train_alpha_list =10;
 train_alpha_list
 train_x0_list
-aggregate=false
+
+aggregate=true
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
 if aggregate
