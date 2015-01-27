@@ -6,8 +6,11 @@ function [tot_cost,avg_cost_per_step] = evaluateTrajCost(xtraj,utraj,field,t)
        x = xtraj.eval(t(step)); u = utraj.eval(t(step));
        tot_cost = tot_cost + cost(0,x,u,field);
    end 
-   tot_cost
+      tot_cost
+
    tot_cost = tot_cost + finalCost(t(end),xtraj.eval(t(end)));
+      tot_cost
+
    avg_cost_per_step = tot_cost/size(t,2);
 end
 
@@ -31,11 +34,11 @@ end
 
 function [h,dh] = finalCost(t,x)
     xg=[5;9;0;0];
-    
+    norm(xg(1:2,:)-x(1:2,:))
     if (norm(xg(1:2,:)-x(1:2,:)))<=0.3
         h = 0;
     else
-        h = (norm(xg(1:2,:)-x(1:2,:)));
+        h = 10*(norm(xg(1:2,:)-x(1:2,:)));
     end
     
     dh = [1,zeros(1,size(x,1))];

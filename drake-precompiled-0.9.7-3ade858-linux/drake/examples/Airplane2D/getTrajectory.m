@@ -120,7 +120,6 @@ end
 
       function [g,dg] = cost(dt,x,u,field)
         R = 0.0001;
-        R=0;
         % minimize the max obstacle constraint
         [c,dc] = field.obstacleConstraint(x);
         [c,i]=max(c);
