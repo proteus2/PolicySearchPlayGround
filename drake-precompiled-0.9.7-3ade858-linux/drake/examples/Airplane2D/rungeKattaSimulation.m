@@ -6,7 +6,7 @@ function [xtraj,utraj] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
     alpha = p.v;
     for k=1:N-1  
         if varyAlpha
-            curr_state = [x1(:,k);alpha];
+            curr_state = [x1(:,k);alpha;x0];
         else
             curr_state = x1(:,k);
         end

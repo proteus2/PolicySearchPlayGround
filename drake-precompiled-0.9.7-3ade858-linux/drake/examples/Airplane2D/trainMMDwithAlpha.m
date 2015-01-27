@@ -28,6 +28,9 @@ end
 train_alpha_list
 train_x0_list
 
+train_alpha_list = [5,10];
+train_x0_list = []
+
 aggregate=true
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
