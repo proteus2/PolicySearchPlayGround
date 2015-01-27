@@ -1,4 +1,4 @@
-function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,controller)
+function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit)
     if nargin < 2
         p = PlanePlant();
     else

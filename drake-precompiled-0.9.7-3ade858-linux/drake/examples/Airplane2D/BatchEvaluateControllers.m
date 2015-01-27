@@ -1,7 +1,7 @@
 % Compare controllers
 clear all;
 close all;
-x0 = [3.9;0;0;0];
+x0 = [4.1;3;0;0];
 rand_list = rand(1,100);
 alpha_list = rand_list*30 + (1-rand_list)*4;
 
@@ -11,7 +11,8 @@ load('cost_list_all_alpha_a=[3,10]_repmat=1','alpha_list');
 alpha_list = [alpha_list temp];
 cost_list_all_alpha = {};
 
-alpha_idx = 1;
+alpha_list = alpha_list(81);
+alpha_idx =    1;
 for alpha = alpha_list
     optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
     optimaltraj_fname = strcat('./data_for_plots/test/',optimaltraj_fname);
@@ -43,22 +44,31 @@ for alpha = alpha_list
     train_file2 = 'mmd_results_repmat=1,a=all_nearest_neighbor';
     train_file3 = 'mmd_results_repmat=1,a=all,algo=RF,aggregation';
     train_file4 = 'mmd_results_repmat=10,a=all';
-    apprxtraj_fname = strcat('./data_for_plots/test/',train_file1,'_',train_file2,'_',train_file3,'_',apprxtraj_fname);
+    
+    train_files={'mmd_results_repmat=1,a=all,algo=nearest_neighbor,aggregation','mmd_results_repmat=1,a=all_nearest_neighbor',...
+                     'mmd_results_repmat=1,a=all,algo=RF,aggregation','mmd_results_repmat=10,a=all'};
+    train_files={'mmd_results_repmat=1,a=all,algo=RF,aggregation','mmd_results_repmat=10,a=all'};
+    n_files = size(train_files,2);
+    
+    %apprxtraj_fname = strcat('./data_for_plots/test/',train_file1,'_',train_file2,'_',train_file3,'_',apprxtraj_fname);
+    apprxtraj_fname = './data_for_plots/test/';
+    for idx=1:n_files
+        fname = train_files{1,idx};
+        if idx == n_files
+            apprxtraj_fname = strcat(apprxtraj_fname,fname);
+        else
+            apprxtraj_fname = strcat(apprxtraj_fname,fname,'_');
+        end
+    end
     
     if ~exist(apprxtraj_fname,'file')
         tf = optimal_u.getBreaks; tf=tf(end);
-        load(train_file1);
-        ctrl_list{1,1} = controller;
-        
-        load(train_file2);
-        ctrl_list{2,1} = controller;
-        
-        load(train_file3);
-        ctrl_list{3,1} = controller;
-
-        load(train_file4);
-        ctrl_list{4,1} = controller;
-        
+        ctrl_list = cell(n_files,1);
+        for fidx = 1:n_files
+            train_file = train_files{1,fidx};
+            load(train_file);
+            ctrl_list{fidx,1} = controller;
+        end
         [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
         save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
     else
@@ -67,18 +77,13 @@ for alpha = alpha_list
         [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
         save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
     end
-    cost_list_all_alpha{alpha_idx,1} = traj_opt_cost;
-    cost_list_all_alpha{alpha_idx,2} = cost_list(1,:);
-    cost_list_all_alpha{alpha_idx,3} = cost_list(2,:);
-    cost_list_all_alpha{alpha_idx,4} = cost_list(3,:);
-    cost_list_all_alpha{alpha_idx,5} = cost_list(4,:);
-
     
-    traj_list_all_alpha{alpha_idx,1} = traj_list{1};
-    traj_list_all_alpha{alpha_idx,2} = traj_list{2};
-    traj_list_all_alpha{alpha_idx,3} = traj_list{3};
-    traj_list_all_alpha{alpha_idx,4} = traj_list{4};
-
+    cost_list_all_alpha{alpha_idx,1} = traj_opt_cost;
+    for fidx = 1:n_files
+        cost_list_all_alpha{alpha_idx,fidx+1} = cost_list(fidx,:);
+        traj_list_all_alpha{alpha_idx,fidx} = traj_list{fidx};
+    end
+    
     alpha_idx = alpha_idx+1;
 %     
 %      x1 = traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
@@ -102,16 +107,16 @@ for alpha = alpha_list
 %      ylabel('Average Rewards')
 %      xlabel('Algorithms')
 %      visualizeTraj(optimal_x,alpha);
-%       visualizeTraj(traj_list{1,1},alpha);
-%      visualizeTraj(traj_list{2,1},alpha);
+      visualizeTraj(traj_list{1,1},alpha);
+     visualizeTraj(traj_list{2,1},alpha);
 %      visualizeTraj(traj_list{3,1},alpha);
-% 
-% visualizeTraj(traj_list{4,1},alpha);
+
+%       visualizeTraj(traj_list{4,1},alpha);
 
 
 end
 keyboard;
-save('cost_list_all_alpha_a=[3,30]_all_algo_if_cost_fun__','cost_list_all_alpha','alpha_list');
+save('cost_list_all_alpha_a=[3,30]_all_algo_if_cost_fun__','cost_list_all_alpha','alpha_list','traj_list_all_alpha');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
