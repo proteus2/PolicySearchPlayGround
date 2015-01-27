@@ -49,7 +49,7 @@ for alpha = alpha_list
     
     train_files={'mmd_results_repmat=1,a=all,algo=nearest_neighbor,aggregation','mmd_results_repmat=1,a=all_nearest_neighbor',...
                      'mmd_results_repmat=1,a=all,algo=RF,aggregation','mmd_results_repmat=10,a=all'};
-    train_files={'mmd_results_init_at_alpha_R>0_agg','mmd_results_init_at_alpha_R>0'};
+    train_files={'mmd_results_init_at_alpha_R>0_agg','mmd_results_alpha_R>0'};
     n_files = size(train_files,2);
     
     %apprxtraj_fname = strcat('./data_for_plots/test/',train_file1,'_',train_file2,'_',train_file3,'_',apprxtraj_fname);

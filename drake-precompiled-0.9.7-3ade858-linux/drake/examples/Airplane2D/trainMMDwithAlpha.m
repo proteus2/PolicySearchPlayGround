@@ -28,8 +28,8 @@ end
 train_alpha_list
 train_x0_list
 
-train_alpha_list = [5,10];
-train_x0_list = []
+train_alpha_list = [5];
+train_x0_list = [[2;0;0;0],[4;0;0;0]];
 
 aggregate=true
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);

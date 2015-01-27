@@ -137,7 +137,7 @@ classdef MMDAggregateController
                     end
                 
                     dists=dists.^2;
-                    dists(end,:) = dists(end,:)*2;
+                    dists(5,:) = dists(5,:)*2;
 %                     k(idx1,:) = -sum(dists)./(2);
                     k(idx1,:) = exp(-sum(dists)./(2*100));
 %                     for idx2=1:n
@@ -168,7 +168,7 @@ classdef MMDAggregateController
                 end
                     
                 dists=dists.^2;
-                dists(end,:) = dists(end,:)*2;
+                dists(5,:) = dists(5,:)*2;
                 sum_dists = sum(dists);
                 sum_kernel = sum( exp(-sum_dists./(2*100)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
