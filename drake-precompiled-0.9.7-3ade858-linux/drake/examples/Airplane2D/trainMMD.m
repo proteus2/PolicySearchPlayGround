@@ -43,7 +43,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
             tf_list(idx) = tf;
             t = xtraj.getBreaks();
             [x,y] = turnTrajToData(xtraj,utraj,t,alpha,x0);
-            %controller = setNewController(controller,x,y);
+            controller = setNewController(controller,x,y);
             ref_traj_list{x0_idx,1} = x(1:4,:); 
         end
         
