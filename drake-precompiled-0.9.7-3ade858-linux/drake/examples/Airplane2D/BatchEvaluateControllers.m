@@ -2,7 +2,7 @@
 clear all;
 close all;
 x0 = [2;0.7;0;0];
-rand_list = rand(1,100);
+rand_list = rand(1,50);
 alpha_list = rand_list*30 + (1-rand_list)*4;
 
 load('cost_list_all_alpha_a=[4,30]_repmat=1','alpha_list');
@@ -12,7 +12,7 @@ alpha_list = [alpha_list temp];
 cost_list_all_alpha = {};
 
 
-n_x0=10;
+n_x0=50;
 x0_rand = rand(1,n_x0);
 x0_x = 5*x0_rand + (1-x0_rand)*2;
 x0_rand = rand(1,n_x0);
@@ -63,7 +63,7 @@ for x0_idx=1:size(test_x0_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
-        train_files={'mmd_results_init_at_alpha_R>0_agg'};
+        train_files={'mmd_results_alpha_R>0.mat'};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -131,8 +131,7 @@ for x0_idx=1:size(test_x0_list,2)
 
     end
 end
-keyboard;
-save('cost_list_all_alpha_a=[3,30]_all_algo_if_cost_fun__','cost_list_all_alpha','alpha_list','traj_list_all_alpha');
+save('cost_list_all_alpha_all_x0_no_agg','cost_list_all_alpha','alpha_list','traj_list_all_alpha');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
