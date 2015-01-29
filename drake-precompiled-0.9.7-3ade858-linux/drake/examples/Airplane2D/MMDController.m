@@ -93,10 +93,10 @@ classdef MMDController
                         obj.max_d(obj.n_mmd_itern) = k;
                     end
                 end
-                
-                    num_replicate = 5;
-                    x_data = repmat(x_data,1,num_replicate);
-                    y_data = repmat(y_data,1,num_replicate);
+
+                num_replicate = 10;
+                x_data = repmat(x_data,1,num_replicate);
+                y_data = repmat(y_data,1,num_replicate);
                 rng(obj.RF_seed);
                 obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
             end
@@ -143,7 +143,7 @@ classdef MMDController
         end
         
         function [min_mmd,min_mmd_idx]=computeMMD(obj,x_data)
-            if obj.n_mmd_itern == 1
+            if obj.n_mmd_itern == 0
                 min_mmd = Inf;
                 min_mmd_idx = -1;
                 return;
@@ -223,7 +223,7 @@ classdef MMDController
                     dists=dists.^2;
                     dists(5,:) = dists(5,:)*2;
 %                     k(idx1,:) = -sum(dists)./(2);
-                    k(idx1,:) = exp(-sum(dists)./(2*100));
+                    k(idx1,:) = exp(-sum(dists)./(2*10));
 %                     for idx2=1:n
 %                         k(idx1,idx2) = obj.kernel(x(:,idx1),x(:,idx2));
 %                     end
@@ -263,7 +263,7 @@ classdef MMDController
                 dists=dists.^2;
                 dists(5,:) = dists(5,:)*2;
                 sum_dists = sum(dists);
-                sum_kernel = sum( exp(-sum_dists./(2*100)) );
+                sum_kernel = sum( exp(-sum_dists./(2*10)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
             
                 

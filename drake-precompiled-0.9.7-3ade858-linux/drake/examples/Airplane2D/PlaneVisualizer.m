@@ -91,7 +91,7 @@ classdef PlaneVisualizer < Visualizer
       end
       
       % draw goal location
-      rectangle('Position',[4.5,8.5,1,1],'Curvature',1,'EdgeColor','red')
+      rectangle('Position',[4.25,8.25,1.5,1.5],'Curvature',1,'EdgeColor','red')
       
 % 
 %       %%Plot borders

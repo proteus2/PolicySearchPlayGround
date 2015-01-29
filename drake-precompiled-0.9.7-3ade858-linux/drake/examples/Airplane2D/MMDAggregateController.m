@@ -31,6 +31,11 @@ classdef MMDAggregateController
 
         function obj = setNewController(obj,x_data,y_data)
             
+            num_replicate = 10;
+            x_data = repmat(x_data,1,num_replicate);
+            y_data = repmat(y_data,1,num_replicate);
+            
+            
             if size(obj.data_sets_unnormalized,1) == 0
                 obj.n_dataset = size(x_data,2);
                 obj.data_sets_unnormalized{1,1} = [];
@@ -67,8 +72,10 @@ classdef MMDAggregateController
                     obj.max_d(1) = k;
                 end
             end
+
+                    
             rng(obj.RF_seed);
-            obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
+            obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',5);
         end
     
         function [normalized_data,mean_data,stddev_data] = normalizeData(obj,data_idx)
@@ -139,7 +146,7 @@ classdef MMDAggregateController
                     dists=dists.^2;
                     dists(5,:) = dists(5,:)*2;
 %                     k(idx1,:) = -sum(dists)./(2);
-                    k(idx1,:) = exp(-sum(dists)./(2*100));
+                    k(idx1,:) = exp(-sum(dists)./(2*10));
 %                     for idx2=1:n
 %                         k(idx1,idx2) = obj.kernel(x(:,idx1),x(:,idx2));
 %                     end
@@ -170,7 +177,7 @@ classdef MMDAggregateController
                 dists=dists.^2;
                 dists(5,:) = dists(5,:)*2;
                 sum_dists = sum(dists);
-                sum_kernel = sum( exp(-sum_dists./(2*100)) );
+                sum_kernel = sum( exp(-sum_dists./(2*10)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
            
             end 

@@ -17,9 +17,14 @@ sum(exp(-dists2./2))
 
 
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
-ref_traj = ref_traj_list{2,1};
-figure; hold on; scatter(ref_traj(1,:),ref_traj(2,:),'black')
-figure; scatter(x1(1,1:end),x1(2,1:end),'blue');
+ref_traj = controller.data_sets_unnormalized{1,1};
+    field = ObstacleField();
+    field = field.GenerateRandomObstacles();    
+ figure(25); clf;  hold on;
+    v = PlaneVisualizer(p,field);
+    v.draw(0,x0);
+ hold on; scatter(ref_traj(1,:),ref_traj(2,:),'black')
+hold on; scatter(x1(1,1:end),x1(2,1:end),'blue');
 %  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
 
 if ~isempty(x)
@@ -28,3 +33,32 @@ end
 
 %%
 hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
+
+
+%%
+field = ObstacleField();
+field = field.GenerateRandomObstacles();
+
+t1= traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
+t2= traj_list{2,1}.eval(traj_list{2,1}.getBreaks);
+opt = traj_list_opt{1,1}.eval(traj_list_opt{1,1}.getBreaks);
+c1 = [];
+c2 = [];
+c3 = [];
+for idx=1:size(t1,2)-1
+x = t1(:,idx);
+[c,dc] = field.obstacleConstraint(x);
+[c,i]=max(c);
+c1 = [c1 c];
+
+x = t2(:,idx);
+[c,dc] = field.obstacleConstraint(x);
+[c,i]=max(c);
+c2 = [c2 c];
+end
+for idx=1:size(opt,2)-1
+x = opt(:,idx);
+[c,dc] = field.obstacleConstraint(x);
+[c,i]=max(c);
+c3 = [c3 c];
+end
