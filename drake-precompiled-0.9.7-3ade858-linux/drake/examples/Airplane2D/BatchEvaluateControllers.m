@@ -4,11 +4,11 @@ close all;
 x0 = [2;0.7;0;0];
 rand_list = rand(1,50);
 alpha_list = rand_list*30 + (1-rand_list)*4;
-
-load('cost_list_all_alpha_a=[4,30]_repmat=1','alpha_list');
-temp=alpha_list;
-load('cost_list_all_alpha_a=[3,10]_repmat=1','alpha_list');
-alpha_list = [alpha_list temp];
+% 
+% load('cost_list_all_alpha_a=[4,30]_repmat=1','alpha_list');
+% temp=alpha_list;
+% load('cost_list_all_alpha_a=[3,10]_repmat=1','alpha_list');
+% alpha_list = [alpha_list temp];
 cost_list_all_alpha = {};
 
 
@@ -33,14 +33,18 @@ else
     load('test_x0_list')
 end
 
-alpha_list = test_alpha_list;
+alpha_list = test_alpha_list(1:5);
+test_x0_list = test_x0_list(:,1:10);
 
+alpha_list = alpha_list(1);
+test_x0_list = test_x0_list(:,1);
 %% Eval script
     alpha_idx =    1;
 for x0_idx=1:size(test_x0_list,2)
     x0 = test_x0_list(:,x0_idx);
 
     for alpha = alpha_list
+    	fprintf('Will be completing=%0.1f percent\n', (x0_idx+alpha_idx-1)/(size(test_x0_list,2)*size(alpha_list,2)) *100);
         optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
         optimaltraj_fname = strcat('./data_for_plots/test/',optimaltraj_fname);
         if exist(optimaltraj_fname,'file')
@@ -63,7 +67,7 @@ for x0_idx=1:size(test_x0_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
-        train_files={'mmd_results_alpha_R>0.mat'};
+        train_files={'mmd_results_alpha_R>0_agg_repmat=10'};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -75,6 +79,7 @@ for x0_idx=1:size(test_x0_list,2)
                 apprxtraj_fname = strcat(apprxtraj_fname,fname,'_');
             end
         end
+        apprxtraj_fname = strcat(apprxtraj_fname,sprintf('_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f]',alpha,x0(1),x0(2),x0(3),x0(4)),'.mat');
 
         if ~exist(apprxtraj_fname,'file')
             tf = optimal_u.getBreaks; tf=tf(end);
@@ -88,7 +93,7 @@ for x0_idx=1:size(test_x0_list,2)
             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
         else
             load(apprxtraj_fname)
-            tf = optimal_u.getBreaks; tf=tf(end)+0.01;
+            tf = optimal_u.getBreaks; tf=tf(end);
             [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
         end
@@ -122,8 +127,7 @@ for x0_idx=1:size(test_x0_list,2)
     %      ylabel('Average Rewards')
     %      xlabel('Algorithms')
            %visualizeTraj(optimal_x,alpha);
-           %visualizeTraj(traj_list{1,1},alpha);
-          %visualizeTraj(traj_list{2,1},alpha);
+          visualizeTraj(traj_list{1,1},alpha);
     %      visualizeTraj(traj_list{3,1},alpha);
 
     %       visualizeTraj(traj_list{4,1},alpha);
@@ -131,7 +135,8 @@ for x0_idx=1:size(test_x0_list,2)
 
     end
 end
-save('cost_list_all_alpha_all_x0_no_agg','cost_list_all_alpha','alpha_list','traj_list_all_alpha');
+keyboard
+save('cost_list_all_alpha_all_x0_no_agg2','cost_list_all_alpha','alpha_list','traj_list_all_alpha');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 

@@ -1,5 +1,4 @@
 train_alpha_list = [5,7,12,14,15,18,20,22,24];
-train_alpha_list = 10;
 n_mmd_itern = 50;
 train_x0_list = {[2;0;0;0],[4;0;0;0]};
 
@@ -25,17 +24,16 @@ else
 end
 
 
-train_alpha_list
+train_alpha_list = train_alpha_list(1:5);
 train_x0_list
-
 
 aggregate=true
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
 if aggregate
-    save('mmd_results_alpha_R>0_agg','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_R>0_agg_repmat=10','controller','data','train_alpha_list','train_x0_list');
 else
-    save('mmd_results_alpha_R>0','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_R>0_testing','controller','data','train_alpha_list','train_x0_list');
 end
 % save('mmd_results_repmat=1,a=all,algo=RF,aggregation','controller','data','train_alpha_list');
 % load('mmd_results_x0=2,4')

@@ -15,7 +15,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
         alpha = alpha_list(idx);
         for x0_idx=1:size(x0_list,2)
             x0=x0_list(:,x0_idx);
-            init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4));
+            init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
             if ~exist(init_fname,'file')
                 if exist('xtraj','var') % if initial training is done
                     p = PlanePlant(alpha);
@@ -28,7 +28,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 
                     %[utraj,xtraj,~] = getTrajectory(x0,alpha,true,xinit,uinit,tf);
                 else
-                    [utraj,xtraj,~] = getTrajectory(x0,alpha,true);
+                    [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
                 end
                 save(init_fname, 'xtraj','utraj');
             else
@@ -43,7 +43,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
             tf_list(idx) = tf;
             t = xtraj.getBreaks();
             [x,y] = turnTrajToData(xtraj,utraj,t,alpha,x0);
-            controller = setNewController(controller,x,y);
+%             controller = setNewController(controller,x,y);
             ref_traj_list{x0_idx,1} = x(1:4,:); 
         end
         
@@ -74,12 +74,12 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                         d_list=[d_list d];
 
                         dist_to_goal = norm(x1(1:2,k)-[5; 9]);
-                        if dist_to_goal<=0.3
+                        if dist_to_goal<=0.5
                             break
                         end
 
                         % Check if the encountered state lies far from datasets
-                        if emptyCandidates       
+                         if emptyCandidates   
                             d,current_state
                             x = [x current_state];
     %                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x1(:,k),alpha,false,ref_traj);
