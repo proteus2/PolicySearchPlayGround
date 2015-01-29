@@ -36,8 +36,13 @@ end
 alpha_list = test_alpha_list(1:5);
 test_x0_list = test_x0_list(:,1:10);
 
+<<<<<<< HEAD
 alpha_list = alpha_list(1);
 test_x0_list = test_x0_list(:,1);
+=======
+alpha_list =11;
+test_x0_list = [2.4;0.77;0;0];
+>>>>>>> 704cf43da2f94b3e09a7350df33d3e475f0d4ca7
 %% Eval script
     alpha_idx =    1;
 for x0_idx=1:size(test_x0_list,2)
@@ -67,7 +72,11 @@ for x0_idx=1:size(test_x0_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
+<<<<<<< HEAD
         train_files={'mmd_results_alpha_R>0_agg_repmat=10'};
+=======
+        train_files={'mmd_results_alpha_R>0','mmd_results_alpha_R>0_agg'};
+>>>>>>> 704cf43da2f94b3e09a7350df33d3e475f0d4ca7
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -127,7 +136,12 @@ for x0_idx=1:size(test_x0_list,2)
     %      ylabel('Average Rewards')
     %      xlabel('Algorithms')
            %visualizeTraj(optimal_x,alpha);
+<<<<<<< HEAD
           visualizeTraj(traj_list{1,1},alpha);
+=======
+           visualizeTraj(traj_list{1,1},alpha);
+           visualizeTraj(traj_list{2,1},alpha);
+>>>>>>> 704cf43da2f94b3e09a7350df33d3e475f0d4ca7
     %      visualizeTraj(traj_list{3,1},alpha);
 
     %       visualizeTraj(traj_list{4,1},alpha);
