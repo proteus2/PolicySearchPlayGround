@@ -76,7 +76,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 
                         % Check if the encountered state lies far from datasets
 %                          if emptyCandidates   
-                        if d > controller.max_d*0.70
+                        if d > controller.max_d*0.80
                             d,current_state
                             x = [x current_state];
     %                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x1(:,k),alpha,false,ref_traj);
