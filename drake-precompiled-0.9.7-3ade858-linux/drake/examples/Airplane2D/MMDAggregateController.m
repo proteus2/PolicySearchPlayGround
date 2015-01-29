@@ -31,6 +31,11 @@ classdef MMDAggregateController
 
         function obj = setNewController(obj,x_data,y_data)
             
+            num_replicate = 10;
+            x_data = repmat(x_data,1,num_replicate);
+            y_data = repmat(y_data,1,num_replicate);
+            
+            
             if size(obj.data_sets_unnormalized,1) == 0
                 obj.n_dataset = size(x_data,2);
                 obj.data_sets_unnormalized{1,1} = [];
@@ -68,12 +73,9 @@ classdef MMDAggregateController
                 end
             end
 
-            num_replicate = 10;
-            x_data = repmat(x_data,1,num_replicate);
-            y_data = repmat(y_data,1,num_replicate);
                     
             rng(obj.RF_seed);
-            obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
+            obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',5);
         end
     
         function [normalized_data,mean_data,stddev_data] = normalizeData(obj,data_idx)

@@ -35,16 +35,13 @@ end
 
 alpha_list = test_alpha_list(1:5);
 test_x0_list = test_x0_list(:,1:10);
+% 
+% test_x0_list = test_x0_list(:,6);
+% alpha_list = test_alpha_list(5);
 
-<<<<<<< HEAD
-alpha_list = alpha_list(1);
-test_x0_list = test_x0_list(:,1);
-=======
-alpha_list =11;
-test_x0_list = [2.4;0.77;0;0];
->>>>>>> 704cf43da2f94b3e09a7350df33d3e475f0d4ca7
+
 %% Eval script
-    alpha_idx =    1;
+alpha_idx =    1;
 for x0_idx=1:size(test_x0_list,2)
     x0 = test_x0_list(:,x0_idx);
 
@@ -72,11 +69,7 @@ for x0_idx=1:size(test_x0_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
-<<<<<<< HEAD
-        train_files={'mmd_results_alpha_R>0_agg_repmat=10'};
-=======
-        train_files={'mmd_results_alpha_R>0','mmd_results_alpha_R>0_agg'};
->>>>>>> 704cf43da2f94b3e09a7350df33d3e475f0d4ca7
+        train_files={'mmd_results_alpha_R>0_agg_repmat=10','mmd_results_alpha_R>0_agg_repmat=3','mmd_results_alpha_R>0_agg_repmat=1'};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -88,7 +81,7 @@ for x0_idx=1:size(test_x0_list,2)
                 apprxtraj_fname = strcat(apprxtraj_fname,fname,'_');
             end
         end
-        apprxtraj_fname = strcat(apprxtraj_fname,sprintf('_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f]',alpha,x0(1),x0(2),x0(3),x0(4)),'.mat');
+        apprxtraj_fname =strcat(apprxtraj_fname,sprintf('_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f]',alpha,x0(1),x0(2),x0(3),x0(4)),'.mat');
 
         if ~exist(apprxtraj_fname,'file')
             tf = optimal_u.getBreaks; tf=tf(end);
@@ -136,13 +129,10 @@ for x0_idx=1:size(test_x0_list,2)
     %      ylabel('Average Rewards')
     %      xlabel('Algorithms')
            %visualizeTraj(optimal_x,alpha);
-<<<<<<< HEAD
-          visualizeTraj(traj_list{1,1},alpha);
-=======
-           visualizeTraj(traj_list{1,1},alpha);
-           visualizeTraj(traj_list{2,1},alpha);
->>>>>>> 704cf43da2f94b3e09a7350df33d3e475f0d4ca7
-    %      visualizeTraj(traj_list{3,1},alpha);
+%          visualizeTraj(traj_list{1,1},alpha);
+%  visualizeTraj(traj_list{2,1},alpha);
+%   visualizeTraj(traj_list{3,1},alpha);
+
 
     %       visualizeTraj(traj_list{4,1},alpha);
 
@@ -150,7 +140,7 @@ for x0_idx=1:size(test_x0_list,2)
     end
 end
 keyboard
-save('cost_list_all_alpha_all_x0_no_agg2','cost_list_all_alpha','alpha_list','traj_list_all_alpha');
+save('cost_list_all_alpha_all_x0_no_agg_repmat=1','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 

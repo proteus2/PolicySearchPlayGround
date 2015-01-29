@@ -15,21 +15,9 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
         alpha = alpha_list(idx);
         for x0_idx=1:size(x0_list,2)
             x0=x0_list(:,x0_idx);
-            init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
+             init_fname = sprintf('initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
             if ~exist(init_fname,'file')
-                if exist('xtraj','var') % if initial training is done
-                    p = PlanePlant(alpha);
-                    tf = xtraj.getBreaks(); tf=tf(end);
-                    t = 0:tf/21:tf;
-                    dt=tf/21;
-                    tf = t(end-1);
-                    %[xinit,uinit] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
-                                        [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
-
-                    %[utraj,xtraj,~] = getTrajectory(x0,alpha,true,xinit,uinit,tf);
-                else
-                    [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
-                end
+                [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
                 save(init_fname, 'xtraj','utraj');
             else
                 load(init_fname);
@@ -39,18 +27,26 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                 end
             end
             
+            if idx==1 && x0_idx == 1
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(idx) = tf;
             t = xtraj.getBreaks();
             [x,y] = turnTrajToData(xtraj,utraj,t,alpha,x0);
-%             controller = setNewController(controller,x,y);
+             controller = setNewController(controller,x,y);
             ref_traj_list{x0_idx,1} = x(1:4,:); 
+            end
         end
         
         % get reference trajectory
     end
     
-    
+%     alpha=alpha_list(1); x0=x0_list(:,1);
+%     [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
+%     tf = xtraj.getBreaks(); tf = tf(end);
+%     t=0:0.01:tf;
+%     [x,y] = turnTrajToData(xtraj,utraj,t,alpha,x0);
+%     controller = setNewController(controller,x,y);
+%      
     % set parameters
     %beta = 0.90; gamma = 1;
     for MMD_iteration = 1:n_mmd_itern
@@ -79,7 +75,8 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                         end
 
                         % Check if the encountered state lies far from datasets
-                         if emptyCandidates   
+%                          if emptyCandidates   
+                        if d > controller.max_d*0.70
                             d,current_state
                             x = [x current_state];
     %                         [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getRecoveryTrajectory(x1(:,k),alpha,false,ref_traj);
