@@ -28,27 +28,27 @@ function [controller] = trainKMM(x0_list,n_mmd_itern,alpha_list)
                     %% 2) Execute the current trajectory
                     p = PlanePlant(alpha);
                     [xtraj_exed,~] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
-%                     drawTrajectories({xtraj_ref.eval(xtraj_ref.getBreaks());xtraj_exed.eval(xtraj_exed.getBreaks())},x0);
+                     drawTrajectories({xtraj_ref.eval(xtraj_ref.getBreaks());xtraj_exed.eval(xtraj_exed.getBreaks())},x0);
 
                     %% 3) while MMD between the exe'd traj and the ref trajectory is not small,
-                    n_kmm = 0;
-                    while (computeMMD(xtraj_ref.eval(xtraj_ref.getBreaks()),xtraj_exed.eval(xtraj_exed.getBreaks())) > gamma) ...
-                            && n_kmm<=n_kmm_limit
-                        % KMM the output of the trajectory optimization
-                        train_x = xtraj_ref.eval(xtraj_ref.getBreaks());
-                        test_x = xtraj_exed.eval(xtraj_exed.getBreaks());
-                        sprintf('KMM...')
-                        kmm_weights = KMM(train_x,test_x,2000);
-                        
-                        % train a new policy on the D union KMM'ed output
-                        controller = setNewController(controller,x,y,kmm_weights);
-                        
-                        % execute the policy
-                        [xtraj_exed,~] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
-%                         drawTrajectories({xtraj_ref.eval(xtraj_ref.getBreaks());xtraj_exed.eval(xtraj_exed.getBreaks())},x0);
-                        n_kmm = n_kmm + 1;
-                        n_kmm_calls = n_kmm_calls + 1;
-                    end
+%                     n_kmm = 0;
+%                     while (computeMMD(xtraj_ref.eval(xtraj_ref.getBreaks()),xtraj_exed.eval(xtraj_exed.getBreaks())) > gamma) ...
+%                             && n_kmm<=n_kmm_limit
+%                         % KMM the output of the trajectory optimization
+%                         train_x = xtraj_ref.eval(xtraj_ref.getBreaks());
+%                         test_x = xtraj_exed.eval(xtraj_exed.getBreaks());
+%                         sprintf('KMM...')
+%                         kmm_weights = KMM(train_x,test_x,2000);
+%                         
+%                         % train a new policy on the D union KMM'ed output
+%                         controller = setNewController(controller,x,y,kmm_weights);
+%                         
+%                         % execute the policy
+%                         [xtraj_exed,~] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
+%                          drawTrajectories({xtraj_ref.eval(xtraj_ref.getBreaks());xtraj_exed.eval(xtraj_exed.getBreaks())},x0);
+%                         n_kmm = n_kmm + 1;
+%                         n_kmm_calls = n_kmm_calls + 1;
+%                     end
                 end
             end
             if n_kmm_calls == 0
