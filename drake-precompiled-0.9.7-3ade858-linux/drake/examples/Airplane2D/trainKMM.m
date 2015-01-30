@@ -18,17 +18,18 @@ function [controller] = trainKMM(x0_list,n_mmd_itern,alpha_list)
                     else
                         load(init_fname);
                     end
-                    xtraj_ref = xtraj; utraj_ref = utraj;
-                    tf = xtraj_ref.getBreaks(); tf=tf(end); t = xtraj_ref.getBreaks();
-                    [x,y] = turnTrajToData(xtraj_ref,utraj_ref,t,alpha);
-                    if alpha_idx == 1 && x0_idx == 1
-                        controller = setNewController(controller,x,y,ones(21,1)); % if first alpha, train
-                    end
-                    
-                    %% 2) Execute the current trajectory
-                    p = PlanePlant(alpha);
-                    [xtraj_exed,~] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
-                     drawTrajectories({xtraj_ref.eval(xtraj_ref.getBreaks());xtraj_exed.eval(xtraj_exed.getBreaks())},x0);
+%                     visualizeTraj(xtraj)
+%                     xtraj_ref = xtraj; utraj_ref = utraj;
+%                     tf = xtraj_ref.getBreaks(); tf=tf(end); t = xtraj_ref.getBreaks();
+%                     [x,y] = turnTrajToData(xtraj_ref,utraj_ref,t,alpha);
+%                     if alpha_idx == 1 && x0_idx == 1
+%                         controller = setNewController(controller,x,y,ones(21,1)); % if first alpha, train
+%                     end
+%                     
+%                     %% 2) Execute the current trajectory
+%                     p = PlanePlant(alpha);
+%                     [xtraj_exed,~] = rungeKattaSimulation(x0,controller,dt,tf,p,true);
+%                      drawTrajectories({xtraj_ref.eval(xtraj_ref.getBreaks());xtraj_exed.eval(xtraj_exed.getBreaks())},x0);
 
                     %% 3) while MMD between the exe'd traj and the ref trajectory is not small,
 %                     n_kmm = 0;

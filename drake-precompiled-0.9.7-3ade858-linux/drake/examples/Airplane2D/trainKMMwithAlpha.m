@@ -23,10 +23,10 @@ else
     load('train_x0_list')
 end
 
-train_alpha_list = train_alpha_list(2:end);
-train_x0_list = train_x0_list(:,end);
 train_alpha_list
 train_x0_list
 
 [controller] = trainKMM(train_x0_list,n_mmd_itern,train_alpha_list);
-save('KMM_controller','controller');
+% save('KMM_controller','controller');
+% initial_mmd_traj_alpha=1.909802e+01,x0=[4.763814e+00,6.803369e-01,0,0].mat
+% initial_mmd_traj_alpha=1.909802e+01,x0=[4.342788e+00,8.445333e-01,0,0].mat
