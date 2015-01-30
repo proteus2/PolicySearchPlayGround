@@ -24,16 +24,13 @@ else
 end
 
 
-train_alpha_list = train_alpha_list(1:5)
+train_alpha_list
 train_x0_list
-
-train_alpha_list = 7;
-train_x0_list = [4.3;0.7;0;0];
 aggregate=true
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
 if aggregate
-    save('mmd_results_alpha_R>0_agg_repmat=1_test','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_R>0_agg_repmat=10','controller','data','train_alpha_list','train_x0_list');
 else
     save('mmd_results_alpha_R>0_repmat=10_test','controller','data','train_alpha_list','train_x0_list');
 end

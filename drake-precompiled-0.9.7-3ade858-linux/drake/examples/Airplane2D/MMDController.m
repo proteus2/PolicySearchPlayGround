@@ -35,6 +35,9 @@ classdef MMDController
             if obj.n_mmd_itern == 0
                 obj.n_dataset = size(x_data,2);
             end
+                num_replicate = 10;
+                x_data = repmat(x_data,1,num_replicate);
+                y_data = repmat(y_data,1,num_replicate);
             
             % Check the mmd discrepancy between the new data and the existing data
             [min_mmd,min_mmd_idx] = obj.computeMMD(x_data);
@@ -94,11 +97,8 @@ classdef MMDController
                     end
                 end
 
-                num_replicate = 10;
-                x_data = repmat(x_data,1,num_replicate);
-                y_data = repmat(y_data,1,num_replicate);
                 rng(obj.RF_seed);
-                obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',1);
+                obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',5);
             end
 %         end
     
@@ -122,7 +122,7 @@ classdef MMDController
             candidates = {};
             for idx=1:size(obj.data_sets,1)
                 curr_d = obj.computeKernel(idx,x);
-                if curr_d <= obj.max_d(idx)
+                if curr_d <= obj.max_d(idx)*0.7
                     candidates{size(candidates,1)+1,1} = idx; candidates{size(candidates,1),2} = curr_d;
                 end
                 
@@ -221,7 +221,7 @@ classdef MMDController
                     end
                 
                     dists=dists.^2;
-                    dists(5,:) = dists(5,:)*2;
+                    dists(5,:) = dists(5,:);
 %                     k(idx1,:) = -sum(dists)./(2);
                     k(idx1,:) = exp(-sum(dists)./(2*10));
 %                     for idx2=1:n
@@ -261,7 +261,7 @@ classdef MMDController
                 end
                     
                 dists=dists.^2;
-                dists(5,:) = dists(5,:)*2;
+                dists(5,:) = dists(5,:);
                 sum_dists = sum(dists);
                 sum_kernel = sum( exp(-sum_dists./(2*10)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);

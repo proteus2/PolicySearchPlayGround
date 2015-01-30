@@ -69,7 +69,7 @@ for x0_idx=1:size(test_x0_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
-        train_files={'mmd_results_alpha_R>0_agg_repmat=10','mmd_results_alpha_R>0_agg_repmat=3','mmd_results_alpha_R>0_agg_repmat=1'};
+        train_files={'mmd_results_alpha_R>0_agg_repmat=1_test','KMM_controller'};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -140,7 +140,7 @@ for x0_idx=1:size(test_x0_list,2)
     end
 end
 keyboard
-save('cost_list_all_alpha_all_x0_no_agg_repmat=1','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
+save('cost_list_mmd_vs_kmm','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 

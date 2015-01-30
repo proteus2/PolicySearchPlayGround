@@ -31,10 +31,6 @@ classdef MMDAggregateController
 
         function obj = setNewController(obj,x_data,y_data)
             
-            num_replicate = 10;
-            x_data = repmat(x_data,1,num_replicate);
-            y_data = repmat(y_data,1,num_replicate);
-            
             
             if size(obj.data_sets_unnormalized,1) == 0
                 obj.n_dataset = size(x_data,2);
@@ -66,15 +62,20 @@ classdef MMDAggregateController
                 
             % compute the maximum distance to the center of the dataset
             obj.max_d(1) = -Inf;
-            for idx = 1:size(obj.data_sets_unnormalized{1,1},2)
-                k = obj.computeKernel(1,obj.data_sets_unnormalized{1,1}(:,idx)); 
-                if k>obj.max_d(1)
-                    obj.max_d(1) = k;
-                end
-            end
+%             for idx = 1:size(obj.data_sets_unnormalized{1,1},2)
+%                 k = obj.computeKernel(1,obj.data_sets_unnormalized{1,1}(:,idx)); 
+%                 if k>obj.max_d(1)
+%                     obj.max_d(1) = k;
+%                 end
+%             end
 
                     
             rng(obj.RF_seed);
+            
+            num_replicate = 10;
+            x_data = repmat(x_data,1,num_replicate);
+            y_data = repmat(y_data,1,num_replicate);
+            
             obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',5);
         end
     
@@ -144,7 +145,7 @@ classdef MMDAggregateController
                     end
                 
                     dists=dists.^2;
-                    dists(5,:) = dists(5,:)*2;
+                    dists(5,:) = dists(5,:);
 %                     k(idx1,:) = -sum(dists)./(2);
                     k(idx1,:) = exp(-sum(dists)./(2*10));
 %                     for idx2=1:n
@@ -175,7 +176,7 @@ classdef MMDAggregateController
                 end
                     
                 dists=dists.^2;
-                dists(5,:) = dists(5,:)*2;
+                dists(5,:) = dists(5,:);
                 sum_dists = sum(dists);
                 sum_kernel = sum( exp(-sum_dists./(2*10)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
@@ -184,9 +185,7 @@ classdef MMDAggregateController
         end
         
         function u = predict(obj,x,idx)
-            if nargin<3
-                [~,idx,~] = checkDiscrepancy(obj,x);
-            end
+            idx=1;
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
             
