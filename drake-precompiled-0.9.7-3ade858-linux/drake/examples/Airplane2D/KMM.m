@@ -63,8 +63,8 @@ temp_test = test_data;
     k = n_tr/n_te*sum(k,2);
 
     lb_theta = zeros(n_tr,1);
-    ub_theta = ones(n_tr,1);
-    cvx_begin 
+    ub_theta = ones(n_tr,1)*100;
+    cvx_begin quiet
         variable theta(n_tr)
         minimize( 1/2*theta'*K*theta - k'*theta )
         subject to 
@@ -75,15 +75,15 @@ temp_test = test_data;
     theta = theta/min(theta);
     theta = theta/sum(theta)*max_n_data;
     theta = ceil(theta);
-% 
+
 %     p=PlanePlant()
 %     field = ObstacleField();
 %     field = field.GenerateRandomObstacles();    
 %     figure(25); clf;  hold on;
 %     v = PlaneVisualizer(p,field);
-%     v.draw(0,[4.1203;0.3583;0;0]);
+%     v.draw(0,[3.9;0;0;0]);
 % 
-%     hold on; scatter(temp_train(1,:),temp_train(2,:),theta)
+%     hold on; scatter(temp_train(1,:),temp_train(2,:),theta+10)
 %     hold on; scatter(temp_test(1,:),temp_test(2,:))
 end
 % 

@@ -62,21 +62,21 @@ classdef MMDAggregateController
                 
             % compute the maximum distance to the center of the dataset
             obj.max_d(1) = -Inf;
-%             for idx = 1:size(obj.data_sets_unnormalized{1,1},2)
-%                 k = obj.computeKernel(1,obj.data_sets_unnormalized{1,1}(:,idx)); 
-%                 if k>obj.max_d(1)
-%                     obj.max_d(1) = k;
-%                 end
-%             end
+            for idx = 1:size(obj.data_sets_unnormalized{1,1},2)
+                k = obj.computeKernel(1,obj.data_sets_unnormalized{1,1}(:,idx)); 
+                if k>obj.max_d(1)
+                    obj.max_d(1) = k;
+                end
+            end
 
                     
             rng(obj.RF_seed);
             
-            num_replicate = 10;
+            num_replicate = 1;
             x_data = repmat(x_data,1,num_replicate);
             y_data = repmat(y_data,1,num_replicate);
             
-            obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',5);
+            obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',2);
         end
     
         function [normalized_data,mean_data,stddev_data] = normalizeData(obj,data_idx)

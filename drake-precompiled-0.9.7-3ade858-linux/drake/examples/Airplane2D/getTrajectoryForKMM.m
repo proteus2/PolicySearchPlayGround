@@ -15,12 +15,21 @@ function [utraj,xtraj,F]=getTrajectoryForKMM(x0,alpha,visualize,xinit,uinit,tf,F
     else
         tf0=tf;
     end
-
+    
+    tf0 = norm(x0-xf)/alpha;
+    dt = tf0/21;
+    
+    xsubg = [3.7;4.5;0;0];
+    tsubg = norm(xsubg-x0)/alpha;
+    Nsubg = ceil(tsubg/dt)
+    
     N = 21;
-    prog = DircolTrajectoryOptimization(p,N,[0.2 3]);
+    prog = CheatedDircolTrajectoryOptimization(p,N,[0 3]);
 
     prog = addStateConstraint(prog,ConstantConstraint(x0),1);
     prog = addStateConstraint(prog,ConstantConstraint(xf),N);
+%     [prog,id] = addStateConstraint(prog,ConstantConstraint([3.7;4.5;0;0]),Nsubg);
+
 
     % add obstacles
     disp('Adding obstacles...');
@@ -47,7 +56,7 @@ function [utraj,xtraj,F]=getTrajectoryForKMM(x0,alpha,visualize,xinit,uinit,tf,F
     
     disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
     disp(disp_msg);
-    max_num_retries = 5;
+    max_num_retries = 10;
     n_retries = 0;
     if exist('uinit','var')
         initial_guess.u = uinit;
@@ -60,7 +69,8 @@ function [utraj,xtraj,F]=getTrajectoryForKMM(x0,alpha,visualize,xinit,uinit,tf,F
     if exist('xinit','var')
         x_initial_guess = xinit;
     else 
-        x_initial_guess = PPTrajectory(foh([0,tf0/2,tf0],[x0,[3.5;4;0;0],xf]));
+%         x_initial_guess = PPTrajectory(foh([0,tf0/3,tf0*2/3,tf0],[x0,[3.5;4;0;0],[4;6;0;0],xf]));
+x_initial_guess = PPTrajectory(foh([0,tf0],[x0,xf]));
     end
 
     if ~exist('F_limit','var')
@@ -71,7 +81,7 @@ function [utraj,xtraj,F]=getTrajectoryForKMM(x0,alpha,visualize,xinit,uinit,tf,F
     F_list =[];
     
     while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>F_limit) && (n_retries <=max_num_retries) ...
-            && info ~= 1 && info~=4 && info~=5 && info~=6
+            && info ~= 1 && info~=4 && info~=5
         
          if n_retries == 0
             initial_guess.x = x_initial_guess;
@@ -90,10 +100,12 @@ function [utraj,xtraj,F]=getTrajectoryForKMM(x0,alpha,visualize,xinit,uinit,tf,F
 %                 initial_guess.x = xinit;
 %                 initial_guess.u = uinit;
 %             else
-                initial_guess.x = PPTrajectory(foh([0,tf0/2,tf0],[x0,[3.5;4;0;0],xf]+[rand(4,1) rand(4,1) zeros(4,1)] ));
+                initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
                 initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));
                 initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
 %             end
+%                 prog = updateStateConstraint(prog,id,ConstantConstraint([3.7;4.5;0;0]),Nsubg+randi([-2,2]));
+
         end
         tic
         [xtraj,utraj,~,F,info]=solveTraj(prog,tf0,initial_guess);

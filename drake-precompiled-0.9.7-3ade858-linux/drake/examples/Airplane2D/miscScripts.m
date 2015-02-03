@@ -28,12 +28,37 @@ hold on; scatter(x1(1,1:end),x1(2,1:end),'blue');
 %  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
 
 if ~isempty(x)
-hold on; scatter(x(1,:),x(2,:),100,'magenta','filled')
+hold on; scatter(x(1,:),x(2,:),10,'magenta','filled')
 end
 
-%%
 hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
 
+%% Plotting mistakes vs distance from the center
+ref_traj = controller.data_sets_unnormalized{1,1};
+dists = sum(bsxfun(@minus,controller.data_mean{1},ref_traj).^2);
+y=[];
+for idx=1:size(ref_traj,2)
+    y(idx) = controller.predict([ref_traj(:,idx);alpha;x0]);
+end
+train_err = abs((controller.data_sets_unnormalized{1,2} - y));
+
+figure;plot(dists,'o')
+hold on; plot(train_err,'o')
+plot(ones(1,21),'black')
+legend('dists','train_err')
+%% visualizing trajectoreis
+load('cost_list_kmm_vs_kmm_500'); 
+idx=1;
+for x0_idx=1:size(test_x0_list,2)
+    x0=test_x0_list(:,x0_idx);
+    for alpha_idx=1:numel(alpha_list)
+        alpha = alpha_list(alpha_idx);
+        x0,alpha
+        traj = traj_list_all_alpha{idx,2};
+        visualizeTraj(traj)
+        idx = idx+1;
+    end
+end
 
 %%
 field = ObstacleField();

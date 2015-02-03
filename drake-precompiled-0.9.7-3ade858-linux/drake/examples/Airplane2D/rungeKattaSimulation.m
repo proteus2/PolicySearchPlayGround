@@ -14,6 +14,8 @@ function [xtraj,utraj] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
             control = u.predict(curr_state');
         elseif strcmp(class(u),'MMDController') ||strcmp(class(u),'MMDAggregateController') ||strcmp(class(u),'KMMController')
             control = u.predict(curr_state);
+        elseif strcmp(class(u),'BoostedKMMController')
+            control = u.predict([curr_state;x0]);
         elseif strcmp(class(u),'network')
             control = u(curr_state);
         else

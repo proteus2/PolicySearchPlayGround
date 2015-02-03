@@ -1,18 +1,8 @@
 % Compare controllers
 clear all;
 close all;
-x0 = [2;0.7;0;0];
-rand_list = rand(1,50);
-alpha_list = rand_list*30 + (1-rand_list)*4;
-% 
-% load('cost_list_all_alpha_a=[4,30]_repmat=1','alpha_list');
-% temp=alpha_list;
-% load('cost_list_all_alpha_a=[3,10]_repmat=1','alpha_list');
-% alpha_list = [alpha_list temp];
-cost_list_all_alpha = {};
 
-
-n_x0=50;
+n_x0=10;
 x0_rand = rand(1,n_x0);
 x0_x = 5*x0_rand + (1-x0_rand)*2;
 x0_rand = rand(1,n_x0);
@@ -33,13 +23,10 @@ else
     load('test_x0_list')
 end
 
-alpha_list = test_alpha_list(1:5);
-test_x0_list = test_x0_list(:,1:10);
+% test_x0_list = test_x0_list(:,10:15);
 % 
 % test_x0_list = test_x0_list(:,6);
-% alpha_list = test_alpha_list(5);
-
-
+alpha_list = test_alpha_list(38);
 %% Eval script
 alpha_idx =    1;
 for x0_idx=1:size(test_x0_list,2)
@@ -69,7 +56,7 @@ for x0_idx=1:size(test_x0_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
-        train_files={'mmd_results_alpha_R>0_agg_repmat=1_test','KMM_controller'};
+        train_files={'mmd_results_alpha_R>0_agg_repmat=5_x0_list'};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -88,7 +75,7 @@ for x0_idx=1:size(test_x0_list,2)
             ctrl_list = cell(n_files,1);
             for fidx = 1:n_files
                 train_file = train_files{1,fidx};
-                load(train_file);
+                load(train_file,'controller');
                 ctrl_list{fidx,1} = controller;
             end
             [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
@@ -129,18 +116,17 @@ for x0_idx=1:size(test_x0_list,2)
     %      ylabel('Average Rewards')
     %      xlabel('Algorithms')
            %visualizeTraj(optimal_x,alpha);
-%          visualizeTraj(traj_list{1,1},alpha);
+%           visualizeTraj(traj_list{1,1},alpha);
 %  visualizeTraj(traj_list{2,1},alpha);
 %   visualizeTraj(traj_list{3,1},alpha);
 
 
     %       visualizeTraj(traj_list{4,1},alpha);
 
-
     end
 end
-keyboard
-save('cost_list_mmd_vs_kmm','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
+
+save('mmd_results_alpha_R>0_agg_repmat=5_x0_list_evaled.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 

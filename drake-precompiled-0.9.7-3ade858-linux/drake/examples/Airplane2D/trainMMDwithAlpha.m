@@ -24,15 +24,15 @@ else
 end
 
 
+train_x0_list=train_x0_list(:,1)
 train_alpha_list
-train_x0_list
-aggregate=true
+aggregate=false
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
 if aggregate
-    save('mmd_results_alpha_R>0_agg_repmat=10','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_R>0_agg_repmat=5_x0_list','controller','data','train_alpha_list','train_x0_list');
 else
-    save('mmd_results_alpha_R>0_repmat=10_test','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_R>0_repmat=5_alpha_list','controller','data','train_alpha_list','train_x0_list');
 end
 % save('mmd_results_repmat=1,a=all,algo=RF,aggregation','controller','data','train_alpha_list');
 % load('mmd_results_x0=2,4')

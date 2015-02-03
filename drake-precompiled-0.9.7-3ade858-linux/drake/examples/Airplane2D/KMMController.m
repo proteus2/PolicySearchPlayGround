@@ -63,7 +63,7 @@ classdef KMMController
 
           
             rng(obj.RF_seed);
-            obj.controllers{1,1} = TreeBagger(50,normalized_x',y','Method','regression','MinLeaf',5);
+            obj.controllers{1,1} = TreeBagger(50,normalized_x',y','Method','regression','MinLeaf',1);
         end
     
         
