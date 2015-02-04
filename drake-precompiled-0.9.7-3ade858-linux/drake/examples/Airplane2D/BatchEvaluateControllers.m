@@ -4,12 +4,12 @@ close all;
 
 n_x0=10;
 x0_rand = rand(1,n_x0);
-x0_x = 5*x0_rand + (1-x0_rand)*2;
+x0_x = 6*x0_rand + (1-x0_rand)*0;
 x0_rand = rand(1,n_x0);
-x0_y = 0*x0_rand + (1-x0_rand)*1;
+x0_y = 0*x0_rand + (1-x0_rand)*0;
 
 if ~exist('./test_alpha_list.mat','file')
-    test_alpha_list = 5*x0_rand + (1-x0_rand)*20;
+    test_alpha_list = 15*x0_rand + (1-x0_rand)*25;
     save('test_alpha_list','test_alpha_list');
 else
     load('test_alpha_list')
@@ -23,17 +23,22 @@ else
     load('test_x0_list')
 end
 
-% test_x0_list = test_x0_list(:,10:15);
-% 
-% test_x0_list = test_x0_list(:,6);
-alpha_list = test_alpha_list(38);
-%% Eval script
-alpha_idx =    1;
-for x0_idx=1:size(test_x0_list,2)
-    x0 = test_x0_list(:,x0_idx);
 
-    for alpha = alpha_list
-    	fprintf('Will be completing=%0.1f percent\n', (x0_idx+alpha_idx-1)/(size(test_x0_list,2)*size(alpha_list,2)) *100);
+%% Eval script
+ 
+
+
+x0_list = test_x0_list(:,1:10);
+alpha_list = test_alpha_list(1:10);
+
+x0_alpha_list  = [x0_list; alpha_list];
+
+
+for idx=1:size(x0_alpha_list,2)
+        x0 = x0_alpha_list(1:4,idx);
+        alpha = x0_alpha_list(5,idx);
+        
+    	fprintf('Will be completing=%0.1f percent\n', idx/size(x0_alpha_list,2)) *100);
         optimaltraj_fname = sprintf('optimal_traj_with_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f].mat',alpha,x0(1),x0(2),x0(3),x0(4));
         optimaltraj_fname = strcat('./data_for_plots/test/',optimaltraj_fname);
         if exist(optimaltraj_fname,'file')
@@ -123,7 +128,6 @@ for x0_idx=1:size(test_x0_list,2)
 
     %       visualizeTraj(traj_list{4,1},alpha);
 
-    end
 end
 
 save('mmd_results_alpha_R>0_agg_repmat=5_x0_list_evaled.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');

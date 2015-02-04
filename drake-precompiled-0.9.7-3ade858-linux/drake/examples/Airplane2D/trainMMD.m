@@ -10,15 +10,19 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
     % for all alpha values, get initial trajectories
     ref_traj_list = cell(numel(alpha_list,2),1);
     tf_list = zeros(numel(alpha_list,2)+size(x0_list,2),1);
+
     
+    train_list = [x0_list;alpha_list];
+
     train_idx = 1;
-     for x0_idx=1:size(x0_list,2)
-        for idx=1:numel(alpha_list)
-        alpha = alpha_list(idx);
-            x0=x0_list(:,x0_idx);
+  %  for x0_idx=1:size(x0_list,2)
+  %     for idx=1:numel(alpha_list)
+    for idx=1:size(train_list,2)
+           alpha = train_list(5,idx);
+            x0=train_list(1:4,x0_idx);
              init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
             if ~exist(init_fname,'file')
-                [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
+                [utraj,xtraj,~] = getTrajectory(x0,alpha,true);
                 save(init_fname, 'xtraj','utraj');
             else
                 load(init_fname);
@@ -30,32 +34,24 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
             
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(train_idx) = tf;
-            if train_idx == 1
+%            if train_idx == 1
                 t = xtraj.getBreaks();
                 [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
                 controller = setNewController(controller,x,y);
-            end
+%            end
 %             ref_traj_list{x0_idx,1} = x(1:4,:); 
             train_idx = train_idx + 1;
         end
-    end
-%     alpha=alpha_list(1); x0=x0_list(:,1);
-%     [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
-%     tf = xtraj.getBreaks(); tf = tf(end);
-%     t=0:0.01:tf;
-%     [x,y] = turnTrajToData(xtraj,utraj,t,alpha,x0);
-%     controller = setNewController(controller,x,y);
 %      
     % set parameters
     %beta = 0.90; gamma = 1;
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[]; train_idx = 1;
-            for x0_idx=1:size(x0_list,2)
-                x0 = x0_list(:,x0_idx);
-                for alpha_idx=1:numel(alpha_list)
+    	for idx=1:size(train_list,2)
+           alpha = train_list(5,idx);
+            x0=train_list(1:4,x0_idx);
                     
                     d_list =[];
-                    alpha = alpha_list(alpha_idx);
 
                     tf = tf_list(train_idx);
                     N  = numel(0:dt:tf);
@@ -81,13 +77,6 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                            [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
                              t = x_traj_from_curr_loc.getBreaks();
                              [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-    %                         if action_diff < gamma
-    %                             control = controller.predict(current_state,min_idx);
-    %                         else
-    %                             x = [x x_to_attach];
-    %                             y = [y y_to_attach];
-    %                             control = u_traj_from_curr_loc.eval(0);
-    %                         end
                               controller = setNewController(controller,x_to_attach,y_to_attach);    
                               control = controller.predict(current_state);
                         else
@@ -101,7 +90,6 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 %                         fprintf('Completed=%0.1f percent of alpha value = %0.2d and MMD iteration of %d\n', k/(N-1)*100, alpha, MMD_iteration);
                     end
                     train_idx = train_idx + 1;
-                end
             end   
             if isempty(x)
                 break

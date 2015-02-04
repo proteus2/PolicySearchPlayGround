@@ -30,8 +30,6 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
         prog = addRunningCost(prog,@(dt,x,u)cost(dt,x,u,field));
         prog = addFinalCost(prog,@finalCost);
     if visualize
-
-
         prog = addTrajectoryDisplayFunction(prog,@(dt,x,u)plotDircolTraj(dt,x,u,[1 2]));
         figure(25); clf;  hold on;
         v = PlaneVisualizer(p,field);
@@ -47,7 +45,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
     
     disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
     disp(disp_msg);
-    max_num_retries = 5;
+    max_num_retries = 20;
     n_retries = 0;
     if exist('uinit','var')
         initial_guess.u = uinit;
@@ -60,18 +58,22 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
     if exist('xinit','var')
         x_initial_guess = xinit;
     else 
-        x_initial_guess = PPTrajectory(foh([0,tf0],[x0,xf]));
+                        seed = rand(1);
+
+                        randx= -1*seed+10*(1-seed);
+                randy = 5.1*seed+4.8*(1-seed);
+        x_initial_guess = PPTrajectory(foh([0,tf0/2,tf0],[x0,[randx;randy;0;0],xf]+[rand(4,1) rand(4,1) zeros(4,1)] ));
     end
 
     if ~exist('F_limit','var')
-        F_limit = -12;
+        F_limit = -Inf;
     end
     
     traj_list = cell(0,2);
     F_list =[];
     
     while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>F_limit) && (n_retries <=max_num_retries) ...
-            && info ~= 1 && info~=4 && info~=5 && info~=6
+            && info ~= 1 && info~=4 && info~=5 
         
          if n_retries == 0
             initial_guess.x = x_initial_guess;
@@ -90,7 +92,11 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
 %                 initial_guess.x = xinit;
 %                 initial_guess.u = uinit;
 %             else
-                initial_guess.x = PPTrajectory(foh([0,tf0],[x0,xf]+[rand(4,1) zeros(4,1)] ));
+
+                seed = rand(1);
+                randx= -1*seed+10*(1-seed);
+                randy = 5.1*seed+4.8*(1-seed);
+                initial_guess.x = PPTrajectory(foh([0,tf0/2,tf0],[x0,[randx;randy;0;0],xf]+[rand(4,1) rand(4,1) zeros(4,1)] ));
                 initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));
                 initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
 %             end
@@ -102,7 +108,9 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
         n_retries = n_retries+1
         F
            traj_list{n_retries,1} = xtraj; traj_list{n_retries,2} = utraj;
+           if info ~= 42 && F<-12
         F_list = [F_list; F];
+           end
     end
     
     
@@ -119,13 +127,13 @@ end
     
 
       function [g,dg] = cost(dt,x,u,field)
-        R = 0.0001;
+        R = 0.00001;
         % minimize the max obstacle constraint
         [c,dc] = field.obstacleConstraint(x);
         [c,i]=max(c);
-        dc = dc(i,:);
+        dc = 10*dc(i,:);
         
-        g = c + u'*R*u;
+        g = 10*c + u'*R*u;
         %g = sum((R*u).*u,1);
         dg = [0,dc,2*u'*R];
         

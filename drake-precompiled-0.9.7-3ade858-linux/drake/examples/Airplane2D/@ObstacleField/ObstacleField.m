@@ -37,6 +37,7 @@ classdef ObstacleField
             % Generate random obstacles
             S = RandStream('mt19937ar','Seed',seedval);
             obs_pos=[S.rand(1,NUM_OBSTACLES)*(x_high-x_low)+x_low; S.rand(1,NUM_OBSTACLES)*(z_high-z_low)+z_low];
+            obs_pos(:,1) = [3.5;4];
             obs_num_edges=S.randi(OBS_MAX_EDGE-OBS_MIN_EDGE+1,1,NUM_OBSTACLES)+OBS_MIN_EDGE-1;
             obs_map.coords={};
             obs_map.A={}; % A*x <= b

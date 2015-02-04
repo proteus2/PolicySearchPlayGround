@@ -21,8 +21,9 @@ ref_traj = controller.data_sets_unnormalized{1,1};
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;
+ p=PlanePlant();
     v = PlaneVisualizer(p,field);
-    v.draw(0,x0);
+    v.draw(0,[4;0;0;0]);
  hold on; scatter(ref_traj(1,:),ref_traj(2,:),'black')
 hold on; scatter(x1(1,1:end),x1(2,1:end),'blue');
 %  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
