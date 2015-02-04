@@ -24,7 +24,7 @@ end
 x0_list = train_x0_list(:,1:10);
 alpha_list = train_alpha_list(1:10);
 
-x0_alpha_list  = [x0_list; alpha_list];
+x0_alpha_list  = [train_x0_list; alpha_list];
 % for alpha_idx=1:numel(alpha_list) 
 %     for x0_idx=1:size(x0_list,2)
 for idx=1:size(x0_alpha_list,2)

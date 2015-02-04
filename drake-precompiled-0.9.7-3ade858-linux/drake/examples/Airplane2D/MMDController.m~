@@ -87,7 +87,7 @@ classdef MMDController
         function mmd = computeMMD(obj,x1,x2,mu1,sigma1,mu2,sigma2)
             if ~(mu1 == mu2 && sigma1 == sigma2)
                 x1 = bsxfun(@times,x1,simga1) + mu1;
-                x2 = bsxfun(@times,x2,simga1) + mu2;
+                x2 = bsxfun(@times,x1,simga1) + mu1;
             end
             % compute the Gram matrix of x1
             g1 = obj.computeGramMatrix(x1,x1_stddev);

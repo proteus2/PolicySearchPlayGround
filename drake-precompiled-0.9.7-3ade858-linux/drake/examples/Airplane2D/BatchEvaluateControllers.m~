@@ -28,8 +28,8 @@ end
  
 
 
-x0_list = test_x0_list(:,2:10);
-alpha_list = test_alpha_list(2:10);
+x0_list = test_x0_list(:,1:10);
+alpha_list = test_alpha_list(1:10);
 
 x0_alpha_list  = [x0_list; alpha_list];
 
@@ -61,7 +61,7 @@ for idx=1:size(x0_alpha_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
-        train_files={'mmd_results_alpha_R>0_agg_repmat=5_x0_list_0,001','mmd_results_alpha_R>0_agg_repmat=5_x0_list'};
+        train_files={'mmd_results_alpha_R>0_agg_repmat=5_x0_list_0,001',};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -92,12 +92,13 @@ for idx=1:size(x0_alpha_list,2)
             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
         end
 
-        cost_list_all_alpha{idx,1} = traj_opt_cost;
+        cost_list_all_alpha{alpha_idx,1} = traj_opt_cost;
         for fidx = 1:n_files
-            cost_list_all_alpha{idx,fidx+1} = cost_list(fidx,:);
-            traj_list_all_alpha{idx,fidx} = traj_list{fidx};
+            cost_list_all_alpha{alpha_idx,fidx+1} = cost_list(fidx,:);
+            traj_list_all_alpha{alpha_idx,fidx} = traj_list{fidx};
         end
 
+        alpha_idx = alpha_idx+1;
     %     
     %      x1 = traj_list{1,1}.eval(traj_list{1,1}.getBreaks);
     %      x2 = traj_list{2,1}.eval(traj_list{1,1}.getBreaks);

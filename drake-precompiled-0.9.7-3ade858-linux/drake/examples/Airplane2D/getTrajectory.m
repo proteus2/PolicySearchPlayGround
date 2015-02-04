@@ -45,7 +45,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
     
     disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
     disp(disp_msg);
-    max_num_retries = 20;
+    max_num_retries = 10;
     n_retries = 0;
     if exist('uinit','var')
         initial_guess.u = uinit;
@@ -66,7 +66,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
     end
 
     if ~exist('F_limit','var')
-        F_limit = -Inf;
+        F_limit = -12;
     end
     
     traj_list = cell(0,2);

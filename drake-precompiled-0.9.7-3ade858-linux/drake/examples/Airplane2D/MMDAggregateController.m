@@ -38,6 +38,8 @@ classdef MMDAggregateController
                 obj.data_sets_unnormalized{1,2} = [];
             end
             
+            x_data = fixTheta(obj,x_data);
+
             % Check the mmd discrepancy between the new data and the existing data
             obj.data_sets_unnormalized{1,1} = [obj.data_sets_unnormalized{1,1} x_data];
             obj.data_sets_unnormalized{1,2} = [obj.data_sets_unnormalized{1,2} y_data];
@@ -68,33 +70,49 @@ classdef MMDAggregateController
                     obj.max_d(1) = k;
                 end
             end
-
                     
             rng(obj.RF_seed);
             
-            num_replicate = 1;
+            num_replicate = 5;
             x_data = repmat(x_data,1,num_replicate);
             y_data = repmat(y_data,1,num_replicate);
             
             obj.controllers{1,1} = TreeBagger(50,x_data',y_data','Method','regression','MinLeaf',2);
         end
-    
-        function [normalized_data,mean_data,stddev_data] = normalizeData(obj,data_idx)
-                x_data = obj.data_sets_unnormalized{data_idx,1};
-                
-                mean_data = mean(x_data,2);
-                stddev_data = std(x_data',1)';
-                if any(stddev_data==0) == 1
-                    stddev_data(stddev_data==0) = 1;
+      function x_prime = fixTheta(obj,x)
+            theta = x(3,:);
+            negtheta = find(theta<=0);
+            while ~isempty(negtheta)
+                theta(negtheta) = theta(negtheta) + 2*pi;
+                negtheta = find(theta<=0);
+            end
+            x_prime = x;
+            x_prime(3,:) = theta;
+        end
+        function [diff_x] = computeDiffWithNormalizedData(obj,x1,x2,std_dev)
+            dists = abs(bsxfun(@minus,x1,x2));
+            theta_dists = dists(3,:)*std_dev(3);
+            wrong_th_dists = find(abs(theta_dists)>pi);
+            while ~isempty(wrong_th_dists)
+                theta_dists(wrong_th_dists) = min(abs(theta_dists(wrong_th_dists)),abs(2*pi-abs(theta_dists(wrong_th_dists))));
+                if any(theta_dists<0)
+                    fprintf('Wrong angle difference detected')
+                    return;
                 end
-                
-                normalized_data=bsxfun(@minus,x_data,mean_data);
-                normalized_data=bsxfun(@rdivide,normalized_data,stddev_data);
+                wrong_th_dists = find(abs(theta_dists)>pi);
+                if ~isempty(wrong_th_dists)
+                    fprintf('Wrong angle difference detected')
+                    return;
+                end
+            end
+            dists(3,:) = theta_dists/std_dev(3);
+            diff_x = dists;
         end
         
-        function [min_d,min_idx,emptyCandidates] = checkDiscrepancy(obj,x)
+         function [min_d,min_idx,emptyCandidates,candidates] = checkDiscrepancy(obj,x)
             min_idx=1;
             min_d = inf;
+            x = fixTheta(obj,x);
             
             candidates = {};
             for idx=1:size(obj.data_sets,1)
@@ -120,72 +138,43 @@ classdef MMDAggregateController
         end
         
 
+        
         function k = computeKernel(obj,data_idx,s)
             x=obj.data_sets{data_idx,1}; 
             n = size(x,2);
 
             if nargin == 2
-                % Compute Gram Matrix
+                % Compute Gram Matrix for data_idx
                 k = zeros(n,n);
                 for idx1=1:n   
-                    dists = (bsxfun(@minus,x(:,idx1),x)) ; 
-                    theta_stddev = obj.data_stddev{data_idx,1}(3);
-                    
-                    th_dist_idx_pos = find((dists(3,:))*theta_stddev  > pi);
-                    while ~isempty(th_dist_idx_pos)
-                        dists(3,th_dist_idx_pos) = (dists(3,th_dist_idx_pos)*theta_stddev   - 2*pi)./theta_stddev  ;
-                        th_dist_idx_pos = find(dists(3,:)*theta_stddev  > pi);
-                    end
-
-
-                    th_dist_idx_neg =  (dists(3,:))*theta_stddev  < -pi;
-                    while ~isempty(th_dist_idx_neg)
-                        dists(3,th_dist_idx_neg) = (dists(3,th_dist_idx_neg)*theta_stddev   + 2*pi)./theta_stddev ;
-                        th_dist_idx_neg =  find(dists(3,:)*theta_stddev  < -pi);
-                    end
-                
+                    dists = computeDiffWithNormalizedData(obj,x(:,idx1),x,obj.data_stddev{data_idx,1});
                     dists=dists.^2;
-                    dists(5,:) = dists(5,:);
-%                     k(idx1,:) = -sum(dists)./(2);
+                    dists(5,:) = dists(5,:)*2;
                     k(idx1,:) = exp(-sum(dists)./(2*10));
-%                     for idx2=1:n
-%                         k(idx1,idx2) = obj.kernel(x(:,idx1),x(:,idx2));
-%                     end
                 end
             elseif nargin==3
                 % Compute equation (4) in my RSS paper
-                data_mean = obj.data_mean{data_idx,1};
-                data_stddev = obj.data_stddev{data_idx,1};
-                s = s-data_mean;
-                s = s./data_stddev;
+                x_mean = obj.data_mean{data_idx,1};
+                x_stddev = obj.data_stddev{data_idx,1};
+                s = s-x_mean;
+                s = s./x_stddev;
                 
-                dists = (bsxfun(@minus,s,x)) ; 
-                theta_stddev = obj.data_stddev{data_idx,1}(3);
-                
-                th_dist_idx_pos = find((dists(3,:))*theta_stddev  > pi);
-                while ~isempty(th_dist_idx_pos)
-                    dists(3,th_dist_idx_pos) = (dists(3,th_dist_idx_pos)*theta_stddev   - 2*pi)./theta_stddev  ;
-                    th_dist_idx_pos = find(dists(3,:)*theta_stddev  > pi);
-                end
-
-
-                th_dist_idx_neg =  (dists(3,:))*theta_stddev  < -pi;
-                while ~isempty(th_dist_idx_neg)
-                    dists(3,th_dist_idx_neg) = (dists(3,th_dist_idx_neg)*theta_stddev   + 2*pi)./theta_stddev ;
-                    th_dist_idx_neg =  find(dists(3,:)*theta_stddev  < -pi);
-                end
-                    
+                dists = computeDiffWithNormalizedData(obj,s,x,x_stddev);  
                 dists=dists.^2;
-                dists(5,:) = dists(5,:);
-                sum_dists = sum(dists);
-                sum_kernel = sum( exp(-sum_dists./(2*10)) );
+                dists(5,:) = dists(5,:)*2;
+                sum_kernel = sum( exp(-sum(dists)./(2*10)) );
                 k = 1 - (2/n)*sum_kernel + obj.self_discrepancy(data_idx,1);
-           
             end 
         end
         
-        function u = predict(obj,x,idx)
-            idx=1;
+         function u = predict(obj,x,idx)
+            x = fixTheta(obj,x); 
+            
+            if nargin<3
+                [~,idx,~,~] = checkDiscrepancy(obj,x);
+            end
+            
+            idx
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
             
