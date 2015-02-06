@@ -32,10 +32,11 @@ for idx=1:size(x0_alpha_list,2)
         alpha = x0_alpha_list(5,idx);
         
         init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
+        load(init_fname);
 %         if ~exist(init_fname,'file')
-                        [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
-                        save(init_fname, 'xtraj','utraj');
+%                         [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
+%                         save(init_fname, 'xtraj','utraj');
 %          end
-%     end
+% %     end
  end
  

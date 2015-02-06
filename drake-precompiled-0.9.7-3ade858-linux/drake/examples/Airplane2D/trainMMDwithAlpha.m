@@ -27,13 +27,18 @@ end
 train_x0_list=train_x0_list(:,1:10)
 train_alpha_list=train_alpha_list(1:10) 
 
+train_x0_list = [train_x0_list [2;0;0;0] ];
+train_alpha_list = [train_alpha_list 10];
+
+train_x0_list = train_x0_list(:,1:3);
+train_alpha_list = train_alpha_list(:,1:3);
 aggregate=false;
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
 if aggregate
-    save('mmd_results_alpha_R>0_agg_repmat=5_x0_list_0,001','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_0.001_agg','controller','data','train_alpha_list','train_x0_list');
 else
-    save('mmd_results_alpha_R>0_repmat=5_x0_list_0,001','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_0.001','controller','data','train_alpha_list','train_x0_list');
 end
 % save('mmd_results_repmat=1,a=all,algo=RF,aggregation','controller','data','train_alpha_list');
 % load('mmd_results_x0=2,4')

@@ -17,7 +17,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
     train_idx = 1;
   %  for x0_idx=1:size(x0_list,2)
   %     for idx=1:numel(alpha_list)
-    for idx=2:2%size(train_list,2)
+    for idx=1:size(train_list,2)
            alpha = train_list(5,idx);
             x0=train_list(1:4,idx);
              init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
@@ -47,7 +47,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
     %beta = 0.90; gamma = 1;
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[]; train_idx = 1;
-            for idx=2:2%size(train_list,2)
+            for idx=1:size(train_list,2)
                alpha = train_list(5,idx);
                 x0=train_list(1:4,idx);
                     
@@ -61,7 +61,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 
                     for k=1:N-1
                         current_state = [x1(:,k);alpha];
-                        [d,min_idx,emptyCandidates,candidates] = checkDiscrepancy(controller,current_state); 
+                        [d,min_idx,emptyCandidates,candidates,d_return] = checkDiscrepancy(controller,current_state); 
                         d_list=[d_list d];
                         candidates
                         
@@ -72,24 +72,24 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 
                         % Check if the encountered state lies far from datasets
 
-                         if (emptyCandidates||d>controller.max_d(min_idx)) 
+                         if (emptyCandidates||d>controller.max_d(min_idx)*0.8) && (norm(x1(1:2,k)-[5;9])>1.5)
 %                         if d > controller.max_d && (norm(x1(1:2,k)-[5;9])>1.5)
-                            d,current_state
+                            d,current_state,d_return
                             x = [x current_state];
-                           [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,true);
+                           [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false);
                              t = x_traj_from_curr_loc.getBreaks();
                              [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
                               controller = setNewController(controller,x_to_attach,y_to_attach);    
                               control = controller.predict(current_state);
                         else
-                            control = controller.predict(current_state,min_idx);
-                        end
-
+                            control = controller.predict(current_state,min_idx)+rand(1,1)*4;
+                         end
+                        y = [y control];
                         % advance the dynamics
                         xdot = p.dynamics(0,x1(:,k),control);
                         xnew = x1(:,k) + xdot*dt;
                         x1(:,k+1)=xnew;
-%                         fprintf('Completed=%0.1f percent of alpha value = %0.2d and MMD iteration of %d\n', k/(N-1)*100, alpha, MMD_iteration);
+                        fprintf('Completed=%0.1f percent of alpha value = %0.2d and MMD iteration of %d\n', k/(N-1)*100, alpha, MMD_iteration);
                     end
                     train_idx = train_idx + 1;
             end   

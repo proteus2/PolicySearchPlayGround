@@ -17,7 +17,7 @@ sum(exp(-dists2./2))
 
 
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
-ref_traj = controller.data_sets_unnormalized{2,1};
+ref_traj = controller.data_sets_unnormalized{idx,1};
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;

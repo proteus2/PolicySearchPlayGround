@@ -66,7 +66,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
     end
 
     if ~exist('F_limit','var')
-        F_limit = -12;
+        F_limit = -Inf;
     end
     
     traj_list = cell(0,2);
@@ -95,7 +95,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
 
                 seed = rand(1);
                 randx= -1*seed+10*(1-seed);
-                randy = 5.1*seed+4.8*(1-seed);
+                randy = 5.1*seed+7*(1-seed);
                 initial_guess.x = PPTrajectory(foh([0,tf0/2,tf0],[x0,[randx;randy;0;0],xf]+[rand(4,1) rand(4,1) zeros(4,1)] ));
                 initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));
                 initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
@@ -108,7 +108,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
         n_retries = n_retries+1
         F
            traj_list{n_retries,1} = xtraj; traj_list{n_retries,2} = utraj;
-           if info ~= 42 && F<-12
+           if info ~= 42
         F_list = [F_list; F];
            end
     end
@@ -116,6 +116,7 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xinit,uinit,tf,F_limit
     
     if n_retries == max_num_retries+1
         [~,min_idx] = min(F_list);
+        min_idx=min_idx(1);
         xtraj = traj_list{min_idx,1}; utraj = traj_list{min_idx,2};
     end
     
@@ -127,13 +128,13 @@ end
     
 
       function [g,dg] = cost(dt,x,u,field)
-        R = 0.00001;
+        R = 0.0001;
         % minimize the max obstacle constraint
         [c,dc] = field.obstacleConstraint(x);
         [c,i]=max(c);
-        dc = 10*dc(i,:);
+        dc = 2*dc(i,:);
         
-        g = 10*c + u'*R*u;
+        g = 2*c + u'*R*u;
         %g = sum((R*u).*u,1);
         dg = [0,dc,2*u'*R];
         
