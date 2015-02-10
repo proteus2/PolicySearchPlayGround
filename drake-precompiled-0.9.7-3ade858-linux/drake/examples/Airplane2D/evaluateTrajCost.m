@@ -32,7 +32,8 @@ end
 
 function [h,dh] = finalCost(t,x)
     xg=[5;9;0;0];
-    dist_to_goal = norm(xg(1:2,:)-x(1:2,:))
+    n_steps = t/0.001;
+    dist_to_goal = norm(xg(1:2,:)-x(1:2,:))*0.1*n_steps
     if dist_to_goal <=0.4
         h = 0;
     else

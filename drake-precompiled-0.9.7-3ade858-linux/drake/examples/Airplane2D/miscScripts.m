@@ -23,14 +23,17 @@ ref_traj = controller.data_sets_unnormalized{idx,1};
  figure(25); clf;  hold on;
  p=PlanePlant();
     v = PlaneVisualizer(p,field);
-    v.draw(0,[5;0;-1;0]);
+    v.draw(0,[3;0;0;0]);
  hold on; scatter(ref_traj(1,:),ref_traj(2,:),'black')
+%   hold on; scatter(controller.data_sets_unnormalized{9,1}(1,:),controller.data_sets_unnormalized{9,1}(2,:),'green')
+
 hold on; scatter(x1(1,1:end),x1(2,1:end),'blue');
 %  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
 
 if ~isempty(x)
 hold on; scatter(x(1,:),x(2,:),100,'magenta','filled')
 end
+hold on; scatter(xf(1,:),xf(2,:),1000,'red');
 
 hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
 
@@ -61,6 +64,19 @@ for x0_idx=1:size(test_x0_list,2)
     end
 end
 
+
+%% 
+ref_traj = controller.data_sets_unnormalized{idx,1};
+    field = ObstacleField();
+    field = field.GenerateRandomObstacles();    
+ figure(25); clf;  hold on;
+ p=PlanePlant();
+    v = PlaneVisualizer(p,field);
+    v.draw(0,[3;0;0;0]);
+
+data_idx = 18;
+data = controller.data_sets_unnormalized{18,1};
+hold on; scatter(data(1,:),data(2,:))
 %%
 field = ObstacleField();
 field = field.GenerateRandomObstacles();

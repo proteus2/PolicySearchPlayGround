@@ -131,7 +131,7 @@ classdef DirectTrajectoryOptimization < NonlinearProgram
       end
     end
 
-    function obj = addStateConstraint(obj,constraint,time_index,x_indices)
+    function [obj,id] = addStateConstraint(obj,constraint,time_index,x_indices)
       % Add constraint (or composite constraint) that is a function of the
       % state at the specified time or times.
       % @param constraint  a CompositeConstraint
@@ -158,10 +158,32 @@ classdef DirectTrajectoryOptimization < NonlinearProgram
         obj.constraints{end+1}.constraint = constraint;
         obj.constraints{end}.var_inds = cstr_inds;
         obj.constraints{end}.time_index = time_index;
-
-        obj = obj.addConstraint(constraint,cstr_inds);
+        id = size(obj.constraints,2);
+        [obj] = obj.addConstraint(constraint,cstr_inds);
       end
     end
+    
+    function [obj,id] = updateStateConstraint(obj,id,constraint,time_index,x_indices)
+      if ~iscell(time_index)
+        % then use { time_index(1), time_index(2), ... } ,
+        % aka independent constraints for each time
+        time_index = num2cell(reshape(time_index,1,[]));
+      end
+      if nargin<5, x_indices = 1:size(obj.x_inds,1); end
+
+      for j=1:length(time_index),
+        cstr_inds = mat2cell(obj.x_inds(x_indices,time_index{j}),numel(x_indices),ones(1,length(time_index{j})));
+
+        % record constraint for posterity
+        obj.constraints{id}.constraint = constraint;
+        obj.constraints{id}.var_inds = cstr_inds;
+        obj.constraints{id}.time_index = time_index;
+
+        [obj,id] = obj.addConstraint(constraint,cstr_inds);
+      end
+    end
+    
+    
 
     function obj = addTrajectoryDisplayFunction(obj,display_fun)
       % add a dispay function that gets called on every iteration of the

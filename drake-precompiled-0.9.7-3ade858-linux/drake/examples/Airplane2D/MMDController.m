@@ -77,7 +77,7 @@ classdef MMDController
 %             figure;scatter(x_data(1,:),x_data(2,:))
 %             hold on;scatter(far_x_list(1,:),far_x_list(2,:))
             
-            n_replicate = 5;
+            n_replicate = 3;
             x_data = repmat(x_data,1,n_replicate);
             y_data = repmat(y_data,1,n_replicate);
             rng(obj.RF_seed);
@@ -137,7 +137,7 @@ classdef MMDController
             x_prime(3,:) = theta;
         end
         
-        function [dist_x] = computeDistance(obj,x1,x2,theta_std_dev)
+        function [dist_x] = computeDistance(obj,x1,x2,theta_std_dev,Q)
             %% Must FIX and NORMALIZE both x1 with same mean and std dev first
             assert(size(x1,2)==1,'x1 size not 1');
             
@@ -154,16 +154,20 @@ classdef MMDController
                 wrong_th_dists = find(abs(theta_dists)>pi);
                 if ~isempty(wrong_th_dists)
                     fprintf('Wrong angle difference detected')
-                    return;
+                    %return;
                 end
             end
             difference(3,:) = theta_dists*theta_std_dev;
             diff_x = difference;
             
+            if ~exist('Q','var')
             Q = eye(size(x1,1));
-            Q(3,3) = 100;
-            Q(4,4) = 5;
-            Q(5,5) = 100;
+            Q(1,1) = 10;
+            Q(2,2) = 10;
+            Q(3,3) = 15;
+            Q(4,4) = 10;
+            Q(5,5) = 1;
+            end
 %             Q(1,1) = 1000000;
             dist_x = diff_x'*Q*diff_x;
             dist_x = (diag(dist_x));
@@ -233,7 +237,6 @@ classdef MMDController
             if nargin<3
                 [~,idx,~,~] = checkDiscrepancy(obj,x);
             end
-            
             idx
             
             x = x-obj.data_mean{idx,1};

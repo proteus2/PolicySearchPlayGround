@@ -1,4 +1,4 @@
-fname = 'mmd_results_alpha_R>0_agg_repmat=5_x0_list_evaled';
+fname = 'mmd_results_training_error';
 load(fname);
 traj_opt_cost = zeros(size(cost_list_all_alpha,1),1);
 ctrl_cost = zeros(size(cost_list_all_alpha,1),1);
