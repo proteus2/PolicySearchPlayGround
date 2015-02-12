@@ -1,4 +1,4 @@
-function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,uinit,F_limit)
+function [utraj,xtraj,traj_list,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,uinit,F_limit)
     if nargin < 2
         p = PlanePlant();
     else
@@ -76,10 +76,10 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,uinit,F_li
     
     traj_list = cell(0,2);
     F_list =[];
-    
-    while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>F_limit) && (n_retries <=max_num_retries) ...
-            && info ~= 1 && info~=4 && info~=5 
-        
+    n_trajs_saved = 0;
+    %while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>F_limit) && (n_retries <=max_num_retries && n_trajs_saved==0) ...
+     %       && info ~= 1 && info~=4 && info~=5 
+    while (info~=1 && info~=4 && info~=5) && (n_retries <=max_num_retries || n_trajs_saved<5)
          if n_retries == 0
             initial_guess.x = x_initial_guess;
          else
@@ -148,17 +148,24 @@ function [utraj,xtraj,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,uinit,F_li
         toc
         n_retries = n_retries+1
         F
+        if ~(info==11 || info == 13 || info ==42 ||info==3)
+            n_trajs_saved = n_trajs_saved + 1;
            traj_list{n_retries,1} = xtraj; traj_list{n_retries,2} = utraj;
-        F_list = [F_list; F];
+           F_list(n_retries)=F;
+        end
     end
     
-    
-    if n_retries == max_num_retries+1
-        [~,min_idx] = min(F_list);
-        min_idx=min_idx(1);
-        xtraj = traj_list{min_idx,1}; utraj = traj_list{min_idx,2};
+    if (info==1 && info==4 && info==5)
+        return
+    else
+        F_list(F_list==0) = Inf;
+        if n_retries>= max_num_retries+1
+            [~,min_idx] = min(F_list);
+            min_idx=min_idx(1);
+            xtraj = traj_list{min_idx,1}; utraj = traj_list{min_idx,2};
+        end
     end
-    
+    min_idx
     
 %     visualizeTraj(xtraj);
 end

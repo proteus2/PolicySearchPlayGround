@@ -22,7 +22,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
             x0=train_list(1:4,idx);
              init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
             if ~exist(init_fname,'file')
-                [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
+                [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
                 save(init_fname, 'xtraj','utraj');
             else
                 load(init_fname);
@@ -34,7 +34,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                     utraj = optimal_u;
                 end
             end
-            
+            visualizeTraj(xtraj,alpha);
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(idx) = tf;
 %            if train_idx == 1
@@ -97,7 +97,8 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                             dists = computeDistance(controller,normed_state,normed_data_set,sigma(3),Q);
                             [d,closest_data] = sort(dists);
                             
-                            xf = data_set(:,closest_data(1));idx2=2;
+%                             xf = data_set(:,closest_data(1));idx2=2;
+                            xf = [5;9;0;0];
                             while norm(xf(1:2,1)-current_state(1:2,1))<0.5
                                 xf = data_set(:,closest_data(idx2));
                                 idx2 = idx2 + 1;
@@ -107,6 +108,12 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                             [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
                              t = x_traj_from_curr_loc.getBreaks();
                              [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                            while y_to_attach(1) == 0
+                                plan_time = norm(xf(1:2)-current_state(1:2))/alpha+rand(1,1)*2;
+                                [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+                                 t = x_traj_from_curr_loc.getBreaks();
+                                 [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                            end
                               controller = setNewController(controller,x_to_attach,y_to_attach);    
                               control = controller.predict(current_state);
                         else

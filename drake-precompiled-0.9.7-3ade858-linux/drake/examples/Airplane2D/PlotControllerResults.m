@@ -1,4 +1,4 @@
-fname = 'mmd_results_training_error';
+fname = 'mmd_results_training_error2';
 load(fname);
 traj_opt_cost = zeros(size(cost_list_all_alpha,1),1);
 ctrl_cost = zeros(size(cost_list_all_alpha,1),1);

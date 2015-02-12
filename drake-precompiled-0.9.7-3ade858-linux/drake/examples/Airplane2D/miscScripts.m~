@@ -17,7 +17,7 @@ sum(exp(-dists2./2))
 
 
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
-ref_traj = controller.data_sets_unnormalized{9,1};
+ref_traj = controller.data_sets_unnormalized{7,1};
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;
@@ -38,7 +38,7 @@ hold on; scatter(xf(1,:),xf(2,:),1000,'red');
 hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
 
 %% Plotting mistakes vs distance from the center
-ref_traj = controller.data_sets_unnormalized{9,1};
+ref_traj = controller.data_sets_unnormalized{1,1};
 dists = sum(bsxfun(@minus,controller.data_mean{1},ref_traj).^2);
 y=[];
 for idx=1:size(ref_traj,2)
@@ -52,13 +52,14 @@ plot(ones(1,21),'black')
 legend('dists','train_err')
 %% visualizing trajectoreis
 load('mmd_results_training_error2'); 
-for idx=9
+idx=1;
+    idx=8
     cost_list_all_alpha{idx,1}
     cost_list_all_alpha{idx,2}
         alpha = alpha_list(idx);
         traj = traj_list_all_alpha{idx,1};
         visualizeTraj(traj,alpha)
-end
+
 
 
 %% 
