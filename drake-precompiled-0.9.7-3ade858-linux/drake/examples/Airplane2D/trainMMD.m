@@ -34,10 +34,10 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                     utraj = optimal_u;
                 end
             end
-            visualizeTraj(xtraj,alpha);
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(idx) = tf;
 %            if train_idx == 1
+            idx
                 t = xtraj.getBreaks();
                 [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
                 controller = setNewController(controller,x,y);
@@ -66,7 +66,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                         current_state = [x1(:,k);alpha];
                         [d,min_idx,emptyCandidates,candidates,d_return] = checkDiscrepancy(controller,current_state); 
                         d_list=[d_list d];
-                        candidates
+                        candidates,min_idx
                         
                         dist_to_goal = norm(x1(1:2,k)-[5; 9]);
                         if dist_to_goal<=0.5
@@ -94,8 +94,9 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                             Q(1,1) = 10;
                             Q(2,2) = 10;
                             Q(5,5) = 5;
-                            dists = computeDistance(controller,normed_state,normed_data_set,sigma(3),Q);
-                            [d,closest_data] = sort(dists);
+			
+                          %  dists = computeDistance(controller,normed_state,normed_data_set,sigma(3),Q);
+                           % [d,closest_data] = sort(dists);
                             
 %                             xf = data_set(:,closest_data(1));idx2=2;
                             xf = [5;9;0;0];

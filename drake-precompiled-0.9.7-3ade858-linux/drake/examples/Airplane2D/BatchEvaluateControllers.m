@@ -4,13 +4,13 @@ close all;
 
 n_x0=10;
 x0_rand = rand(1,n_x0);
-x0_x = 6*x0_rand + (1-x0_rand)*0;
+x0_x = 5*x0_rand + (1-x0_rand)*0;
 x0_rand = rand(1,n_x0);
 x0_y = 0*x0_rand + (1-x0_rand)*0;
 
 
 if ~exist('./test_alpha_list.mat','file')
-    test_alpha_list = 15*x0_rand + (1-x0_rand)*25;
+    test_alpha_list = 5*x0_rand + (1-x0_rand)*20;
     save('test_alpha_list','test_alpha_list');
 else
     load('test_alpha_list')
@@ -30,13 +30,13 @@ load('train_alpha_list');
 
 
 %% Eval script
-trainTest = true;
+trainTest = false;
 if trainTest 
     x0_list = train_x0_list;
     alpha_list = train_alpha_list;
 else
-    x0_list = test_x0_list(:,8);
-    alpha_list = test_alpha_list(8);
+    x0_list = test_x0_list;
+    alpha_list = test_alpha_list;
 end
 
 trainOnSelection = false;
@@ -59,8 +59,8 @@ end
 x0_alpha_list  = [x0_list; alpha_list];
 
 
-% for idx=1:size(x0_alpha_list,2)
-for idx=9;
+for idx=1:size(x0_alpha_list,2)
+% for idx=9;
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
         
@@ -96,7 +96,7 @@ for idx=9;
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         end
 
-        train_files={'mmd_results_alpha_0.001_all_val4.mat'};
+        train_files={'mmd_results_alpha_0.001_all_vals3.mat'};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';
@@ -164,7 +164,7 @@ for idx=9;
 
 end
 
-save('mmd_results_training_error2.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
+save('mmd_results_test_error.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 

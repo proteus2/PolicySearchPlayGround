@@ -155,7 +155,7 @@ function [utraj,xtraj,traj_list,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,
         end
     end
     
-    if (info==1 && info==4 && info==5)
+    if (info==1 || info==4 || info==5)
         return
     else
         F_list(F_list==0) = Inf;

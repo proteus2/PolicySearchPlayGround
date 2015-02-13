@@ -165,8 +165,8 @@ classdef MMDController
             Q(1,1) = 10;
             Q(2,2) = 10;
             Q(3,3) = 15;
-            Q(4,4) = 10;
-            Q(5,5) = 1;
+            Q(4,4) = 15;
+            Q(5,5) = 15;
             end
 %             Q(1,1) = 1000000;
             dist_x = diff_x'*Q*diff_x;
@@ -197,7 +197,18 @@ classdef MMDController
             end
             
             if ~isempty(candidates)
-                [min_d,min_idx] = min(cell2mat(candidates(:,2)));
+%                 [min_d,min_idx] = min(cell2mat(candidates(:,2)));
+%                 min_idx = candidates{min_idx,1};
+                candidate_idx = cell2mat(candidates(:,1));
+                d_cand_list = zeros(numel(candidate_idx),1);
+                for idx=1:numel(candidate_idx)
+                    data_mu = obj.data_mean{candidate_idx(idx),1};
+                    data_std = obj.data_stddev{candidate_idx(idx),1};
+                    normed_x=x-data_mu;
+                    normed_x=normed_x./data_std; 
+                    d_cand_list(idx) = min(computeDistance(obj,normed_x,obj.data_sets{candidate_idx(idx),1},data_std(3)));
+                end
+                [min_d,min_idx] = min(d_cand_list);
                 min_idx = candidates{min_idx,1};
                 emptyCandidates = false;
             else

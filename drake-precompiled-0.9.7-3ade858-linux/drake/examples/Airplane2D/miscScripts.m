@@ -17,7 +17,7 @@ sum(exp(-dists2./2))
 
 
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
-ref_traj = controller.data_sets_unnormalized{9,1};
+ref_traj = controller.data_sets_unnormalized{idx,1};
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;
@@ -51,8 +51,8 @@ hold on; plot(train_err,'o')
 plot(ones(1,21),'black')
 legend('dists','train_err')
 %% visualizing trajectoreis
-load('mmd_results_training_error2'); 
-for idx=9
+load('mmd_results_test_error'); 
+for idx=1:size(traj_list_all_alpha,1);
     cost_list_all_alpha{idx,1}
     cost_list_all_alpha{idx,2}
         alpha = alpha_list(idx);

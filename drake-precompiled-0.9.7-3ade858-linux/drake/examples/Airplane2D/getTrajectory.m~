@@ -79,7 +79,7 @@ function [utraj,xtraj,traj_list,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,
     n_trajs_saved = 0;
     %while (info==11 || info == 13 || info ==42 || info ==41||info==3 || F>F_limit) && (n_retries <=max_num_retries && n_trajs_saved==0) ...
      %       && info ~= 1 && info~=4 && info~=5 
-    while (info~=1 && info~=4 && info~=5) ||
+    while (info~=1 && info~=4 && info~=5) && (n_retries <=max_num_retries || n_trajs_saved<)
          if n_retries == 0
             initial_guess.x = x_initial_guess;
          else
@@ -100,8 +100,8 @@ function [utraj,xtraj,traj_list,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,
             
             if x0(2) <2 && xf(2) >8 
                 seed = rand(1);
-                randx= -1*seed+10*(1-seed);
-                randy = 5.1*seed+7*(1-seed);
+                randx= (x0(1)-2)*seed+(x0(1)+3)*(1-seed);
+                randy = (x0(2)+3)*seed+7*(1-seed);
                 initial_guess.x = PPTrajectory(foh([0,tf0/2,tf0],[x0,[randx;randy;0;0],xf]+[zeros(4,1) rand(4,1) zeros(4,1)] ));
                 initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));
                 initial_guess.u = setOutputFrame(initial_guess.u,getInputFrame(p));
@@ -148,18 +148,22 @@ function [utraj,xtraj,traj_list,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,
         toc
         n_retries = n_retries+1
         F
-        if ~(info==11 || info == 13 || info ==42 || info ==41||info==3)
+        if ~(info==11 || info == 13 || info ==42 ||info==3)
             n_trajs_saved = n_trajs_saved + 1;
            traj_list{n_retries,1} = xtraj; traj_list{n_retries,2} = utraj;
+           F_list(n_retries)=F;
         end
-        F_list = [F_list; F];
     end
     
-    
-    if n_retries == max_num_retries+1
-        [~,min_idx] = min(F_list);
-        min_idx=min_idx(1);
-        xtraj = traj_list{min_idx,1}; utraj = traj_list{min_idx,2};
+    if (info==1 || info==4 || info==5)
+        return
+    else
+        F_list(F_list==0) = Inf;
+        if n_retries>= max_num_retries+1
+            [~,min_idx] = min(F_list);
+            min_idx=min_idx(1);
+            xtraj = traj_list{min_idx,1}; utraj = traj_list{min_idx,2};
+        end
     end
     min_idx
     
