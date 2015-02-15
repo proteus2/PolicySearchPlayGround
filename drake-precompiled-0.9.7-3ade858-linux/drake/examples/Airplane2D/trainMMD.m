@@ -37,8 +37,8 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(idx) = tf;
 %            if train_idx == 1
-            idx
-            visualizeTraj(xtraj,alpha);
+           % idx
+           % visualizeTraj(xtraj,alpha);
                 t = xtraj.getBreaks();
                 [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
                 controller = setNewController(controller,x,y);

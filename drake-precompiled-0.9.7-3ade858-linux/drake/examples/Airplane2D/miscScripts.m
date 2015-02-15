@@ -51,9 +51,10 @@ hold on; plot(train_err,'o')
 plot(ones(1,21),'black')
 legend('dists','train_err')
 %% visualizing trajectoreis
-load('mmd_results_train_error'); 
-for idx=1:size(traj_list_all_alpha,1);
-    idx=30;
+load('mmd_results_test_error'); 
+%for idx=1:size(traj_list_all_alpha,1)-20;
+for idx=21
+    idx
     cost_list_all_alpha{idx,1}
     cost_list_all_alpha{idx,2}
         alpha = alpha_list(idx);
@@ -62,19 +63,19 @@ for idx=1:size(traj_list_all_alpha,1);
 end
 
 
+
 %% 
-ref_traj = controller.data_sets_unnormalized{idx,1};
+idx=30;
+ref_traj = data{idx,1};
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;
  p=PlanePlant();
     v = PlaneVisualizer(p,field);
-    v.draw(0,[3;0;0;0]);
+    v.draw(0,ref_traj(:,1));
+    hold on; scatter(ref_traj(1,:),ref_traj(2,:));
 
-data_idx = 18;
-data = controller.data_sets_unnormalized{18,1};
-hold on; scatter(data(1,:),data(2,:))
-%%
+    %%
 field = ObstacleField();
 field = field.GenerateRandomObstacles();
 

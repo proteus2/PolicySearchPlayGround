@@ -60,6 +60,7 @@ x0_alpha_list  = [x0_list; alpha_list];
 
 for idx=1:size(x0_alpha_list,2)
 % for idx=30;
+        idx = 21;
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
         
@@ -92,9 +93,9 @@ for idx=1:size(x0_alpha_list,2)
 
             tf=optimal_u.getBreaks; tf=tf(end);
             [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha);
-            if ~trainTest
-                save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
-            end
+%             if ~trainTest
+%                 save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
+%             end
         end
 
         train_files={'mmd_results_alpha_0.001_all_vals.mat'};
@@ -124,6 +125,7 @@ for idx=1:size(x0_alpha_list,2)
         else
             load(apprxtraj_fname)
             tf = optimal_u.getBreaks; tf=tf(end);
+            tf=3;
             [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
         end
