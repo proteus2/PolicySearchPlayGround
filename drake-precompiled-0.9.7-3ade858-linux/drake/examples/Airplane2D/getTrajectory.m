@@ -100,7 +100,14 @@ function [utraj,xtraj,traj_list,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,
             
             if x0(2) <2 && xf(2) >8 
                 seed = rand(1);
-                randx= (x0(1)-2)*seed+(x0(1)+3)*(1-seed);
+                if x0(1)>=8 && x0(1)<10
+                    randx = x0(1) - 2*seed;
+                elseif x0(1) <=8 && x0(1)>7
+                    randx= x0(1) -1*seed;
+                else
+                    randx = x0(1) +1*seed;
+                end
+%                 randx= (x0(1)-2)*seed+(x0(1)+3)*(1-seed);
                 randy = (x0(2)+3)*seed+7*(1-seed);
                 initial_guess.x = PPTrajectory(foh([0,tf0/2,tf0],[x0,[randx;randy;0;0],xf]+[zeros(4,1) rand(4,1) zeros(4,1)] ));
                 initial_guess.u = PPTrajectory(foh([0,tf0],[0.01,0.01]+rand(1,2)));

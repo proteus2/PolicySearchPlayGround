@@ -23,7 +23,7 @@ ref_traj = controller.data_sets_unnormalized{idx,1};
  figure(25); clf;  hold on;
  p=PlanePlant();
     v = PlaneVisualizer(p,field);
-    v.draw(0,ref_traj(:,1));
+    v.draw(0,[3.9;0;0;0]);
  hold on; scatter(ref_traj(1,:),ref_traj(2,:),'black')
 %   hold on; scatter(controller.data_sets_unnormalized{9,1}(1,:),controller.data_sets_unnormalized{9,1}(2,:),'green')
 
@@ -51,8 +51,9 @@ hold on; plot(train_err,'o')
 plot(ones(1,21),'black')
 legend('dists','train_err')
 %% visualizing trajectoreis
-load('mmd_results_test_error'); 
+load('mmd_results_train_error'); 
 for idx=1:size(traj_list_all_alpha,1);
+    idx=30;
     cost_list_all_alpha{idx,1}
     cost_list_all_alpha{idx,2}
         alpha = alpha_list(idx);

@@ -2,9 +2,9 @@
 clear all;
 close all;
 
-n_x0=10;
+n_x0=50;
 x0_rand = rand(1,n_x0);
-x0_x = 5*x0_rand + (1-x0_rand)*0;
+x0_x = 2*x0_rand + (1-x0_rand)*8;
 x0_rand = rand(1,n_x0);
 x0_y = 0*x0_rand + (1-x0_rand)*0;
 
@@ -39,28 +39,27 @@ else
     alpha_list = test_alpha_list;
 end
 
-trainOnSelection = false;
-if trainOnSelection
-    load('RF_seed');
-    load('mmd_results_alpha_0.001_all_vals3.mat');
-    trainIdx = [1:16,18:size(controller.data_sets_unnormalized,1)];
-    % trainIdx=1:size(controller.data_sets_unnormalized,1);
-    ctrl = MMDController(RF_seed);
-    for idx=1:numel(trainIdx)
-        tidx = trainIdx(idx);
-        data_x = controller.data_sets_unnormalized{tidx,1};
-        data_y = controller.data_sets_unnormalized{tidx,2};
-        idx,data_y
-        ctrl =setNewController(ctrl,data_x,data_y);
-    end
-    controller = ctrl;
-    save('mmd_partial_data_ctrller.mat','controller','controller');
-end
+% trainOnSelection = false;
+% if trainOnSelection
+%     load('RF_seed');
+%     load('mmd_results_alpha_0.001_all_vals.nat');
+%     % trainIdx=1:size(controller.data_sets_unnormalized,1);
+%     ctrl = MMDController(RF_seed);
+%     for idx=1:numel(trainIdx)
+%         tidx = trainIdx(idx);
+%         data_x = controller.data_sets_unnormalized{tidx,1};
+%         data_y = controller.data_sets_unnormalized{tidx,2};
+%         idx,data_y
+%         ctrl =setNewController(ctrl,data_x,data_y);
+%     end
+%     controller = ctrl;
+%     save('mmd_partial_data_ctrller.mat','controller','controller');
+% end
 x0_alpha_list  = [x0_list; alpha_list];
 
 
 for idx=1:size(x0_alpha_list,2)
-% for idx=9;
+% for idx=30;
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
         
@@ -85,7 +84,7 @@ for idx=1:size(x0_alpha_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
         else
             load(optimaltraj_fname);
-            if trainTest && ~exist('optimal_u','var')
+            if trainTest
                 optimal_u = utraj;
                 optimal_x = xtraj;
             end
@@ -93,10 +92,12 @@ for idx=1:size(x0_alpha_list,2)
 
             tf=optimal_u.getBreaks; tf=tf(end);
             [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha);
-            save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
+            if ~trainTest
+                save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
+            end
         end
 
-        train_files={'mmd_results_alpha_0.001_all_vals3.mat'};
+        train_files={'mmd_results_alpha_0.001_all_vals.mat'};
         n_files = size(train_files,2);
 
         apprxtraj_fname = './data_for_plots/test/';

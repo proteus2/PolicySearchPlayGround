@@ -4,7 +4,7 @@ train_x0_list = {[2;0;0;0],[4;0;0;0]};
 
 n_x0=30;
 x0_rand = rand(1,n_x0);
-x0_x = 5*x0_rand + (1-x0_rand)*0;
+x0_x = 2*x0_rand + (1-x0_rand)*8;
 x0_rand = rand(1,n_x0);
 x0_y = 0*x0_rand + (1-x0_rand)*0;
 
@@ -33,9 +33,9 @@ aggregate=false;
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
 if aggregate
-    save('mmd_results_alpha_0.001_agg','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_0.001_agg.mat','controller','data','train_alpha_list','train_x0_list');
 else
-    save('mmd_results_alpha_0.001_all_vals3','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_0.001_all_vals.mat','controller','data','train_alpha_list','train_x0_list');
 end
 % save('mmd_results_repmat=1,a=all,algo=RF,aggregation','controller','data','train_alpha_list');
 % load('mmd_results_x0=2,4')

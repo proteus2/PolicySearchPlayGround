@@ -28,6 +28,7 @@ classdef ObstacleField
             %Obstacle parameters
             OBSTACLE_DENSITY=1.2; %obstacles per 1 unit in z
             NUM_OBSTACLES=floor((z_high-z_low)*OBSTACLE_DENSITY);
+            NUM_OBSTACLES = 12-4;
             %NUM_OBSTACLES=4;
             OBS_MIN_EDGE=4;
             OBS_MAX_EDGE=6;
@@ -37,7 +38,10 @@ classdef ObstacleField
             % Generate random obstacles
             S = RandStream('mt19937ar','Seed',seedval);
             obs_pos=[S.rand(1,NUM_OBSTACLES)*(x_high-x_low)+x_low; S.rand(1,NUM_OBSTACLES)*(z_high-z_low)+z_low];
+            obs_pos = [  2.2199            9.1861    4.8841    6.1174+1    7.6591    5.1842    2.9680    1.8772    7.3844;
+                         4.4131            2.7409    4.1424    2.9608    6.2879    5.7984    5.9993+1    2.6582    2.5359+1];
             obs_pos(:,1) = [3.5;4];
+            
             obs_num_edges=S.randi(OBS_MAX_EDGE-OBS_MIN_EDGE+1,1,NUM_OBSTACLES)+OBS_MIN_EDGE-1;
             obs_map.coords={};
             obs_map.A={}; % A*x <= b

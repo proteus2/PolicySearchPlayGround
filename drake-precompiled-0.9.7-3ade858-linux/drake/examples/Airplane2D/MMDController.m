@@ -246,7 +246,10 @@ classdef MMDController
         function u = predict(obj,x,idx)
             x = fixTheta(obj,x); 
             if nargin<3
-                [~,idx,~,~] = checkDiscrepancy(obj,x);
+                [~,idx,empty_cand,~,d_list] = checkDiscrepancy(obj,x);
+                if empty_cand
+                    [~,idx] = min(d_list);
+                end
             end
             x = x-obj.data_mean{idx,1};
             x = x./obj.data_stddev{idx,1};
