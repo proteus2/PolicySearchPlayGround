@@ -30,8 +30,9 @@ load('train_alpha_list');
 
 
 %% Eval script
-trainTest = false;
-if trainTest 
+trainTest = true;
+if trainTest  
+    fprintf('Training error evaluation...')
     x0_list = train_x0_list;
     alpha_list = train_alpha_list;
 else
@@ -60,7 +61,6 @@ x0_alpha_list  = [x0_list; alpha_list];
 
 for idx=1:size(x0_alpha_list,2)
 % for idx=30;
-        idx = 21;
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
         
