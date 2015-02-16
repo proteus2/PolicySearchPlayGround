@@ -4,13 +4,13 @@ close all;
 
 n_x0=50;
 x0_rand = rand(1,n_x0);
-x0_x = 2*x0_rand + (1-x0_rand)*8;
+x0_x = 2*x0_rand + (1-x0_rand)*4;
 x0_rand = rand(1,n_x0);
-x0_y = 0*x0_rand + (1-x0_rand)*0;
+x0_y = 0*x0_rand + (1-x0_rand)*1;
 
 
 if ~exist('./test_alpha_list.mat','file')
-    test_alpha_list = 5*x0_rand + (1-x0_rand)*20;
+    test_alpha_list = 5*x0_rand + (1-x0_rand)*30;
     save('test_alpha_list','test_alpha_list');
 else
     load('test_alpha_list')
@@ -30,7 +30,7 @@ load('train_alpha_list');
 
 
 %% Eval script
-trainTest = true;
+trainTest = false;
 if trainTest  
     fprintf('Training error evaluation...')
     x0_list = train_x0_list;
