@@ -1,80 +1,101 @@
-function [controller, dagger_data] = trainDAgger(x0,n_dagg_itern,train_alpha_list)   
+function [controller,mmd_data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
+    dt = 0.001;    
+    
     % for all alpha values, get initial trajectories
-    tf_list = zeros(numel(train_alpha_list,2),1);
+    ref_traj_list = cell(numel(alpha_list,2),1);
+    tf_list = zeros(numel(alpha_list,2)+size(x0_list,2),1);
+
     
-    x=[];y=[];
-    for idx=1:numel(train_alpha_list)
-        alpha = train_alpha_list(idx);
-        init_fname = sprintf('initial_mmd_traj_alpha=%d.mat',alpha);
-        if ~exist(init_fname,'file')
-            [utraj,xtraj,~] = getTrajectory(x0,alpha,false);
-            save(init_fname, 'xtraj','utraj');
-        else
-            load(init_fname);
-            if exist('u_traj_from_curr_loc','var') && ~exist('utraj','var');
-                xtraj = x_traj_from_curr_loc;
-                utraj = u_traj_from_curr_loc;
-            end
+    train_list = [x0_list;alpha_list];
+    x_list=[];
+    y_list=[];
+    for idx=1:size(train_list,2)
+        if idx ==26
+            continue
         end
-        tf = xtraj.getBreaks(); tf=tf(end);
-        tf_list(idx) = tf;
-        t = xtraj.getBreaks();
-        [x_alpha,y_alpha] = turnTrajToData(xtraj,utraj,t,alpha);
-        x = [x x_alpha]; y = [y y_alpha];
-    end
-    
-    % train initial Random Forest
-    controller = TreeBagger(50,x',y','Method','regression');
-
-    % gather DAgger data
-    n=1; n_alpha=size(train_alpha_list,2);
-
-    for idx_alpha=1:n_alpha
-        alpha=train_alpha_list(idx_alpha);
-        p = PlanePlant(alpha);
-        dt=0.01; t=0:dt:tf_list(idx_alpha); N = size(t,2);
-        x1=zeros(4,N); x1(:,1) = x0; 
-        for idx=1:n_dagg_itern;
-            xtraj = zeros(4,N); xtraj(:,1) = x0; utraj = zeros(1,N);
-
-            for k=1:N-1
-    %              if exists('alpha','var')
-                  curr_state = [x1(:,k);alpha];
-    %             else
-    %                 curr_state = x1(:,k);
-    %              end
-                dist_to_goal = norm(x1(:,k)-[5; 9; 0; 0]);
-                if dist_to_goal<=0.4
-                    % got to the goal
-                    break
+           alpha = train_list(5,idx);
+            x0=train_list(1:4,idx);
+             init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
+            if ~exist(init_fname,'file')
+                [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
+                save(init_fname, 'xtraj','utraj');
+            else
+                load(init_fname);
+                if exist('u_traj_from_curr_loc','var') && ~exist('utraj','var');
+                    xtraj = x_traj_from_curr_loc;
+                    utraj = u_traj_from_curr_loc;
+                elseif exist('optimal_x','var')
+                    xtraj = optimal_x;
+                    utraj = optimal_u;
                 end
-                control = controller.predict(curr_state');
-                xdot = p.dynamics(0,x1(:,k),control);
-                xnew = x1(:,k) + xdot*dt;
-                x1(:,k+1)=xnew;
-                
-                [u_traj_from_curr_loc,~,~] = getTrajectory(x1(:,k),alpha,false);
-                xtraj(:,k+1) = xnew;
-                utraj(:,k) = u_traj_from_curr_loc.eval(0); 
-                
-                fprintf('Completed=%0.1f percent of alpha value = %0.2d and dagger iteration of %d\n', k/(N-1)*100, alpha, idx);
             end
-            
-            xtraj = PPTrajectory(foh(t,xtraj));
-            utraj = PPTrajectory(foh(t,utraj));
-
-            % aggregate data 
-            dagger_data{n,1} = xtraj;
-            dagger_data{n,2} = utraj;
-            n=n+1;
-
-            % train using the aggregated dataset
-            t = xtraj.getBreaks();
-            [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
-            controller = TreeBagger(50,x',y','Method','regression');
-        end  
-        save('vary_alpha_dagger_results','controller','dagger_data','alpha');
+            tf = xtraj.getBreaks(); tf=tf(end);
+            tf_list(idx) = tf;
+            %idx
+            %visualizeTraj(xtraj,alpha);
+                t = xtraj.getBreaks();
+                [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
+                x_list=[x_list;x'];
+                y_list=[y_list;y'];
     end
-    save('vary_alpha_dagger_results','controller','dagger_data','train_alpha_list');
+      
+    load('RF_seed');
+    controller = TreeBagger(50,x_list,y_list,'Method','regression');
+    
+    % set parameters
+    %beta = 0.90; gamma = 1;
+    for MMD_iteration = 1:n_mmd_itern
+            x = []; y=[]; train_idx = 1;
+            for idx=1:size(train_list,2)
+               alpha = train_list(5,idx);
+                x0=train_list(1:4,idx);
+                    
+                    d_list =[];
+
+                    tf = tf_list(idx);
+                    N  = numel(0:dt:tf);
+                   
+                    x1=zeros(4,N); x1(:,1) = x0; % state simulation
+                    p = PlanePlant(alpha);
+
+                    for k=1:N-1
+                        current_state = [x1(:,k);alpha];
+                        dist_to_goal = norm(x1(1:2,k)-[5; 9]);
+                        if dist_to_goal<=0.5
+                            break
+                        end
+                        
+                        
+                        if mod(k,50) == 0
+                            plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
+                            [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+                            t = x_traj_from_curr_loc.getBreaks();
+                            [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+
+                            while y_to_attach(1) == 0
+                                plan_time = norm(xf(1:2)-current_state(1:2))/alpha+rand(1,1)*2;
+                                [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+                                 t = x_traj_from_curr_loc.getBreaks();
+                                 [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                            end
+                            x = [x x_to_attach'];
+                            y = [y y_to_attach'];
+                        end
+                        
+                        control = controller.predict(current_state);
+                        
+                        % advance the dynamics
+                        xdot = p.dynamics(0,x1(:,k),control);
+                        xnew = x1(:,k) + xdot*dt;
+                        x1(:,k+1)=xnew;
+                        fprintf('Completed=%0.1f percent of alpha value = %0.2d and MMD iteration of %d\n', k/(N-1)*100, alpha, MMD_iteration);
+                    end
+                    train_idx = train_idx + 1;
+            end  
+            controller = TreeBagger(50,x,y,'Method','regression');
+
+    end   
+    mmd_data = controller.data_sets_unnormalized;    
 end
+
 

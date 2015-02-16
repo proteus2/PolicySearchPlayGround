@@ -52,8 +52,7 @@ plot(ones(1,21),'black')
 legend('dists','train_err')
 %% visualizing trajectoreis
 load('mmd_results_test_error'); 
-%for idx=1:size(traj_list_all_alpha,1)-20;
-for idx=21
+for idx=1:size(traj_list_all_alpha,1);
     idx
     cost_list_all_alpha{idx,1}
     cost_list_all_alpha{idx,2}
