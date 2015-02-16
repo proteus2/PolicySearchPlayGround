@@ -1,4 +1,4 @@
-n_dagg_itern = 10;
+n_dagg_itern = 1;
 
 n_x0=30;
 x0_rand = rand(1,n_x0);

@@ -82,7 +82,7 @@ function [controller,mmd_data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                             y = [y y_to_attach'];
                         end
                         
-                        control = controller.predict(current_state);
+                        control = controller.predict(current_state');
                         
                         % advance the dynamics
                         xdot = p.dynamics(0,x1(:,k),control);
