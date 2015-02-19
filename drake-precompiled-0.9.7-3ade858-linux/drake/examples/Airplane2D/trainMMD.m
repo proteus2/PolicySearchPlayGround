@@ -17,8 +17,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
     train_idx = 1;
   %  for x0_idx=1:size(x0_list,2)
   %     for idx=1:numel(alpha_list)
-   % for idx=1:size(train_list,2)
-   for idx =26
+   for idx=1:size(train_list,2)
            alpha = train_list(5,idx);
             x0=train_list(1:4,idx);
              init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
@@ -37,13 +36,14 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
             end
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(idx) = tf;
-%            if train_idx == 1
+           if train_idx == 1
             idx
-            visualizeTraj(xtraj,alpha);
+                visualizeTraj(xtraj,alpha);
                 t = xtraj.getBreaks();
                 [x,y] = turnTrajToData(xtraj,utraj,t,alpha);
                 controller = setNewController(controller,x,y);
-%            end
+                break;
+           end
 %             ref_traj_list{x0_idx,1} = x(1:4,:); 
             train_idx = train_idx + 1;
     end

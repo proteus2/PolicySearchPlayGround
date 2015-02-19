@@ -1,4 +1,4 @@
-function [controller,mmd_data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
+function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
     dt = 0.001;    
     
     % for all alpha values, get initial trajectories
@@ -40,10 +40,20 @@ function [controller,mmd_data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
     end
       
     load('RF_seed');
+    load('dagger_temp_data');
+    y_to_attach=reshape(y,21*160,1);
+    y_list = [y_list; y_to_attach];
+    
+    for idx=1:5:size(x,2)
+        x_to_attach=x(:,idx:idx+4);
+        x_list = [x_list; x_to_attach];
+    end
     controller = TreeBagger(50,x_list,y_list,'Method','regression');
+    
     
     % set parameters
     %beta = 0.90; gamma = 1;
+    data = {}
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[]; train_idx = 1;
             for idx=1:size(train_list,2)
@@ -65,8 +75,8 @@ function [controller,mmd_data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                             break
                         end
                         
-                        
-                        if mod(k,50) == 0
+                        xf = [5;9;0;0];
+                        if mod(k,100) == 0
                             plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
                             [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
                             t = x_traj_from_curr_loc.getBreaks();
@@ -78,8 +88,10 @@ function [controller,mmd_data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                                  t = x_traj_from_curr_loc.getBreaks();
                                  [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
                             end
-                            x = [x x_to_attach'];
-                            y = [y y_to_attach'];
+                            data{k,1} = x_to_attach';
+                            data{k,2} = y_to_attach';
+                            x = [x; x_to_attach'];
+                            y = [y; y_to_attach'];
                         end
                         
                         control = controller.predict(current_state');
@@ -95,7 +107,6 @@ function [controller,mmd_data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
             controller = TreeBagger(50,x,y,'Method','regression');
 
     end   
-    mmd_data = controller.data_sets_unnormalized;    
 end
 
 
