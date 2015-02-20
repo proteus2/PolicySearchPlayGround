@@ -1,4 +1,4 @@
-fname = 'mmd_partial_results_test_error.mat';
+fname = 'mmd_partial_controller_data.mat';
 load(fname);
 traj_opt_cost = zeros(size(cost_list_all_alpha,1),1);
 ctrl_cost = zeros(size(cost_list_all_alpha,1),1);
@@ -14,7 +14,7 @@ ctrl_cost(ctrl_cost(:,2)>0.5,:)=[];
 
 
 %% Learning curve
-fname = 'mmd_partial_results_learning_curve.mat';
+fname = 'supervised_controller_learning_curve.mat';
 load(fname);
 n_itern = size(cost_list_all_alpha{1,2},1);
 n_tests = size(test_x0_list,2);

@@ -1,6 +1,5 @@
 % Compare controllers
 clear all;
-close all;
 
 n_x0=50;
 x0_rand = rand(1,n_x0);
@@ -42,7 +41,7 @@ end
 
 train_file='mmd_results_alpha_0.001_all_vals.mat';
 load(train_file,'controller');
-trainOnSelection = false;
+trainOnSelection = true;
 getLearningCurve = false;
 % 
 % ctrl_list = cell(n_files,1);
@@ -68,7 +67,8 @@ if trainOnSelection
             ctrl_list{trainIdx,1} = trainOnSelectedData(1:trainIdx,data_set,controller_name);
         end
     else
-        ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller,'TreeBagger');
+       trainIdx = 1:size(data_set,1);
+        ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller_name);
     end
 else
     ctrl_list{1,1} = controller;
@@ -79,7 +79,7 @@ x0_alpha_list  = [x0_list; alpha_list];
 % a=ctrl_list{end,1};
 % ctrl_list ={};
 % ctrl_list{1} = a;
-for idx=1:size(x0_alpha_list,2)
+for idx=2:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
         

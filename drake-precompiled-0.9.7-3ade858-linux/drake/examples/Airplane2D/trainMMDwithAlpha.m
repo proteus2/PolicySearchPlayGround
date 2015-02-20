@@ -26,7 +26,7 @@ aggregate=false;
 if aggregate
     save('mmd_results_alpha_0.001_agg.mat','controller','data','train_alpha_list','train_x0_list');
 else
-    save('mmd_results_alpha_0.001_all_vals.mat','controller','data','train_alpha_list','train_x0_list');
+    save('mmd_results_alpha_0.001_all_vals_norepmat.mat','controller','data','train_alpha_list','train_x0_list');
 end
 % save('mmd_results_repmat=1,a=all,algo=RF,aggregation','controller','data','train_alpha_list');
 % load('mmd_results_x0=2,4')

@@ -77,7 +77,7 @@ classdef MMDController
 %             figure;scatter(x_data(1,:),x_data(2,:))
 %             hold on;scatter(far_x_list(1,:),far_x_list(2,:))
             
-            n_replicate = 3;
+            n_replicate = 1;
             x_data = repmat(x_data,1,n_replicate);
             y_data = repmat(y_data,1,n_replicate);
             rng(obj.RF_seed);

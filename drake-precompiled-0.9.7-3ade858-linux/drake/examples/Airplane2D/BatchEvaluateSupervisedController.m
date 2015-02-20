@@ -42,8 +42,8 @@ end
 
 train_file='supervised_controller';
 load(train_file);
-trainOnSelection = true;
-getLearningCurve = true;
+trainOnSelection = false;
+getLearningCurve = false;
 % 
 % ctrl_list = cell(n_files,1);
 % for fidx = 1:n_files
@@ -79,7 +79,7 @@ x0_alpha_list  = [x0_list; alpha_list];
 % a=ctrl_list{end,1};
 % ctrl_list ={};
 % ctrl_list{1} = a;
-for idx=1:size(x0_alpha_list,2)
+for idx=2:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
         

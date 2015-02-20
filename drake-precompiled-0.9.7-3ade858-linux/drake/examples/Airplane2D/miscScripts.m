@@ -15,9 +15,16 @@ legend('data1','data2')
 sum(exp(-dists1./2))
 sum(exp(-dists2./2))
 
+%%
 
+    field = ObstacleField();
+    field = field.GenerateRandomObstacles();    
+ figure(25); clf;  hold on;
+ p=PlanePlant();
+ 
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
 ref_traj = controller.data_sets_unnormalized{idx,1};
+ref_traj = traj_list{1,1}.eval(traj_list{1,1}.getBreaks())
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;
