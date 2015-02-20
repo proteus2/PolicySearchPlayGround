@@ -40,10 +40,10 @@ else
     alpha_list = test_alpha_list;
 end
 
-train_file='mmd_partial_data_ctrller';
+train_file='mmd_results_alpha_0.001_all_vals.mat';
 load(train_file,'controller');
-trainOnSelection = true;
-getLearningCurve = true;
+trainOnSelection = false;
+getLearningCurve = false;
 % 
 % ctrl_list = cell(n_files,1);
 % for fidx = 1:n_files
@@ -70,10 +70,15 @@ if trainOnSelection
     else
         ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller,'TreeBagger');
     end
+else
+    ctrl_list{1,1} = controller;
 end
- 
+%  
+% load('ctrl_list');
 x0_alpha_list  = [x0_list; alpha_list];
-
+% a=ctrl_list{end,1};
+% ctrl_list ={};
+% ctrl_list{1} = a;
 for idx=1:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
@@ -104,9 +109,9 @@ for idx=1:size(x0_alpha_list,2)
                 optimal_x = xtraj;
             end
             u{1,1} = optimal_u;
-
+            traj_opt_cost
             tf=optimal_u.getBreaks; tf=tf(end);
-            [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha);
+%             [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha);
 %             if ~trainTest
 %                 save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
 %             end
@@ -121,17 +126,18 @@ for idx=1:size(x0_alpha_list,2)
             
         apprxtraj_fname =strcat(apprxtraj_fname,sprintf('_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f]',alpha,x0(1),x0(2),x0(3),x0(4)),'.mat');
 
-        if ~exist(apprxtraj_fname,'file')
-            tf = optimal_u.getBreaks; tf=tf(end);
-            [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
-            save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
-        else
-            load(apprxtraj_fname)
+%         if ~exist(apprxtraj_fname,'file')
             tf = optimal_u.getBreaks; tf=tf(end);
             tf=tf+2;
             [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
-            save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
-        end
+%             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
+%         else
+%             load(apprxtraj_fname)
+%             tf = optimal_u.getBreaks; tf=tf(end);
+%             tf=tf+2;
+%             [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
+%             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
+%         end
 
         cost_list_all_alpha{idx,1} = traj_opt_cost;
         cost_list_all_alpha{idx,2} = cost_list(:,:);
@@ -139,7 +145,7 @@ for idx=1:size(x0_alpha_list,2)
          
 end
 
-save('mmd_partial_results_learning_curve.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
+save('mmd_partial_controller_data.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 

@@ -1,4 +1,4 @@
-function [xtraj,utraj] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
+function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
     t=0:dt:tf;
     N = size(t,2);
     x1=zeros(4,N); u1=zeros(1,N);
@@ -25,7 +25,15 @@ function [xtraj,utraj] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
         xdot = p.dynamics(0,x1(:,k),control);
         xnew = x1(:,k) + xdot*dt;
         x1(:,k+1)=xnew;
+        if( x1(2,k+1) > 9)
+            break
+        end
     end
+
+    x1(:,k+2:end)=[];
+    u1(:,k+2:end)=[];
+    
+    t=0:dt:(size(x1,2)-1)*dt;
     x1 = PPTrajectory(foh(t,x1));
     u1 = PPTrajectory(foh(t,u1));
     xtraj = x1.setOutputFrame(p.getStateFrame);

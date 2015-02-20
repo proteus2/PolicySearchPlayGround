@@ -152,10 +152,10 @@ classdef MMDController
                     return;
                 end
                 wrong_th_dists = find(abs(theta_dists)>pi);
-                if ~isempty(wrong_th_dists)
-                    fprintf('Wrong angle difference detected')
-                    %return;
-                end
+%                 if ~isempty(wrong_th_dists)
+%                     fprintf('Wrong angle difference detected')
+%                     %return;
+%                 end
             end
             difference(3,:) = theta_dists*theta_std_dev;
             diff_x = difference;

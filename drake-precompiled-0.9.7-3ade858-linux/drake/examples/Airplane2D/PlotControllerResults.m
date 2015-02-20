@@ -14,6 +14,20 @@ ctrl_cost(ctrl_cost(:,2)>0.5,:)=[];
 
 
 %% Learning curve
+fname = 'mmd_partial_results_learning_curve.mat';
+load(fname);
+n_itern = size(cost_list_all_alpha{1,2},1);
+n_tests = size(test_x0_list,2);
+costs = zeros(n_tests,n_itern); % rows=ith trajectory addition, columns=ith tests in test_x0_list
+
+traj_opt_costs = zeros(n_tests,1);
+for test_idx=1:n_tests 
+    for train_idx=1:n_itern
+        costs(test_idx,train_idx) = cost_list_all_alpha{test_idx,2}(train_idx,2);
+    end
+    traj_opt_costs(test_idx,1) = cost_list_all_alpha{test_idx,1}(1,2);
+end
+
 
 %% Speed of executing a trajectory
 

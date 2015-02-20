@@ -27,7 +27,7 @@ x = x';y=y';
 load('RF_seed');
 rng(RF_seed);
 [controller] = TreeBagger(50,x,y,'Method','regression');
-save('vary_alpha_supervised_results_alpha','controller','data','train_alpha_list');
+save('supervised_controller','controller','data','train_alpha_list');
 
 
 

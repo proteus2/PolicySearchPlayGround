@@ -12,7 +12,7 @@ function [traj_list,cost_list] = EvaluateControllers(ctrl_list,x0,tf,alpha)
     for idx = 1:n_ctrls
         ctrl = ctrl_list{idx,1};
         tic
-        [xtraj,utraj]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
+        [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
         toc
         [tot_cost,avg_cost] = evaluateTrajCost(xtraj,utraj,field,t);
         traj_list{idx,1} = xtraj; traj_list{idx,2} = utraj;

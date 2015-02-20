@@ -19,7 +19,6 @@ function [ctrller] = trainOnSelectedData(trainIdx,data_set,controller)
                     load('RF_seed');
                     ctrller = MMDController(RF_seed);
                 end
-                rng(RF_seed);
                 ctrller = setNewController(ctrller,data_x,data_y);
             otherwise
                 warning('unknown controller type')
