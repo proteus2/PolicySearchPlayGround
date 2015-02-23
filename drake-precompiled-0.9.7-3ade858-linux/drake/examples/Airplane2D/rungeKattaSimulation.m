@@ -4,6 +4,7 @@ function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
     x1=zeros(4,N); u1=zeros(1,N);
     x1(:,1) = x0;
     alpha = p.v;
+    exed =[];
     for k=1:N-1  
         if varyAlpha
             curr_state = [x1(:,k);alpha];
@@ -13,7 +14,8 @@ function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
         if strcmp(class(u),'TreeBagger')
             control = u.predict(curr_state');
         elseif strcmp(class(u),'MMDController') ||strcmp(class(u),'MMDAggregateController') ||strcmp(class(u),'KMMController')
-            control = u.predict(curr_state);
+            [control,idx] = u.predict(curr_state);
+            exed = [exed idx];
         elseif strcmp(class(u),'BoostedKMMController')
             control = u.predict([curr_state;x0]);
         elseif strcmp(class(u),'network')
@@ -25,7 +27,7 @@ function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha)
         xdot = p.dynamics(0,x1(:,k),control);
         xnew = x1(:,k) + xdot*dt;
         x1(:,k+1)=xnew;
-        if( x1(2,k+1) > 9)
+        if( x1(2,k+1) > 9) || (norm(x1(1:2,k+1)-[5;9]) <0.7)
             break
         end
     end

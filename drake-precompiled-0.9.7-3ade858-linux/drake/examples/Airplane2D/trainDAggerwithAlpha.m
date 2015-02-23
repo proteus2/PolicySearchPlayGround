@@ -20,5 +20,5 @@ else
     load('train_x0_list');
 end
 
-[controller] = trainDAgger(train_x0_list,n_dagg_itern,train_alpha_list);
-save('dagg_results_alpha_0.001.mat','controller','train_alpha_list','train_x0_list');
+[controller,data] = trainDAgger(train_x0_list,n_dagg_itern,train_alpha_list);
+save('dagg_results_alpha_0.001.mat','controller','train_alpha_list','train_x0_list','data');

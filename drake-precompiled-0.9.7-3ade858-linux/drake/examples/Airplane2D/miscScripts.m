@@ -16,32 +16,27 @@ sum(exp(-dists1./2))
 sum(exp(-dists2./2))
 
 %%
-
-    field = ObstacleField();
-    field = field.GenerateRandomObstacles();    
- figure(25); clf;  hold on;
- p=PlanePlant();
- 
+for idx=1:size(cost_list_all_alpha,1)
+visualizeTraj(traj_list_all_alpha{idx,1}{1,1},alpha_list(idx));cost_list_all_alpha{idx,2}
+end
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
 ref_traj = controller.data_sets_unnormalized{idx,1};
-ref_traj = traj_list{1,1}.eval(traj_list{1,1}.getBreaks())
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;
  p=PlanePlant();
     v = PlaneVisualizer(p,field);
-    v.draw(0,[3.9;0;0;0]);
- hold on; scatter(ref_traj(1,:),ref_traj(2,:),'black')
+    v.draw(0,ref_traj(:,1));
+ hold on; ref= scatter(ref_traj(1,:),ref_traj(2,:),'black')
 %   hold on; scatter(controller.data_sets_unnormalized{9,1}(1,:),controller.data_sets_unnormalized{9,1}(2,:),'green')
 
-hold on; scatter(x1(1,1:end),x1(2,1:end),'blue');
+hold on; exed=scatter(x1(1,1:end),x1(2,1:end),'blue');
 %  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
 
 if ~isempty(x)
-hold on; scatter(x(1,:),x(2,:),100,'magenta','filled')
+hold on; detected=scatter(x(1,:),x(2,:),100,'magenta','filled')
 end
 hold on; scatter(xf(1,:),xf(2,:),1000,'red');
-
 hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
 
 %% Plotting mistakes vs distance from the center

@@ -50,6 +50,7 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 %      
     % set parameters
     %beta = 0.90; gamma = 1;
+    executedCtrls =[];
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[]; train_idx = 1;
             for idx=1:size(train_list,2)
@@ -71,8 +72,8 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                         current_state = [x1(:,k);alpha];
                         [d,min_idx,emptyCandidates,candidates,d_return] = checkDiscrepancy(controller,current_state); 
                         d_list=[d_list d];
-                        candidates,min_idx
-                        
+                        min_idx
+                        executedCtrls=[executedCtrls min_idx];
                         dist_to_goal = norm(x1(1:2,k)-[5; 9]);
                         if dist_to_goal<=0.5
                             break
@@ -84,43 +85,43 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 %                         if d > controller.max_d && (norm(x1(1:2,k)-[5;9])>1.5)
                             d,current_state,d_return
                             x = [x current_state];
-                            data_set = (cell2mat(controller.data_sets_unnormalized(:,1)'));
-                            curr_d_goal = norm(current_state(1:2) - [5;9]);
-                            data_d_goal = bsxfun(@minus,data_set(1:2,:),[5;9]);
-                            data_d_goal = sqrt(sum(data_d_goal.^2));
-                            data_set = data_set(:,(data_d_goal<curr_d_goal));
+%                             data_set = (cell2mat(controller.data_sets_unnormalized(:,1)'));
+%                             curr_d_goal = norm(current_state(1:2) - [5;9]);
+%                             data_d_goal = bsxfun(@minus,data_set(1:2,:),[5;9]);
+%                             data_d_goal = sqrt(sum(data_d_goal.^2));
+%                             data_set = data_set(:,(data_d_goal<curr_d_goal));
                             
-                            [normed_data_set,mu,sigma] = normalizeData(controller, data_set);
-                            normed_state = current_state - mu;
-                            normed_state = normed_state./sigma;
+%                             [normed_data_set,mu,sigma] = normalizeData(controller, data_set);
+%                             normed_state = current_state - mu;
+%                             normed_state = normed_state./sigma;
+%                             
+%                             
+%                             Q = eye(5,5);
+%                             Q(1,1) = 10;
+%                             Q(2,2) = 10;
+%                             Q(5,5) = 5;
+% 			
+%                           %  dists = computeDistance(controller,normed_state,normed_data_set,sigma(3),Q);
+%                            % [d,closest_data] = sort(dists);
+%                             
+% %                             xf = data_set(:,closest_data(1));idx2=2;
+%                             xf = [5;9;0;0];
+%                             while norm(xf(1:2,1)-current_state(1:2,1))<0.5
+%                                 xf = data_set(:,closest_data(idx2));
+%                                 idx2 = idx2 + 1;
+%                             end
                             
-                            
-                            Q = eye(5,5);
-                            Q(1,1) = 10;
-                            Q(2,2) = 10;
-                            Q(5,5) = 5;
-			
-                          %  dists = computeDistance(controller,normed_state,normed_data_set,sigma(3),Q);
-                           % [d,closest_data] = sort(dists);
-                            
-%                             xf = data_set(:,closest_data(1));idx2=2;
-                            xf = [5;9;0;0];
-                            while norm(xf(1:2,1)-current_state(1:2,1))<0.5
-                                xf = data_set(:,closest_data(idx2));
-                                idx2 = idx2 + 1;
-                            end
-                            
-                            plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
-                            [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
-                             t = x_traj_from_curr_loc.getBreaks();
-                             [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-                            while y_to_attach(1) == 0
-                                plan_time = norm(xf(1:2)-current_state(1:2))/alpha+rand(1,1)*2;
-                                [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
-                                 t = x_traj_from_curr_loc.getBreaks();
-                                 [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-                            end
-                              controller = setNewController(controller,x_to_attach,y_to_attach);    
+%                             plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
+%                             [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+%                             t = x_traj_from_curr_loc.getBreaks();
+%                             [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+%                             while y_to_attach(1) == 0
+%                                 plan_time = norm(xf(1:2)-current_state(1:2))/alpha+rand(1,1)*2;
+%                                 [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+%                                  t = x_traj_from_curr_loc.getBreaks();
+%                                  [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+%                             end
+%                               controller = setNewController(controller,x_to_attach,y_to_attach);    
                               control = controller.predict(current_state);
                         else
                             control = controller.predict(current_state,min_idx);

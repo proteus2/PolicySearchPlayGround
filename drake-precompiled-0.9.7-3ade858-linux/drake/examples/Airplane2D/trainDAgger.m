@@ -77,6 +77,7 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                         
                         xf = [5;9;0;0];
                         if mod(k,100) == 0
+                            tic
                             plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
                             [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
                             t = x_traj_from_curr_loc.getBreaks();

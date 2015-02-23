@@ -15,13 +15,13 @@ end
 
 function [g] = cost(dt,x,u,field)
 R = 0.0001;
-
+R=0;
 % minimize the max obstacle constraint
 [c,dc] = field.obstacleConstraint(x);
 [c,i]=max(c);
 dc = dc(i,:);
 
-g = ((c)) + u'*R*u;
+g = ((c*2)) + u'*R*u;
 %g = c + norm(xg-x);
 %g = sum((R*u).*u,1);
 dg = [0,dc,2*u'*R];
@@ -38,13 +38,13 @@ function [h] = finalCost(t,xtraj)
     dists = sum(bsxfun(@minus,x(1:2,:),xg(1:2,:)).^2);
     [d,xf_idx] = min(dists);
     xf = x(:,xf_idx);
-    
-    n_steps = t/0.001;
-    dist_to_goal = norm(xg(1:2,:)-xf(1:2,:))*0.1*n_steps
-    if dist_to_goal <=0.4
-        h = 0;
+    d=sqrt(d);
+    n_steps = t/0.01;
+    if d <1
+        dist_to_goal = 0
     else
-        h =dist_to_goal;
+        dist_to_goal = sqrt(d)*n_steps;
     end
+    h=dist_to_goal;
     
 end

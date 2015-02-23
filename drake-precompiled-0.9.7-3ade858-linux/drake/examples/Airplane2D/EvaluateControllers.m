@@ -2,7 +2,7 @@ function [traj_list,cost_list] = EvaluateControllers(ctrl_list,x0,tf,alpha)
     
     n_ctrls = size(ctrl_list,1);
     p = PlanePlant(alpha);
-    dt = 0.01;
+    dt = 0.001;
     t=0:dt:tf;
     traj_list = cell(0,2);
     cost_list = zeros(n_ctrls,2);

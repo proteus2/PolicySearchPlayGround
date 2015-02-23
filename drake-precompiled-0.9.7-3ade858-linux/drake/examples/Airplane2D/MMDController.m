@@ -243,7 +243,7 @@ classdef MMDController
             k = exp(-distance./(2*sigma));
         end
 
-        function u = predict(obj,x,idx)
+        function [u,idx] = predict(obj,x,idx)
             x = fixTheta(obj,x); 
             if nargin<3
                 [~,idx,empty_cand,~,d_list] = checkDiscrepancy(obj,x);

@@ -9,8 +9,8 @@ function [ctrller] = trainOnSelectedData(trainIdx,data_set,controller)
         
         switch controller
             case 'TreeBagger'
-                x_list = [x_list; data_x'];
-                y_list = [y_list; data_y'];
+                x_list = [x_list; data_x];
+                y_list = [y_list; data_y];
                 if dataidx == numel(trainIdx)
                     ctrller = TreeBagger(50,x_list,y_list,'Method','regression','MinLeaf',1);
                 end

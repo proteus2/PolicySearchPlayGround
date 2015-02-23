@@ -1,5 +1,6 @@
 % Compare controllers
 clear all;
+close all;
 
 n_x0=50;
 x0_rand = rand(1,n_x0);
@@ -39,9 +40,10 @@ else
     alpha_list = test_alpha_list;
 end
 
-train_file='mmd_results_alpha_0.001_all_vals.mat';
-load(train_file,'controller');
-trainOnSelection = true;
+train_file='mmd_results_alpha_0.001_all_vals_norepmat.mat';
+% train_file = 'supervised_controller.mat';
+load(train_file);
+trainOnSelection = false;
 getLearningCurve = false;
 % 
 % ctrl_list = cell(n_files,1);
@@ -67,11 +69,16 @@ if trainOnSelection
             ctrl_list{trainIdx,1} = trainOnSelectedData(1:trainIdx,data_set,controller_name);
         end
     else
-       trainIdx = 1:size(data_set,1);
-        ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller_name);
+        ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller,'TreeBagger');
     end
 else
     ctrl_list{1,1} = controller;
+    train_file='supervised_controller.mat';
+    load(train_file)
+    ctrl_list{2,1} = controller;
+        train_file='dagg_results_alpha_0.001.mat';
+    load(train_file);
+    ctrl_list{3,1} = controller;
 end
 %  
 % load('ctrl_list');
@@ -79,7 +86,7 @@ x0_alpha_list  = [x0_list; alpha_list];
 % a=ctrl_list{end,1};
 % ctrl_list ={};
 % ctrl_list{1} = a;
-for idx=2:size(x0_alpha_list,2)
+for idx=1:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
         
@@ -109,9 +116,9 @@ for idx=2:size(x0_alpha_list,2)
                 optimal_x = xtraj;
             end
             u{1,1} = optimal_u;
-            traj_opt_cost
             tf=optimal_u.getBreaks; tf=tf(end);
-%             [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha);
+            [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha);
+            traj_opt_cost
 %             if ~trainTest
 %                 save(optimaltraj_fname,'optimal_u','optimal_x','alpha','traj_list_opt','traj_opt_cost');
 %             end
@@ -141,11 +148,12 @@ for idx=2:size(x0_alpha_list,2)
 
         cost_list_all_alpha{idx,1} = traj_opt_cost;
         cost_list_all_alpha{idx,2} = cost_list(:,:);
-         traj_list_all_alpha{idx,1} = {}; %traj_list;
+         traj_list_all_alpha{idx,1} = traj_list;
+         traj_opt_list_all_alpha{idx,1} = traj_list_opt;
          
 end
 
-save('mmd_partial_controller_data.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list');
+save('supervised_vs_mmd_vs_dagg_test_error.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list','traj_opt_list_all_alpha');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
