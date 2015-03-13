@@ -13,7 +13,6 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 
     
     train_list = [x0_list;alpha_list];
-
     train_idx = 1;
   %  for x0_idx=1:size(x0_list,2)
   %     for idx=1:numel(alpha_list)

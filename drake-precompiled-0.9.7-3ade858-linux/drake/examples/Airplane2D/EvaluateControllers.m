@@ -12,7 +12,21 @@ function [traj_list,cost_list] = EvaluateControllers(ctrl_list,x0,tf,alpha)
     for idx = 1:n_ctrls
         ctrl = ctrl_list{idx,1};
         tic
-        [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
+        if strcmp(class(ctrl),'MMDController') 
+            if size(ctrl.data_sets{1},1) == 4
+                    [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,false);  
+            else
+                    [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
+            end
+        else if strcmp(class(ctrl),'TreeBagger') 
+            if size(ctrl.X,2) == 4
+                [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,false);  
+            else
+                [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
+            end
+        else
+            [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
+        end
         toc
         [tot_cost,avg_cost] = evaluateTrajCost(xtraj,utraj,field,t);
         traj_list{idx,1} = xtraj; traj_list{idx,2} = utraj;
