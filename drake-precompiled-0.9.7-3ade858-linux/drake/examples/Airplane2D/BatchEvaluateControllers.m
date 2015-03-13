@@ -4,11 +4,6 @@ close all;
 
 n_x0=50;
 x0_rand = rand(1,n_x0);
-x0_x = 2*x0_rand + (1-x0_rand)*4;
-x0_rand = rand(1,n_x0);
-x0_y = 0*x0_rand + (1-x0_rand)*1;
-
-
 if ~exist('./test_alpha_list.mat','file')
     test_alpha_list = 5*x0_rand + (1-x0_rand)*30;
     save('test_alpha_list','test_alpha_list');
@@ -16,16 +11,6 @@ else
     load('test_alpha_list')
 end
 
-if ~exist('./test_x0_list.mat','file')
-    test_x0_list = [x0_x;x0_y;zeros(1,n_x0);zeros(1,n_x0)];
-    test_x0_list = [test_x0_list];
-    save('test_x0_list','test_x0_list');
-else
-    load('test_x0_list')
-end
-
-
-load('train_x0_list');
 load('train_alpha_list');
 
 
@@ -36,11 +21,11 @@ if trainTest
     x0_list = train_x0_list;
     alpha_list = train_alpha_list;
 else
-    x0_list = test_x0_list;
+    x0_list = repmat([3.9;0;0;0],1,n_x0);
     alpha_list = test_alpha_list;
 end
 
-train_file='mmd_results_alpha_0.001_all_vals_norepmat.mat';
+train_file='mmd_unobservable_controller.mat';
 % train_file = 'supervised_controller.mat';
 load(train_file);
 trainOnSelection = false;
@@ -72,13 +57,13 @@ if trainOnSelection
         ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller,'TreeBagger');
     end
 else
-    ctrl_list{1,1} = controller;
-    train_file='supervised_controller.mat';
-    load(train_file)
-    ctrl_list{2,1} = controller;
-        train_file='dagg_results_alpha_0.001.mat';
-    load(train_file);
-    ctrl_list{3,1} = controller;
+%     ctrl_list{1,1} = controller;
+%     train_file='supervised_controller.mat';
+%     load(train_file)
+%     ctrl_list{2,1} = controller;
+%         train_file='dagg_results_alpha_0.001.mat';
+%     load(train_file);
+%     ctrl_list{3,1} = controller;
 end
 %  
 % load('ctrl_list');
@@ -153,7 +138,7 @@ for idx=1:size(x0_alpha_list,2)
          
 end
 
-save('supervised_vs_mmd_vs_dagg_test_error.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list','traj_opt_list_all_alpha');
+save('unobservable_test_error.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list','traj_opt_list_all_alpha');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
