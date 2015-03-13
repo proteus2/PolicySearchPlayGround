@@ -1,4 +1,4 @@
-function [utraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,xinit,uinit,F_limit)
+function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,xinit,uinit,F_limit)
 
     if ~exist('xf','var')
         xf = [5; 9; 0; 0];
@@ -134,13 +134,14 @@ function [utraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,xinit,
             end
         end
         tic
-        [utraj_list,~,F,info]=solveTraj(master_prog,tf0,initial_guess);
+        [utraj_list,xtraj_list,~,F,info]=solveTraj(master_prog,tf0,initial_guess);
         info
         toc
         n_retries = n_retries+1
         F
         if ~(info==11 || info == 13 || info ==42 ||info==3)
            n_trajs_saved = n_trajs_saved + 1;
+           traj_list{n_retries,1} = xtraj_list;
            traj_list{n_retries,2} = utraj_list;
            F_list(n_retries)=F;
         end

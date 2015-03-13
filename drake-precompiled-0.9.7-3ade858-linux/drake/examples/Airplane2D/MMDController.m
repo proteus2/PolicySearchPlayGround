@@ -161,12 +161,14 @@ classdef MMDController
             diff_x = difference;
             
             if ~exist('Q','var')
-            Q = eye(size(x1,1));
-            Q(1,1) = 10;
-            Q(2,2) = 10;
-            Q(3,3) = 15;
-            Q(4,4) = 15;
-            Q(5,5) = 15;
+                Q = eye(size(x1,1));
+                Q(1,1) = 10;
+                Q(2,2) = 10;
+                Q(3,3) = 15;
+                Q(4,4) = 15;
+                if size(x1,1) ==5
+                    Q(5,5) = 15;
+                end
             end
 %             Q(1,1) = 1000000;
             dist_x = diff_x'*Q*diff_x;

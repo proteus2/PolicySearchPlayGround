@@ -28,7 +28,6 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                 [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
                 while(~checkSuccess(xtraj))
                     [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
-                
                 end
                 save(init_fname, 'xtraj','utraj');
             else
@@ -39,6 +38,9 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                 elseif exist('optimal_x','var')
                     xtraj = optimal_x;
                     utraj = optimal_u;
+                end
+                while(~checkSuccess(xtraj))
+                    [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
                 end
             end
             tf = xtraj.getBreaks(); tf=tf(end);

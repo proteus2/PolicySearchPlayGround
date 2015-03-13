@@ -134,7 +134,7 @@ classdef RobustDircolTrajectoryOptimization < NonlinearProgram
                 h_idx = (prog_idx-1)*num_vars_per_sample + h_idx;
                 A_tau(node_range, h_idx) = -eye(nh);
 
-                figure; imagesc(A_tau)
+                %figure; imagesc(A_tau)
             end
             
             num_vars = num_vars + prog_list{prog_idx}.num_vars;
@@ -153,7 +153,7 @@ classdef RobustDircolTrajectoryOptimization < NonlinearProgram
 
     end
     
-    function [utraj,z,F,info,infeasible_constraint_name] = solveTraj(obj,t_init,traj_init)
+    function [utraj,xtraj_list,z,F,info,infeasible_constraint_name] = solveTraj(obj,t_init,traj_init)
         % Solve the nonlinear program and return resulting trajectory
         % @param t_init initial timespan for solution.  can be a vector of
         % length obj.N specifying the times of each segment, or a scalar
@@ -168,6 +168,7 @@ classdef RobustDircolTrajectoryOptimization < NonlinearProgram
         [z,F,info,infeasible_constraint_name] = obj.solve(z0);
 %         xtraj = reconstructStateTrajectory(obj,z);
         if nargout>1, utraj = reconstructInputTrajectory(obj,z); end
+        xtraj_list = reconstructStateTrajectory(obj,z);
     end
     
     function [utraj] = reconstructInputTrajectory(obj,z)
@@ -215,19 +216,25 @@ classdef RobustDircolTrajectoryOptimization < NonlinearProgram
       end
     end
     
-     function xtraj = reconstructStateTrajectory(obj,z)
+     function xtraj_list = reconstructStateTrajectory(obj,z)
       % Interpolate between knot points to reconstruct a trajectory using
       % the hermite spline
-      t = [0; cumsum(z(obj.h_inds))];
+      t = [0; cumsum(z(obj.h_inds(1:obj.N-1)))];
       u = reshape(z(obj.u_inds),[],obj.N);
       x = reshape(z(obj.x_inds),[],obj.N);
       
-      xdot = zeros(size(x,1),obj.N);
-      for i=1:obj.N,
-        xdot(:,i) = obj.plant.dynamics(t(i),x(:,i),u(:,i));
+      idx2=1;
+      for idx=1:obj.n_samples
+          plant = obj.plant_list{idx};
+          xdot = zeros(4,obj.N);
+          for i=1:obj.N,
+            xdot(:,i) = plant.dynamics(t(i),x(idx2:idx2+3,i),u(:,i));
+          end
+          xtraj = PPTrajectory(pchipDeriv(t,x(idx2:idx2+3,:),xdot));
+          xtraj = xtraj.setOutputFrame(plant.getStateFrame);
+          xtraj_list{idx} = xtraj;
+          idx2=idx2+4;
       end
-      xtraj = PPTrajectory(pchipDeriv(t,x,xdot));
-      xtraj = xtraj.setOutputFrame(obj.plant.getStateFrame);
     end
 
   end
