@@ -1,17 +1,21 @@
-function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern,alpha_list,aggregate)
+function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern,obs_list,aggregate)
+    %% getting initial set of trajectories
+    % for observations o_1...o_m,
+        % sample alpha_1,...,alpha_n from P(alpha|o)
+        % tau^{o_i} = getRobustTrajectory(x0_list(:,1),alpha_list,false)
+    
     load('RF_seed');
     if aggregate
         controller = MMDAggregateController(RF_seed);
     else
         controller = MMDController(RF_seed);
     end
-    dt = 0.001;    
-    
-    % for all alpha values, get initial trajectories
-    ref_traj_list = cell(numel(alpha_list,2),1);
-    tf_list = zeros(numel(alpha_list,2)+size(x0_list,2),1);
+    dt = 0.001;
 
     x0=x0_list(:,1);
+    
+    
+    
     init_fname = sprintf( './InitTraining/unobservable_initial_mmd_traj_alpha=%d,%d,%d,x0=[%d,%d,%d,%d].mat',alpha_list(1),alpha_list(2),alpha_list(3),x0(1),x0(2),x0(3),x0(4) )
 
     if ~exist(init_fname,'file')              
@@ -21,6 +25,10 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
         load(init_fname)
     end
 
+    %% Learning
+    
+    
+    
     x=[];y=[];
     tf_list = zeros(1,10);
     for idx=1:numel(xtraj_list)

@@ -6,11 +6,6 @@ function [controller,mmd_data] = trainUnobservableMMD(x0_list,n_mmd_itern,alpha_
         controller = MMDController(RF_seed);
     end
     dt = 0.001;    
-    
-    % for all alpha values, get initial trajectories
-    ref_traj_list = cell(numel(alpha_list,2),1);
-    tf_list = zeros(numel(alpha_list,2)+size(x0_list,2),1);
-
     x0=x0_list(:,1);
     init_fname = sprintf( './InitTraining/unobservable_initial_mmd_traj_alpha=%d,%d,%d,x0=[%d,%d,%d,%d].mat',alpha_list(1),alpha_list(2),alpha_list(3),x0(1),x0(2),x0(3),x0(4) )
 
