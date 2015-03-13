@@ -25,7 +25,7 @@ else
     alpha_list = test_alpha_list;
 end
 
-train_file='mmd_unobservable_controller.mat';
+train_file='mmd_observable_controller.mat';
 % train_file = 'supervised_controller.mat';
 load(train_file);
 trainOnSelection = false;
@@ -57,7 +57,7 @@ if trainOnSelection
         ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller,'TreeBagger');
     end
 else
-%     ctrl_list{1,1} = controller;
+    ctrl_list{1,1} = controller;
 %     train_file='supervised_controller.mat';
 %     load(train_file)
 %     ctrl_list{2,1} = controller;
@@ -138,7 +138,7 @@ for idx=1:size(x0_alpha_list,2)
          
 end
 
-save('unobservable_test_error.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list','traj_opt_list_all_alpha');
+save('observable_test_error.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','test_x0_list','traj_opt_list_all_alpha');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
