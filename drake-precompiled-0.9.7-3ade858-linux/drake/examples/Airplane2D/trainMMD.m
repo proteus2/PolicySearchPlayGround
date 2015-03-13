@@ -24,8 +24,12 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
            alpha = train_list(5,idx);
             x0=train_list(1:4,idx);
              init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
-            if ~exist(init_fname,'file')
+            if ~exist(init_fname,'file')              
                 [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
+                while(~checkSuccess(xtraj))
+                    [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
+                
+                end
                 save(init_fname, 'xtraj','utraj');
             else
                 load(init_fname);
