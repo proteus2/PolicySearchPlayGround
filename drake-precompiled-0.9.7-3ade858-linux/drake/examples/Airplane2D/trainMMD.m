@@ -105,23 +105,22 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
 %                            % [d,closest_data] = sort(dists);
 %                             
 % %                             xf = data_set(:,closest_data(1));idx2=2;
-%                             xf = [5;9;0;0];
 %                             while norm(xf(1:2,1)-current_state(1:2,1))<0.5
 %                                 xf = data_set(:,closest_data(idx2));
 %                                 idx2 = idx2 + 1;
 %                             end
-                            
-%                             plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
-%                             [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
-%                             t = x_traj_from_curr_loc.getBreaks();
-%                             [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-%                             while y_to_attach(1) == 0
-%                                 plan_time = norm(xf(1:2)-current_state(1:2))/alpha+rand(1,1)*2;
-%                                 [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
-%                                  t = x_traj_from_curr_loc.getBreaks();
-%                                  [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
-%                             end
-%                               controller = setNewController(controller,x_to_attach,y_to_attach);    
+                            xf = [5;9;0;0];
+                            plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
+                            [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+                            t = x_traj_from_curr_loc.getBreaks();
+                            [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                            while y_to_attach(1) == 0
+                                plan_time = norm(xf(1:2)-current_state(1:2))/alpha+rand(1,1)*2;
+                                [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+                                 t = x_traj_from_curr_loc.getBreaks();
+                                 [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
+                            end
+                              controller = setNewController(controller,x_to_attach,y_to_attach);    
                               control = controller.predict(current_state);
                         else
                             control = controller.predict(current_state,min_idx);
