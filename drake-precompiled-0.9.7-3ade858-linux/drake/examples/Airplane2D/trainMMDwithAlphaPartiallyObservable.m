@@ -20,7 +20,6 @@ else
     load('train_partially_observable_alpha_list')
 end
 
-
 %train_alpha_list=train_alpha_list(1:n_obs);
 train_x0_list= repmat([3.9; 0; 0; 0],1,n_obs); 
 save('train_x0_list','train_x0_list');
