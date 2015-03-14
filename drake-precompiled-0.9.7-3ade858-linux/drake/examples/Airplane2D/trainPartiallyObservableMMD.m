@@ -54,6 +54,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                     obs = train_list(5,idx);
                     for alpha_idx = 1:n_alpha
                         tf = tf_list(idx,alpha_idx);
+                        alpha = alpha_list(idx,alpha_idx);
                         N  = numel(0:dt:tf);
                         x1=zeros(4,N); x1(:,1) = x0; % state simulation
                         p = PlanePlant(alpha);
