@@ -18,6 +18,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
     n_obs = size(train_obs_list,2);
     tf_list = zeros( n_obs, n_alpha );
     for obs_idx=1:size(train_obs_list,2)
+        obs = train_obs_list(obs_idx);
         alpha_for_obs_val = alpha_list(obs_idx,:);
         init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_alpha=%d,%d,%d,x0=[%d,%d,%d,%d].mat',alpha_list(1),alpha_list(2),alpha_list(3),x0(1),x0(2),x0(3),x0(4) )
         if ~exist(init_fname,'file')              
@@ -33,7 +34,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
             t = xtraj.getBreaks(); tf=t(end);
             tf_list(obs_idx,idx) = tf;
             t=0:tf/21:tf;
-            [new_x,new_y] = turnTrajToData(xtraj,utraj,t);
+            [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
             x=[new_x x]; y =[new_y y];
         end
         controller = setNewController(controller,x,y);
