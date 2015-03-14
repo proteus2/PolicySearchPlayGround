@@ -25,7 +25,7 @@ else
     alpha_list = test_alpha_list;
 end
 
-train_file='unobservable_supervised_controller.mat';
+train_file='observable_supervised_controller.mat';
 % train_file = 'supervised_controller.mat';
 load(train_file);
 trainOnSelection = false;
@@ -133,12 +133,12 @@ for idx=1:size(x0_alpha_list,2)
 
         cost_list_all_alpha{idx,1} = traj_opt_cost;
         cost_list_all_alpha{idx,2} = cost_list(:,:);
-         traj_list_all_alpha{idx,1} = traj_list;
-         traj_opt_list_all_alpha{idx,1} = traj_list_opt;
+        traj_list_all_alpha{idx,1} = traj_list;
+        traj_opt_list_all_alpha{idx,1} = traj_list_opt;
          
 end
 
-save('sup_unobservable_test_error.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','traj_opt_list_all_alpha');
+save('sup_observable_test_error_sup.mat','cost_list_all_alpha','alpha_list','traj_list_all_alpha','traj_opt_list_all_alpha');
 % 
 % traj_opt_cost = zeros(size(cost_list_all_alpha,1),2);
 % 
