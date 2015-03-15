@@ -2,7 +2,7 @@ n_mmd_itern = 50;
 n_obs=30;
 
 obs_rand = rand(1,n_obs);
-n_alpha = 3;
+n_alpha = 5;
 train_alpha_list = zeros(n_obs,n_alpha);
 if ~exist('./train_partially_observable_alpha_list.mat','file')
     train_obs_list = 0.05*obs_rand + (1-obs_rand)*0.1;
