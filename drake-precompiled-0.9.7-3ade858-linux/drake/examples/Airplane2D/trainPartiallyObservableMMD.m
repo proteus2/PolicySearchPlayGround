@@ -21,7 +21,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
         obs = train_obs_list(obs_idx);
         alpha_for_obs_val = alpha_list(obs_idx,:);
        % load('./InitTraining/partially_observable_initial_mmd_traj_alpha=1.356525e+01,1.387324e+01,1.424192e+01,x0=[3.900000e+00,0,0,0].mat');
-        init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_obs_idx=%d,x0=[%d,%d,%d,%d].mat',obs_idx,x0(1),x0(2),x0(3),x0(4) )
+        init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,x0(1),x0(2),x0(3),x0(4) )
         if ~exist(init_fname,'file')              
             [utraj,xtraj_list,traj_list,F]=getRobustTrajectory(x0_list(:,1),alpha_for_obs_val,false);
             save(init_fname, 'xtraj_list','utraj');
