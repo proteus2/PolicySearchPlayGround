@@ -13,13 +13,6 @@ else
     load('train_alpha_list')
 end
 
-% if ~exist('./train_x0_list.mat','file')
-%     train_x0_list = [x0_x;x0_y;zeros(1,n_x0);zeros(1,n_x0)];
-%     save('train_x0_list','train_x0_list');
-% else
-%     load('train_x0_list');
-% end
-
 train_x0_list= repmat([3.9; 0; 0; 0],1,30); 
 
 aggregate=false;

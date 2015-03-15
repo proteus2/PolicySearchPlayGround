@@ -10,10 +10,10 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
     x_list=[];
     y_list=[];
     for idx=1:size(train_list,2)
-        if idx ==26
-            continue
-        end
-           alpha = train_list(5,idx);
+            if idx==26
+                continue
+            end
+            alpha = train_list(5,idx);
             x0=train_list(1:4,idx);
              init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
             if ~exist(init_fname,'file')
@@ -40,14 +40,6 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
     end
       
     load('RF_seed');
-    load('dagger_temp_data');
-    y_to_attach=reshape(y,21*160,1);
-    y_list = [y_list; y_to_attach];
-    
-    for idx=1:5:size(x,2)
-        x_to_attach=x(:,idx:idx+4);
-        x_list = [x_list; x_to_attach];
-    end
     controller = TreeBagger(50,x_list,y_list,'Method','regression');
     
     
@@ -57,6 +49,9 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[]; train_idx = 1;
             for idx=1:size(train_list,2)
+                if idx==26
+                    continue 
+                end
                alpha = train_list(5,idx);
                 x0=train_list(1:4,idx);
                     
