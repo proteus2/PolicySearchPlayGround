@@ -49,14 +49,21 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
     train_list = [x0_list;train_obs_list];
     executedCtrls =[];
     for MMD_iteration = 1:n_mmd_itern
+            % allow n_mmd_itern times to train
             x = []; y=[]; 
             
             for idx=1:size(train_list,2)
+                    % for all the observation values,
+                    
                     x0=train_list(1:4,idx);
                     obs = train_list(5,idx);
+                    alpha_for_obs_val = alpha_list(idx,:); % gets all sampeld alpha values for this observation
+
                     for alpha_idx = 1:n_alpha
+                        % train on the sampled alpha values
                         tf = tf_list(idx,alpha_idx);
                         alpha = alpha_list(idx,alpha_idx);
+                            
                         N  = numel(0:dt:tf);
                         x1=zeros(4,N); x1(:,1) = x0; % state simulation
                         p = PlanePlant(alpha);
@@ -76,15 +83,15 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                                 x = [x current_state];
                                 xf = [5;9;0;0];
                                 plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
-                                [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_list,false,[5;9;0;0],plan_time);
+                                [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
                                 t = x_traj_from_curr_loc.getBreaks();
 
                                 x_to_attach=[]; y_to_attach=[];
                                 for xtraj_idx=1:numel(xtraj_list)
-                                    xtraj = rungeKattaSimulation(current_state,utraj,0.001,1,PlanePlant(alpha_list(idx)),true,obs); 
+                                    xtraj = rungeKattaSimulation(current_state,utraj,0.001,1,p,true,obs); 
                                     t = xtraj.getBreaks();
                                     tf=t(end);
-                                    [new_x,new_y] = turnTrajToData(xtraj,utraj,t);
+                                    [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
 
                                     if new_y(1) == 0
                                         keyboard

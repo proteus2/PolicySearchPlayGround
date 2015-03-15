@@ -24,6 +24,7 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
         x=[new_x x]; y =[new_y y];
     end
     load('RF_seed');
+    rng(RF_seed);
     controller = TreeBagger(50,x',y','Method','regression');
     
     
@@ -90,6 +91,7 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                 end
                 train_idx = train_idx + 1;
             end  
+            rng(RF_seed);
             controller = TreeBagger(50,x,y,'Method','regression');
 
     end   
