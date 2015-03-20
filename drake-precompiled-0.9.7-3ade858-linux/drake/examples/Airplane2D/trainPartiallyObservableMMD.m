@@ -59,7 +59,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                     obs = train_list(5,idx);
                     alpha_for_obs_val = alpha_list(idx,:); % gets all sampeld alpha values for this observation
 
-                    for alpha_idx = 1:n_alpha
+                    for alpha_idx = 1:1% - train only on the first alpha value
                         % train on the sampled alpha values
                         tf = tf_list(idx,alpha_idx);
                         alpha = alpha_list(idx,alpha_idx);
