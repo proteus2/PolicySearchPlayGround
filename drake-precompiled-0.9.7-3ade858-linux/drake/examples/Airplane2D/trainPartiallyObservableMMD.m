@@ -84,7 +84,6 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                                 xf = [5;9;0;0];
                                 plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
                                 [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
-                                t = x_traj_from_curr_loc.getBreaks();
 
                                 x_to_attach=[]; y_to_attach=[];
                                 for xtraj_idx=1:numel(xtraj_list)
