@@ -17,4 +17,4 @@ train_x0_list= repmat([3.9; 0; 0; 0],1,30);
 
 
 [controller,data] = trainDAgger(train_x0_list,n_dagg_itern,train_alpha_list);
-save('dagger_observable_controller.mat','controller','train_alpha_list','train_x0_list','data');
+save('./controllers/dagger_observable_controller.mat','controller','train_alpha_list','train_x0_list','data');
