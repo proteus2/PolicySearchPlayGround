@@ -1,7 +1,8 @@
 function [controller,data] = trainPartiallyObservableDAgger(x0_list,n_mmd_itern,alpha_list,train_obs_list)
     x0=x0_list(:,1);
     
-    
+        dt = 0.001;
+
     n_alpha = size(alpha_list,2);
     n_obs = size(train_obs_list,2);
     tf_list = zeros( n_obs, n_alpha );
@@ -40,7 +41,7 @@ function [controller,data] = trainPartiallyObservableDAgger(x0_list,n_mmd_itern,
                 obs = train_list(5,idx);
                 alpha_for_obs_val = alpha_list(idx,:);
 
-                for alpha_idx = 1:n_alpha
+                for alpha_idx = 1:1
                     alpha = alpha_list(idx,alpha_idx);
                     d_list =[];
 

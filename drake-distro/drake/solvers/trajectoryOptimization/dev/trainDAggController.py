@@ -62,9 +62,9 @@ for idx in range(10):
 			xtraj[0:,i] = xt
 			
 			# check discrepancy
-			fname = 'new_traj_'+str(n_traj_opt_calls)+'.mat'
+			fname = './DAgger_training_output/new_traj_'+str(n_traj_opt_calls)+'.mat'
 			if not os.path.isfile(fname):
-				eng.getTrajectory(xt.tolist())
+				eng.getTrajectory(xt.tolist(),'./DAgger_training_output/')
 			
 			new_data = sio.loadmat(fname)
 			x = new_data['x']
@@ -83,8 +83,8 @@ for idx in range(10):
 			xt = np.reshape(np.transpose(xt),prediction_dim,)
 		
 		print 'one iteration done'
-		save_object( controller, 'DAgg_controller_idx='+str(idx)+'_'+'init_idx='+str(initIdx) )
-		sio.savemat( 'DAgg_predicted_traj'+'_'+str(initIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )
+		save_object( controller, './DAgger_training_output/DAgg_controller_idx='+str(idx)+'_'+'init_idx='+str(initIdx) )
+		sio.savemat( './DAgger_training_output/DAgg_predicted_traj'+'_'+str(initIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )
 		controller.fit(aggregated_x,aggregated_y)
 	# aggregate data
 	

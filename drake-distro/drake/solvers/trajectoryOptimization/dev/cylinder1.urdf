@@ -2,9 +2,9 @@
 <robot name="cylinder" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <link name="cylinder">
     <inertial>
-      <mass value="1.397598"/>
-      <origin xyz="-0.012724 0.009541 -0.020480"/>
-      <inertia ixx="0.010398" ixy="0.0" ixz="0.0" iyy="0.010398" iyz="0.0" izz="0.041988"/>
+      <mass value="1.542700"/>
+      <origin xyz="-0.020931 -0.005754 0.008540"/>
+      <inertia ixx="0.010543" ixy="0.0" ixz="0.0" iyy="0.010543" iyz="0.0" izz="0.042714"/>
     </inertial>
     <collision>
       <geometry>

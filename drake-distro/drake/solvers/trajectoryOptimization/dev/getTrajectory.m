@@ -1,5 +1,9 @@
-function trajectory = getTrajectory(x0)
+function trajectory = getTrajectory(x0,path)
 
+    n_traj = 0;
+    fname=sprintf('new_traj_%d.mat',n_traj);
+    fname=strcat(path,fname)
+    
     checkDependency('lcmgl');
     x0= cell2mat(x0);
     
@@ -95,11 +99,14 @@ function trajectory = getTrajectory(x0)
     
     n_traj = 0;
     fname=sprintf('new_traj_%d.mat',n_traj);
+    fname=strcat(path,fname)
     while exist(fname,'file')
         n_traj = n_traj + 1;
         fname=sprintf('new_traj_%d.mat',n_traj);
+        fname=strcat(path,fname)
     end
     fname=sprintf('new_traj_%d.mat',n_traj);
+    fname=strcat(path,fname)
     save(fname,'x','y');
 % 
 %     v = plan.robot.constructVisualizer();
@@ -124,10 +131,11 @@ end
 
 
 function urdf = uncertainty(radius,len,count)
-load('RF_seed');
-rng(RF_seed);
-rand_num=rand();
-
+% load('RF_seed');
+% rng(RF_seed);
+% rand_num=rand();
+rand_list = [0.5427;0.7124];
+rand_num = rand_list(count);
 mass = rand_num+1;
 inertia = zeros(3);
 

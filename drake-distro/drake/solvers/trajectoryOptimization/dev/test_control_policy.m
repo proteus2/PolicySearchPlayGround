@@ -1,6 +1,6 @@
 function test_control_policy
     checkDependency('lcmgl');
-    load('./predicted_trajs/predicted_traj_1_4');
+    load('./DAgger_trainining_output/DAgg_predicted_traj_3_9');
     q_sol=xtraj(1:end-1,1:end);
     q_sol = [q_sol];
     h_sol = [xtraj(end,:)]

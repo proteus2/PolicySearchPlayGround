@@ -68,9 +68,9 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                             tf=t(end);
                             [new_x,new_y] = turnTrajToData(xtraj,utraj,t);
 
-                            if new_y(1) == 0
-                                keyboard
-                            end
+%                             if new_y(1) == 0
+%                                 keyboard
+%                             end
 
                             x_to_attach=[new_x x_to_attach]; y_to_attach =[new_y y_to_attach];
                         end
