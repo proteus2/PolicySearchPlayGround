@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/beomjoon/Documents/Github/drake-distro/snopt/libf2c/arithchk.c
+stdio.h
+-
+string.h
+-
+math.h
+-
+errno.h
+-
+sys/types.h
+-
+BaseTsd.h
+-
+

@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libeispack.a  CMakeFiles/eispack.dir/eispack.f.o
+/usr/bin/ranlib ../lib/libeispack.a

@@ -1,0 +1,7 @@
+trainUnobservableDAgger - tmux session 3
+trainDAgger - tmux session 9
+trainPartiallyObservableMMMd - tmux session 10
+
+Need to run:
+trainPartiallyObservableDAgger (currently being implemented)
+trainPartiallyObservableMMD (Why is this one taking forever?)

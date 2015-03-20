@@ -1,0 +1,72 @@
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_wd981 failed with the following output:
+Change Dir: /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/gmake "cmTryCompileExec38066674/fast"
+gmake[3]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec38066674.dir/build.make CMakeFiles/cmTryCompileExec38066674.dir/build
+gmake[4]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec38066674.dir/src.cxx.o
+/usr/bin/c++    -fexceptions -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -DCOMPILER_SUPPORT_wd981 -Werror   -wd981 -o CMakeFiles/cmTryCompileExec38066674.dir/src.cxx.o -c /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-wd981'
+gmake[4]: *** [CMakeFiles/cmTryCompileExec38066674.dir/src.cxx.o] Error 1
+gmake[4]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+gmake[3]: *** [cmTryCompileExec38066674/fast] Error 2
+gmake[3]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_wd2304 failed with the following output:
+Change Dir: /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/gmake "cmTryCompileExec3806568787/fast"
+gmake[3]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec3806568787.dir/build.make CMakeFiles/cmTryCompileExec3806568787.dir/build
+gmake[4]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3806568787.dir/src.cxx.o
+/usr/bin/c++    -fexceptions -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -DCOMPILER_SUPPORT_wd2304 -Werror   -wd2304 -o CMakeFiles/cmTryCompileExec3806568787.dir/src.cxx.o -c /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-wd2304'
+gmake[4]: *** [CMakeFiles/cmTryCompileExec3806568787.dir/src.cxx.o] Error 1
+gmake[4]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+gmake[3]: *** [cmTryCompileExec3806568787/fast] Error 2
+gmake[3]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_STRICTANSI failed with the following output:
+Change Dir: /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/gmake "cmTryCompileExec403805029/fast"
+gmake[3]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec403805029.dir/build.make CMakeFiles/cmTryCompileExec403805029.dir/build
+gmake[4]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec403805029.dir/src.cxx.o
+/usr/bin/c++    -fexceptions -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -DCOMPILER_SUPPORT_STRICTANSI -Werror   -strict-ansi -o CMakeFiles/cmTryCompileExec403805029.dir/src.cxx.o -c /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-strict-ansi'
+gmake[4]: *** [CMakeFiles/cmTryCompileExec403805029.dir/src.cxx.o] Error 1
+gmake[4]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+gmake[3]: *** [cmTryCompileExec403805029/fast] Error 2
+gmake[3]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0;}
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Qunusedarguments failed with the following output:
+Change Dir: /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp
+
+Run Build Command:/usr/bin/gmake "cmTryCompileExec3756531300/fast"
+gmake[3]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/gmake -f CMakeFiles/cmTryCompileExec3756531300.dir/build.make CMakeFiles/cmTryCompileExec3756531300.dir/build
+gmake[4]: Entering directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building CXX object CMakeFiles/cmTryCompileExec3756531300.dir/src.cxx.o
+/usr/bin/c++    -fexceptions -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -DCOMPILER_SUPPORT_Qunusedarguments -Werror   -Qunused-arguments -o CMakeFiles/cmTryCompileExec3756531300.dir/src.cxx.o -c /home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Qunused-arguments'
+gmake[4]: *** [CMakeFiles/cmTryCompileExec3756531300.dir/src.cxx.o] Error 1
+gmake[4]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+gmake[3]: *** [cmTryCompileExec3756531300/fast] Error 2
+gmake[3]: Leaving directory `/home/beomjoon/Documents/Github/drake-distro/eigen/pod-build/CMakeFiles/CMakeTmp'
+
+Source file was:
+int main() { return 0;}

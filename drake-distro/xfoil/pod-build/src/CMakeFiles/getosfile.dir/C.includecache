@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/beomjoon/Documents/Github/drake-distro/xfoil/osrc/getosfile.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+

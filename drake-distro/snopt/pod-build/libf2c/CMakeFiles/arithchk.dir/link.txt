@@ -1,0 +1,1 @@
+/usr/bin/cc  -O3 -DNDEBUG    CMakeFiles/arithchk.dir/arithchk.c.o  -o ../bin/arithchk  -L/home/beomjoon/Documents/Github/drake-distro/snopt/pod-build/lib  -L/home/beomjoon/Documents/Github/drake-distro/build/lib -rdynamic -lm -Wl,-rpath,/home/beomjoon/Documents/Github/drake-distro/snopt/pod-build/lib:/home/beomjoon/Documents/Github/drake-distro/build/lib 

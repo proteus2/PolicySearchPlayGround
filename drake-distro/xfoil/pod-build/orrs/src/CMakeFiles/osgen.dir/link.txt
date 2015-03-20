@@ -1,0 +1,1 @@
+/usr/bin/gfortran     -O3 CMakeFiles/osgen.dir/osgen.f.o CMakeFiles/osgen.dir/io.f.o CMakeFiles/osgen.dir/spline.f.o CMakeFiles/osgen.dir/getarg0.f.o  -o ../../bin/osgen  -L/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/lib  -L/home/beomjoon/Documents/Github/drake-distro/build/lib -rdynamic 

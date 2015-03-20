@@ -1,0 +1,8 @@
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/src/CMakeFiles/getosfile.dir
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/CMakeFiles/hOgFiYTJAQXEuc1Wni1n3XDPgE83b0nF.dir
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/orrs/src/CMakeFiles/osgen.dir
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/orrs/src/CMakeFiles/osmap.dir
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/plotlib/CMakeFiles/plotlib.dir
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/src/CMakeFiles/xfoil.dir
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/src/CMakeFiles/xutil.dir
+/home/beomjoon/Documents/Github/drake-distro/xfoil/pod-build/plotlib/CMakeFiles/xwin.dir

@@ -1,0 +1,2 @@
+/usr/bin/ar cr lib/liblcmtypes_bot2-frames.a  CMakeFiles/lcmtypes_bot2-frames.dir/lcmtypes/c/lcmtypes/bot_frames_update_t.c.o
+/usr/bin/ranlib lib/liblcmtypes_bot2-frames.a

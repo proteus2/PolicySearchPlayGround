@@ -1,0 +1,7 @@
+drake/util/MessageMonitor.class
+drake/util/MyLCMTypeDatabase$MyClassVisitor.class
+drake/util/Transform.class
+drake/util/CoordinateFrameData.class
+drake/util/MyLCMTypeDatabase.class
+drake/util/LCMCoder.class
+drake/util/BotLCMGLClient.class

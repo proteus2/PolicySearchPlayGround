@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libxutil.a  CMakeFiles/xutil.dir/userio.f.o
+/usr/bin/ranlib ../lib/libxutil.a

@@ -1,0 +1,97 @@
+CMEX_SRCDIR  = $(top_srcdir)/cmex
+CMEX_OBJDIR  = $(top_builddir)/cmex
+
+MATDIR       = $(top_builddir)/matlab
+
+CMEXLIBS     = libsnopt libcmex libsnblas
+CMEXLIBS_LA  = $(CMEXLIBS:%=$(LIBDIR)/%.la)
+CMEXLIBS_INS = $(CMEXLIBS:%=$(libdir)/%.la)
+CMEX_LIBS    = $(CMEXLIBS_LA)
+
+CMEXFILES    = snoptcmex mexUtility snoptprobdef snoptprint sncmexlog
+CMEX_LO      = $(CMEXFILES:%=$(CMEX_OBJDIR)/%.lo)
+CMEX_O       = $(CMEXFILES:%=$(CMEX_OBJDIR)/%.o)
+
+MEXINCLUDE   = $(F2CINCLUDE) -I${MATLAB}/extern/include
+
+
+all: all_cmex
+install: install_cmex
+uninstall: uninstall_cmex
+clean: clean_cmex
+veryclean: veryclean_cmex
+distclean: veryclean_cmex
+
+all_cmex: $(CMEX_OBJDIR) $(MATDIR) $(MATDIR)/snoptcmex
+
+$(CMEX_OBJDIR): $(top_builddir)
+	if [ ! -d $(CMEX_OBJDIR) ]; then mkdir $@; fi
+
+$(MATDIR): $(top_builddir)
+	if [ ! -d $(MATDIR) ]; then mkdir $@; fi
+
+install_cmex: all_cmex
+	$(INSTALL_LIB) $(LIBDIR)/libcmex.la $(libdir)
+	$(FINISH) $(libdir)
+
+uninstall_cmex:
+	$(UNINSTALL) rm -f $(libdir)/libcmex.la
+
+ifeq ($(shared),yes)
+$(MATDIR)/snoptcmex: $(CMEX_LIBS)
+	$(LINK_MEX) -v -no-install $(MEXFLAGS) $(CMEX_SRCDIR)/dummy.c \
+	CC='$(CC)' CLIBS='$$CLIBS $(CLIBS) $(FCLIBS)' LD='$(CC)' \
+	-o $@ -output snoptcmex -outdir $(MATDIR) $^ $(F2CLIBRARY)
+	@echo "SNOPT cmex files installed in ${MATDIR}"
+else
+$(MATDIR)/snoptcmex:
+	@echo "  To create mexfiles with static libraries,     "
+	@echo "  do a                         'make veryclean' "
+	@echo "  and then a                      'make static' "
+	@echo "  To clean up static make,  'make static_clean' "
+endif
+
+$(LIBDIR)/libcmex.la: $(CMEX_LO)
+	$(LINK_C) $(CFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(CMEX_OBJDIR)/%.lo : $(CMEX_SRCDIR)/%.c
+	$(COMPILE_C) $(CFLAGS) $(MEXINCLUDE) -c $< -o $@
+
+$(CMEX_SRCDIR)/sncmexlog.c: $(CMEX_SRCDIR)/sncmexlog.f
+	$(F2C) $(F2COPTS) $^
+	@mv sncmexlog.c $@
+
+$(CMEX_OBJDIR)/snoptcmex.lo: $(CMEX_SRCDIR)/mexUtility.h $(CMEX_SRCDIR)/snopt.h \
+	$(CMEX_SRCDIR)/sncmexlog.c \
+	$(CMEX_SRCDIR)/snoptprobdef.h $(CMEX_SRCDIR)/snoptprint.h
+
+clean_cmex:
+	$(CLEAN) rm -f $(CMEX_OBJDIR)/*.lo
+
+veryclean_cmex: clean_cmex
+	$(CLEAN) rm -f $(CMEX_OBJDIR)/snoptcmex
+	$(CLEAN) rm -f $(MATDIR)/snoptcmex
+	$(CLEAN) rm -f $(LIBDIR)/libcmex.la
+
+.PRECIOUS: $(CMEX_OBJDIR)/%.c
+
+
+#------------------------------------------------------------------------------#
+
+static_cmex: $(CMEX_OBJDIR) $(MATDIR) $(CMEX_O)
+	$(MEX) -v $(CMEX_SRCDIR)/dummy.c \
+	CC='$(CC)' LD='$(CC)' CLIBS='$$CLIBS $(CLIBS) $(FCLIBS)' \
+	-output $(MATDIR)/snoptcmex $(CMEX_O) \
+	$(LIBDIR)/libf2c.a $(LIBDIR)/libsnopt.a $(LIBDIR)/libsnblas.a \
+	$(FCLIBS)
+	@echo "SNOPT cmex files installed in ${MATDIR}"
+
+$(CMEX_OBJDIR)/%.o : $(CMEX_SRCDIR)/%.c
+	$(MEX) -v $(MEXFLAGS) $(MEXINCLUDE) -c $< $@ -outdir $(CMEX_OBJDIR)
+
+$(CMEX_OBJDIR)/snoptcmex.o: $(CMEX_SRCDIR)/mexUtility.h $(CMEX_SRCDIR)/snopt.h \
+	$(CMEX_SRCDIR)/sncmexlog.c \
+	$(CMEX_SRCDIR)/snoptprobdef.h $(CMEX_SRCDIR)/snoptprint.h
+
+static_cmex_clean:
+	rm -rf $(CMEX_OBJDIR)/*.o

@@ -1,0 +1,30 @@
+CPPEX_SRCDIR = $(top_srcdir)/cppexamples
+CPPEX_OBJDIR = $(top_builddir)/cppexamples
+
+CPPEXAMPLES  = sntoya toyfunction
+CPPEX_LO     = $(CPPEXAMPLES:%=$(CPPEX_OBJDIR)/%.lo)
+CPPEX_EXE    = $(CPPEXAMPLES:%=$(CPPEX_OBJDIR)/%)
+
+
+all: all_cppexamples
+clean: cppexamples_clean
+veryclean: cppexamples_veryclean
+distclean: cppexamples_veryclean
+
+all_cppexamples: $(CPPEX_OBJDIR) all_snopt_cpp $(CPPEX_OBJDIR)/sntoya
+
+$(CPPEX_OBJDIR): $(top_builddir)
+	if [ ! -d $(CPPEX_OBJDIR) ]; then mkdir $@; fi
+
+$(CPPEX_OBJDIR)/sntoya: $(CPPEX_LO)
+	$(LINK_CXX) $(CXXFLAGS) $(CPPINCLUDE) $^ -o $@ $(LDFLAGS) $(CPPLIBRARY)
+
+$(CPPEX_OBJDIR)/%.lo : $(CPPEX_SRCDIR)/%.cc
+	$(COMPILE_CXX) $(CXXFLAGS) $(CPPINCLUDE) -c $< -o $@
+
+cppexamples_clean:
+	$(CLEAN) rm -f $(CPPEX_OBJDIR)/*.lo
+
+cppexamples_veryclean: cppexamples_clean
+	$(CLEAN) rm -f $(CPPEX_EXE)
+	$(CLEAN) rm -f $(CPPEX_OBJDIR)/*.out

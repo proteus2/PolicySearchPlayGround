@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libsnprint.a  CMakeFiles/snprint.dir/sn03prnt.f.o
+/usr/bin/ranlib ../lib/libsnprint.a

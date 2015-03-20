@@ -1,0 +1,2 @@
+/usr/bin/ar cr lib/libliblast.a  CMakeFiles/liblast.dir/dummy.c.o
+/usr/bin/ranlib lib/libliblast.a

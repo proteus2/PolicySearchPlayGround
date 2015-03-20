@@ -1,0 +1,42 @@
+EX_SRCDIR = $(top_srcdir)/examples
+EX_OBJDIR = $(top_builddir)/examples
+
+_EXE      =      sntoya        sntoyb       sntoyc       snchka               \
+                snmaina       snmainb      snmainc       slmain        npmain \
+                hsmaina       hsmainc       sqmain       sqmain2              \
+             snmemtesta    snmemtestb      catmixa      catmixb       catmixc \
+                testera                                                tester \
+                t1dieta       t1dietb    t2bananaa    t2bananab          t3qp \
+               t4mannea      t4manneb     t4mannec     t5weapon        t6wood \
+             t7etamacro       calvara      springa      springb      springib \
+                   maxi         hs118        sqopt    slmainMPS     sqmainMPS
+EXAMPLES_EXE = $(_EXE:%=$(EX_OBJDIR)/%)
+
+
+all: all_examples
+clean: clean_examples
+veryclean: veryclean_examples
+distclean: veryclean_examples
+
+all_examples: $(EX_OBJDIR) all_snopt $(EXAMPLES_EXE)
+
+$(EX_OBJDIR): $(top_builddir)
+	if [ ! -d $(EX_OBJDIR) ]; then mkdir $@; fi
+
+$(EX_OBJDIR)/%: $(EX_OBJDIR)/%.lo
+	$(LINK_F) $(FCFLAGS) $^ -o $@  $(SNOPT_LIBS)
+
+$(EX_OBJDIR)/sqopt: $(EX_OBJDIR)/sn01main.lo
+	$(LINK_F) $(FCFLAGS) $^ -o $@  $(SNOPT_LIBS)
+
+$(EX_OBJDIR)/%.lo : $(EX_SRCDIR)/%.f
+	$(COMPILE_F) $(FCFLAGS) -c $< -o $@
+
+clean_examples:
+	$(CLEAN) rm -f $(EX_OBJDIR)/*.lo
+
+veryclean_examples: clean_examples
+	$(CLEAN) rm -f $(EXAMPLES_EXE)
+	$(CLEAN) rm -f $(EX_OBJDIR)/*.out
+
+.PRECIOUS: $(EX_OBJDIR)/%.lo

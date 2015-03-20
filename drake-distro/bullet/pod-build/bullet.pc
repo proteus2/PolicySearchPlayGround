@@ -1,0 +1,6 @@
+Name: bullet
+Description: Bullet Continuous Collision Detection and Physics Library
+Requires:
+Version: 2.81
+Libs: -L/home/beomjoon/Documents/Github/drake-distro/build/lib -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath
+Cflags: -DBT_USE_DOUBLE_PRECISION -I/home/beomjoon/Documents/Github/drake-distro/build/include/bullet

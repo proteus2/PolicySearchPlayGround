@@ -1,0 +1,63 @@
+CSRCDIR        = $(top_srcdir)/csrc
+COBJDIR        = $(top_builddir)/csrc
+
+ifeq ($(blas),yes)
+CSNOPTLIBS     = libsnopt_c libsnprint_c
+else
+CSNOPTLIBS     = libsnopt_c libsnprint_c libsnblas_c
+endif
+CSNOPTLIBS_LA  = $(CSNOPTLIBS:%=$(LIBDIR)/%.la)
+CSNOPTLIBS_INS = $(CSNOPTLIBS:%=$(libdir)/%.la)
+CSNOPT_LIBS    = $(CSNOPTLIBS_LA)
+
+CBLAS_LO       = $(BLAS:%=$(COBJDIR)/%.lo)
+CSNPRINT_LO    = $(SNPRINT:%=$(COBJDIR)/%.lo)
+CSNOPT_LO      = $(SNOPT:%=$(COBJDIR)/%.lo)
+
+CINCLUDE       = $(F2CINCLUDE)
+CLIBRARY       = $(CSNOPT_LIBS) $(blasLIB) $(F2CLIBRARY) $(FCLIBS)
+
+
+all: all_csnopt
+install: install_csnopt
+uninstall: uninstall_csnopt
+clean: clean_csnopt
+veryclean: veryclean_csnopt
+distclean: veryclean_csnopt
+
+all_csnopt: $(COBJDIR) $(LIBDIR) $(CSNOPTLIBS_LA)
+
+$(COBJDIR): $(top_builddir)
+	if [ ! -d $(COBJDIR) ]; then mkdir $@; fi
+
+install_csnopt: all_csnopt
+	$(INSTALL_LIB) $(CSNOPTLIBS_LA) $(libdir)
+	$(FINISH) $(libdir)
+
+uninstall_csnopt:
+	$(UNINSTALL) rm -f $(CSNOPTLIBS_INS)
+
+$(LIBDIR)/libsnblas_c.la: $(CBLAS_LO)
+	$(LINK_C) $(CFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(LIBDIR)/libsnprint_c.la: $(CSNPRINT_LO)
+	$(LINK_C) $(CFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(LIBDIR)/libsnopt_c.la: $(CSNOPT_LO)
+	$(LINK_C) $(CFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(COBJDIR)/%.lo: $(CSRCDIR)/%.c
+	$(COMPILE_C) $(CFLAGS) $(CINCLUDE) -c $< -o $@
+
+$(CSRCDIR)/%.c: $(SRCDIR)/%.f
+	$(F2C) $(F2COPTS) $(SRCDIR)/$*.f
+	mv $(top_srcdir)/$*.c $@
+#	$(MAKE) F2C="../$(F2C)" F2COPTS="$(F2COPTS)" -C $(CSRCDIR) -f Submakecfile
+
+clean_csnopt:
+	$(CLEAN) rm -f $(COBJDIR)/*.lo
+
+veryclean_csnopt: clean_csnopt
+	$(CLEAN) rm -f $(CSNOPTLIBS_LA)
+
+.PRECIOUS: $(CSRCDIR)/%.c

@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../../lib/libosmap.a  CMakeFiles/osmap.dir/osmap.f.o
+/usr/bin/ranlib ../../lib/libosmap.a

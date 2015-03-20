@@ -1,0 +1,92 @@
+cppexamples/README   Josh D. Griffin                       27  January 2004
+                     Elizabeth Wong                        29 December 2012
+
+===========================================================================
+USING THE SNOPT C++ INTERFACE
+===========================================================================
+
+1) Assuming there were no problems making the executables, to run
+   a simple example "sntoya" simply perform the following in the
+   directory $SNOPT/cppexamples:
+
+      % ./sntoya
+
+  This should run snOptA on the problem sntoya defined in the files
+  toyusrfun.hh, toyusrfun.cc.  sntoya solves a small problem twice,
+  the first time without derivatives and the second time with derivatives.
+
+2) The primary purpose of the examples in $SNOPT/cppexamples
+   is to illustrate how to call snopta_ in the context of C++.  There
+   are three primary classes:
+
+   class snoptProblem
+   class snoptPrint
+   class snoptSolver
+
+   The class snoptProblem is defined in toyfunction.hh, while the
+   latter two classes are defined in snoptSolver.hh.  The purpose of
+   the snoptProblem class is to perform preliminary set up for problem
+   related variables; in this case, problems Toy0 and Toy1.   The
+   purpose of the snoptPrint class is to open and close input/output
+   files.  The remaining class, snoptSolver, is used to invoke
+   standard Fortran SNOPT functions.
+
+3) An important point to keep in mind is that we are invoking Fortran
+   function directly.  Hence data sent in must assume that indices
+   start at 1, not 0.  In other words, although all array arguments of
+   snopta_(...) will be indexed starting at 0 as usual, there contents
+   must be based on starting the indexing at 1.  This is a subtle but
+   important point.
+
+   Example:
+      Consider the problem
+
+       min  x(2)
+
+       subject to   x(1)^2 + 4x(2)^2      <= 4,
+                    (x(1) - 2)^2 + x(2)^2 <= 5,
+                                        x >= 0.
+
+    With the vector F(x) of problem functions defined by:
+
+     F(x) = [ x(2)
+              x(1)^2      + 4x(2)^2
+             (x(1) - 2)^2 +  x(2)^2 ]
+
+   Then in C++, we have
+     F[0] = x[1];
+     F[1] = x[0]*x[0] + 4*x[1]*x[1];
+     F[2] = (x[0] - 2)*(x[0] - 2) + x[1]*x[1];
+
+   but the index of the objective row is
+
+     ObjRow = 1; /* not 0 */
+
+   Similarly, (assuming no linear variables are indicated)
+
+     iGfun[0] = 1; jGvar[0] = 1;  G[0] = 0;
+     iGfun[1] = 1; jGvar[1] = 2;  G[1] = 1;
+     iGfun[2] = 2; jGvar[2] = 1;  G[2] = 2*x[0];
+     iGfun[3] = 2; jGvar[3] = 2;  G[3] = 8*x[1];
+     iGfun[4] = 3; jGvar[4] = 1;  G[4] = 2*(x[0] - 2);
+     iGfun[5] = 3; jGvar[5] = 2;  G[5] = 2*x[1];
+
+   Note that the indices of the arrays iGfun, jGvar and G start at 0
+   (as is standard in C++), however, the coordinates of the elements
+   of the Jacobian that they hold start at 1 (as in Fortran).
+
+4) A wrapper has been provided to help with the opening and closing of
+   Fortran-style file:
+     snoptfilewrapper.hh snoptfilewrapper.f
+
+   To open or close the print, summary and spec files,  follow the steps
+   outlined inside sntoya.cc.
+
+5) Before the routines in  libsnopt.so (or libsnopt.a) can be used,
+   they must be declared inside a header file.  The snopt routines
+   called by sntoya.cc are declared in the header file:
+     snopt.hh.
+
+6) The functions defining the problems solved by sntoya.cc are defined
+   in the files:
+     toyfunction.hh and toyfunction.cc

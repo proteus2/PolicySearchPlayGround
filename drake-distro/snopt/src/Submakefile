@@ -1,0 +1,112 @@
+SRCDIR        = $(top_srcdir)/src
+OBJDIR        = $(top_builddir)/src
+
+ifeq ($(blas),yes)
+SNOPTLIBS     = libsnopt libsnprint
+else
+SNOPTLIBS     = libsnopt libsnprint libsnblas
+endif
+SNOPTLIBS_LA  = $(SNOPTLIBS:%=$(LIBDIR)/%.la)
+SNOPTLIBS_A   = $(SNOPTLIBS:%=$(LIBDIR)/%.a)
+SNOPTLIBS_INS = $(SNOPTLIBS:%=$(libdir)/%.la)
+SNOPT_LIBS    = $(SNOPTLIBS_LA) $(blasLIB) $(LDFLAGS)
+
+BLAS    = sn15blas
+
+SNPRINT = sn03prnt
+
+ifeq ($(f2c_disable),no)
+  f2cdummy = dummy
+endif
+
+SNOPT   = sqopt    snopta   snoptb   snoptc   snoptq   npopt    \
+          sq02lib  sn02lib  np02lib                             \
+          sn05wrpa sn05wrpb sn05wrpc sn05wrpn                   \
+          sn10mach sn12ampl sn17util sn20amat sn25bfac sn27lu   \
+          sn30spec sn35mps  sn37wrap sn40bfil sn50lp   sn55qp   \
+          sn56qncg sn57qopt sn60srch sn65rmod sn70nobj sn80ncon \
+          sn85hess sn87sopt sn90lmqn sn95fmqn $(f2cdummy)
+
+SNOPTAD =          snopta                                       \
+          sq02lib  sn02lib                                      \
+          sn10mach sn12ampl sn17util sn20amat sn25bfac sn27lu   \
+          sn30spec          sn37wrap sn40bfil sn50lp   sn55qp   \
+          sn56qncg sn57qopt sn60srch sn65rmod sn70nobj sn80ncon \
+          sn85hess sn87sopt sn90lmqn sn95fmqn
+
+BLAS_LO    = $(BLAS:%=$(OBJDIR)/%.lo)
+SNPRINT_LO = $(SNPRINT:%=$(OBJDIR)/%.lo)
+SNOPT_LO   = $(SNOPT:%=$(OBJDIR)/%.lo)
+SNOPTAD_LO = $(SNOPTAD:%=$(OBJDIR)/%.lo)
+
+BLAS_O     = $(BLAS:%=$(OBJDIR)/%.o)
+SNPRINT_O  = $(SNPRINT:%=$(OBJDIR)/%.o)
+SNOPT_O    = $(SNOPT:%=$(OBJDIR)/%.o)
+SNOPTAD_O  = $(SNOPTAD:%=$(OBJDIR)/%.o)
+
+
+all: all_snopt
+install: install_snopt
+uninstall: uninstall_snopt
+clean: clean_snopt
+veryclean: veryclean_snopt
+distclean: veryclean_snopt
+
+all_snopt: $(OBJDIR) $(LIBDIR) $(SNOPTLIBS_LA)
+
+$(OBJDIR): $(top_builddir)
+	if [ ! -d $(OBJDIR) ]; then mkdir $@; fi
+
+install_snopt: all_snopt $(libdir)
+	$(INSTALL_LIB) $(SNOPTLIBS_LA) $(libdir)
+	$(FINISH) $(libdir)
+
+uninstall_snopt:
+	$(UNINSTALL) rm -f $(SNOPTLIBS_INS)
+
+$(LIBDIR)/libsnblas.la: $(BLAS_LO)
+	$(LINK_F) $(FCFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(LIBDIR)/libsnprint.la: $(SNPRINT_LO)
+	$(LINK_F) $(FCFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(LIBDIR)/libsnopt.la: $(SNOPT_LO)
+	$(LINK_F) $(FCFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(OBJDIR)/%.lo: $(SRCDIR)/%.f
+	$(COMPILE_F) $(FCFLAGS) -c $< -o $@
+
+$(OBJDIR)/dummy.lo: $(SRCDIR)/dummy.c
+	$(COMPILE_C) $(CFLAGS) $(F2CINCLUDE) -c $< -o $@
+
+clean_snopt:
+	$(CLEAN) rm -f $(OBJDIR)/*.lo
+
+veryclean_snopt: clean_snopt
+	$(CLEAN) rm -f $(SNOPTLIBS_LA)
+
+#------------------------------------------------------------------------------#
+
+static_snopt: $(OBJDIR) $(LIBDIR) $(SNOPTLIBS_A)
+
+$(LIBDIR)/libsnblas.a: $(BLAS_O)
+	ar cru $@ $^
+	ranlib $@
+
+$(LIBDIR)/libsnprint.a: $(SNPRINT_O)
+	ar cru $@ $^
+	ranlib $@
+
+$(LIBDIR)/libsnopt.a: $(SNOPT_O)
+	ar cru $@ $^
+	ranlib $@
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.f
+	$(FC) $(FCFLAGS_stat) -c $< -o $@
+
+$(OBJDIR)/dummy.o: $(SRCDIR)/dummy.c
+	$(CC) $(CFLAGS_stat) -c $< -o $@
+
+static_snopt_clean:
+	rm -rf $(OBJDIR)/*.o
+	rm -rf $(SNOPTLIBS_A)

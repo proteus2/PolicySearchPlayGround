@@ -1,0 +1,54 @@
+CPP_SRCDIR       = $(top_srcdir)/cppsrc
+CPP_OBJDIR       = $(top_builddir)/cppsrc
+
+CPPSNOPTLIBS     = libsnopt_cpp
+CPPSNOPTLIBS_LA  = $(CPPSNOPTLIBS:%=$(LIBDIR)/%.la)
+CPPSNOPTLIBS_INS = $(CPPSNOPTLIBS:%=$(libdir)/%.la)
+CPPSNOPT_LIBS    = $(CPPSNOPTLIBS_LA)
+
+CPPSNOPT         = snoptProblem snfilewrapper
+CPPSNOPT_LO      = $(CPPSNOPT:%=$(CPP_OBJDIR)/%.lo)
+
+CPPINCLUDE       = $(F2CINCLUDE) -I$(CPP_SRCDIR)
+CPPLIBRARY       = $(CPPSNOPT_LIBS) $(SNOPT_LIBS) $(FCLIBS) $(F2CLIBRARY)
+
+
+all: all_snopt_cpp
+install: install_snopt_cpp
+uninstall: uninstall_snopt_cpp
+clean: clean_snopt_cpp
+veryclean: veryclean_snopt_cpp
+distclean: veryclean_snopt_cpp
+
+all_snopt_cpp: $(CPP_OBJDIR) $(LIBDIR) $(CPPSNOPTLIBS_LA)
+
+$(CPP_OBJDIR): $(top_builddir)
+	if [ ! -d $(CPP_OBJDIR) ]; then mkdir $@; fi
+
+install_snopt_cpp: all_snopt_cpp
+	$(INSTALL_LIB) $(CPPSNOPTLIBS_LA) $(libdir)
+	$(FINISH) $(libdir)
+
+uninstall_snopt_cpp:
+	$(UNINSTALL) rm -f $(CPPSNOPTLIBS_INS)
+
+$(LIBDIR)/libsnopt_cpp.la:  $(CPPSNOPT_LO) $(CPP_OBJDIR)/dummy.lo
+	$(LINK_CXX) $(CXXFLAGS) -o $@ $^ -rpath $(libdir)
+
+$(CPP_OBJDIR)/%.lo : $(CPP_SRCDIR)/%.c
+	$(COMPILE_C) $(CFLAGS) $(CPPINCLUDE) -c $< -o $@
+
+#$(CPP_SRCDIR)/%.c : $(CPP_SRCDIR)/%.f
+#	$(F2C) $(F2COPTS) $^ > $@
+
+$(CPP_OBJDIR)/%.lo : $(CPP_SRCDIR)/%.f
+	$(COMPILE_F) $(FCFLAGS) -c $< -o $@
+
+$(CPP_OBJDIR)/%.lo : $(CPP_SRCDIR)/%.cc
+	$(COMPILE_CXX) $(CXXFLAGS) $(CPPINCLUDE) -c $< -o $@
+
+clean_snopt_cpp:
+	$(CLEAN) rm -f $(CPP_OBJDIR)/*.lo
+
+veryclean_snopt_cpp: clean_snopt_cpp
+	$(CLEAN) rm -f $(CPPSNOPTLIBS_LA)

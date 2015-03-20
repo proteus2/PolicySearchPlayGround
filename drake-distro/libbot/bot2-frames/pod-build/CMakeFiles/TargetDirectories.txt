@@ -1,0 +1,11 @@
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/CMakeFiles/1Aa2Oq1MTEoPBYvpNe5odd1zi0tKQJ1k.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/src/CMakeFiles/bot2-frames.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/src/renderer/CMakeFiles/bot2-frames-renderers.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/src/test/CMakeFiles/coord-frames-test.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/CMakeFiles/lcmgen_c.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/CMakeFiles/lcmgen_cpp.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/CMakeFiles/lcmgen_java.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/CMakeFiles/lcmgen_python.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/CMakeFiles/lcmtypes_bot2-frames.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/CMakeFiles/lcmtypes_bot2-frames_jar.dir
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/pod-build/src/renderer/CMakeFiles/test-viewer.dir

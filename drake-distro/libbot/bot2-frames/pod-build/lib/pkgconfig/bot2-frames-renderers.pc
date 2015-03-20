@@ -1,0 +1,11 @@
+prefix=/home/beomjoon/Documents/Github/drake-distro/build
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: bot2-frames-renderers
+Description: bot2-frames-renderers
+Requires:  bot2-core bot2-param-client bot2-vis bot2-frames
+Version: 0.0.1
+Libs: -L${libdir}  -lbot2-frames-renderers
+Cflags: -I${includedir} 

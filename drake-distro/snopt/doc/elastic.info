@@ -1,0 +1,45 @@
+Items used to implement Elastic Variables
+       in SNOPT 5.3 and MINOS 5.6
+
+hEtype(j) says which bounds on x(j) are elastic  (j = 1:nb)
+   0   none
+   1   bl(j)
+   2   bu(j)
+   3   both
+
+hEstat(j) says which elastic bounds x(j) is currently allowed to violate
+   0   none
+   1   bl(j)
+   2   bu(j)
+
+Elastic Mode  0,1,2               sets lEmode
+   0   Don't enter Elastic mode
+   1   Enter if infeasible
+   2   Start there and remain there
+
+Elastic Objective  0,1,2          sets lvlInf and defines W1, W2
+   0   W1 = 1.0   W2 = 0.0        for minimizing the
+   1   W1 = 1.0   W2 = wtInf      Elastic Phase 2 composite obj
+   2   W1 = 0.0   W2 = 1.0           W1*true obj + W2*sInfE
+
+Elastic Weight  r                 sets wtInf
+
+The optimization algorithm can pass through the following phases:
+
+Phase 1          Find a feasible point for all variables     feasbl = false
+Elastic Phase 1  Make non-elastic variable feasible          feasbl = false
+                 while allowing infeasible elastics
+Phase 2          Minimize the true objective                 feasbl = true
+                 while staying feasible
+Elastic Phase 2  Minimize the composite objective            feasbl = true
+                 while keeping the non-elastics feasible
+
+Working variables:
+Elastc  = true if elastic variables are allowed to exceed their bounds
+Normal  = not Elastc
+feasbl  = true if non-elastic variables are feasible
+gotE    = true if hEstat(*) has been set
+nInfE   = no. of elastic variables currently outside their bounds
+sInfE   = sum of infeasibility for elastic variables
+nInf    = nInf(non-elastic) + nInfE = total no. of infeasibilities
+sInf    = sInf(non-elastic) + sInfE

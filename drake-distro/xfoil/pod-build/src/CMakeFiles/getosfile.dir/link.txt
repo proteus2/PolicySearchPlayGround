@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libgetosfile.a  CMakeFiles/getosfile.dir/__/osrc/getosfile.c.o
+/usr/bin/ranlib ../lib/libgetosfile.a

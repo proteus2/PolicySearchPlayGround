@@ -1,0 +1,12 @@
+prefix=/home/beomjoon/Documents/Github/drake-distro/build
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: snopt_cpp
+Description: snopt_cpp
+Requires:  snopt_c
+Version: 0.0.1
+Libs: -L${libdir}  -L/home/beomjoon/Documents/Github/drake-distro/build/lib -lsnopt_cpp
+Cflags: -I${includedir}  -I/home/beomjoon/Documents/Github/drake-distro/build/include/snopt
+classpath=

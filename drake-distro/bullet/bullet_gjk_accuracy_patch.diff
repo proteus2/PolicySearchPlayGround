@@ -1,0 +1,46 @@
+diff --git bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
+index 3268f06..b3559e4 100644
+--- bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
++++ bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkEpa2.cpp
+@@ -41,21 +41,21 @@ namespace gjkepa2_impl
+ 
+ 	/* GJK	*/ 
+ #define GJK_MAX_ITERATIONS	128
+-#define GJK_ACCURARY		((btScalar)0.0001)
+-#define GJK_MIN_DISTANCE	((btScalar)0.0001)
+-#define GJK_DUPLICATED_EPS	((btScalar)0.0001)
++#define GJK_ACCURARY		((btScalar)1e-12)
++#define GJK_MIN_DISTANCE	((btScalar)1e-12)
++#define GJK_DUPLICATED_EPS	((btScalar)1e-12)
+ #define GJK_SIMPLEX2_EPS	((btScalar)0.0)
+ #define GJK_SIMPLEX3_EPS	((btScalar)0.0)
+ #define GJK_SIMPLEX4_EPS	((btScalar)0.0)
+ 
+ 	/* EPA	*/ 
+-#define EPA_MAX_VERTICES	64
++#define EPA_MAX_VERTICES	128
+ #define EPA_MAX_FACES		(EPA_MAX_VERTICES*2)
+ #define EPA_MAX_ITERATIONS	255
+-#define EPA_ACCURACY		((btScalar)0.0001)
++#define EPA_ACCURACY		((btScalar)1e-12)
+ #define EPA_FALLBACK		(10*EPA_ACCURACY)
+-#define EPA_PLANE_EPS		((btScalar)0.00001)
+-#define EPA_INSIDE_EPS		((btScalar)0.01)
++#define EPA_PLANE_EPS		((btScalar)1e-14)
++#define EPA_INSIDE_EPS		((btScalar)1e-9)
+ 
+ 
+ 	// Shorthands
+diff --git bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
+index 8af16b9..8a03f66 100644
+--- bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
++++ bullet-2.81-rev2613/src/BulletCollision/NarrowPhaseCollision/btGjkPairDetector.cpp
+@@ -31,7 +31,7 @@ subject to the following restrictions:
+ #endif
+ 
+ //must be above the machine epsilon
+-#define REL_ERROR2 btScalar(1.0e-6)
++#define REL_ERROR2 btScalar(1.0e-12)
+ 
+ //temp globals, to improve GJK/EPA/penetration calculations
+ int gNumDeepPenetrationChecks = 0;

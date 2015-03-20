@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libxwin.a  CMakeFiles/xwin.dir/Xwin.c.o
+/usr/bin/ranlib ../lib/libxwin.a

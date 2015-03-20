@@ -1,0 +1,22 @@
+SNOPTSRC=../src
+
+CBLAS   = sn15blas
+CBLAS_C = $(CBLAS:%=$(CSRCDIR)/%.c)
+
+CPRINT   = sn03prnt
+CPRINT_C = $(CPRINT:%=$(CSRCDIR)/%.c)
+
+CFILES = sqopt    snopta   snoptb   snoptc   snoptq   npopt    \
+         sq02lib  sn02lib  np02lib                             \
+         sn05wrpa sn05wrpb sn05wrpc sn05wrpn                   \
+         sn10mach sn12ampl sn17util sn20amat sn25bfac sn27lu   \
+         sn30spec sn35mps  sn37wrap sn40bfil sn50lp   sn55qp   \
+         sn56qncg sn57qopt sn60srch sn65rmod sn70nobj sn80ncon \
+         sn85hess sn87sopt sn90lmqn sn95fmqn
+CFILES_C = $(CFILES:%=$(CSRCDIR)/%.c)
+
+
+all: $(CBLAS_C) $(CPRINT_C) $(CFILES_C)
+
+$(CSRCDIR)/%.c: $(SNOPTSRC)/%.f
+	$(F2C) $(F2COPTS) $(SNOPTSRC)/$*.f

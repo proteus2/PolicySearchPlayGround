@@ -1,0 +1,2 @@
+#!/bin/sh
+exec java -server -Xincgc -Xmx128m -Xms64m -ea -cp /home/beomjoon/Documents/Github/drake-distro/build/share/java/lcm.jar lcm.spy.Spy $*

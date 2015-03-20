@@ -1,0 +1,2 @@
+/usr/bin/ar cr lib/liblcmtypes_bot2-lcmgl.a  CMakeFiles/lcmtypes_bot2-lcmgl.dir/lcmtypes/c/lcmtypes/bot_lcmgl_data_t.c.o
+/usr/bin/ranlib lib/liblcmtypes_bot2-lcmgl.a

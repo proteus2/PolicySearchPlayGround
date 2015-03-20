@@ -1,0 +1,11 @@
+drake/examples/Pendulum/lcmt_pendulum_y.class
+drake/examples/Pendulum/lcmt_pendulum_x.class
+drake/examples/Pendulum/lcmt_pendulum_u.class
+drake/lcmt_scope_data.class
+drake/lcmt_viewer_load_robot.class
+drake/lcmt_viewer_draw.class
+drake/lcmt_viewer_geometry_data.class
+drake/lcmt_viewer_command.class
+drake/lcmt_viewer_link_data.class
+drake/lcmt_robot_state.class
+lcmtypes/lcmt_drake_signal.class

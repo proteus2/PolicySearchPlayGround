@@ -1,0 +1,2 @@
+/usr/bin/ar cr ../lib/libsnopt_cpp.a  CMakeFiles/snopt_cpp.dir/snoptProblem.cc.o
+/usr/bin/ranlib ../lib/libsnopt_cpp.a

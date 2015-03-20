@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../lcmtypes/c/lcmtypes/bot_frames_update_t.h
+stdint.h
+-
+stdlib.h
+-
+lcm/lcm_coretypes.h
+-
+lcm/lcm.h
+-
+
+/home/beomjoon/Documents/Github/drake-distro/build/include/lcm/eventlog.h
+stdio.h
+-
+stdint.h
+-
+
+/home/beomjoon/Documents/Github/drake-distro/build/include/lcm/lcm.h
+stdint.h
+-
+eventlog.h
+/home/beomjoon/Documents/Github/drake-distro/build/include/lcm/eventlog.h
+
+/home/beomjoon/Documents/Github/drake-distro/build/include/lcm/lcm_coretypes.h
+stdio.h
+-
+stdint.h
+-
+string.h
+-
+stdlib.h
+-
+
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/lcmtypes/c/lcmtypes/bot_frames_update_t.c
+string.h
+-
+lcmtypes/bot_frames_update_t.h
+/home/beomjoon/Documents/Github/drake-distro/libbot/bot2-frames/lcmtypes/c/lcmtypes/lcmtypes/bot_frames_update_t.h
+

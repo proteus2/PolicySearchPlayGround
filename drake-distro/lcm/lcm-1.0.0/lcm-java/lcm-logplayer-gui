@@ -1,0 +1,2 @@
+#!/bin/sh
+exec java -server -Xincgc -Xmx64m -Xms32m -ea -cp /home/beomjoon/Documents/Github/drake-distro/build/share/java/lcm.jar lcm.logging.LogPlayer $*

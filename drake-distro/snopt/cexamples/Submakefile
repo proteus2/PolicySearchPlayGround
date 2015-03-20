@@ -1,0 +1,31 @@
+CEX_SRCDIR    = $(top_srcdir)/cexamples
+CEX_OBJDIR    = $(top_builddir)/cexamples
+
+CEXAMPLES     = csntoya toyfunction snfilewrapper
+CEXAMPLES_LO  = $(CEXAMPLES:%=$(CEX_OBJDIR)/%.lo)
+CEXAMPLES_EXE = $(CEXAMPLES:%=$(CEX_OBJDIR)/%)
+
+
+all: all_cexamples
+clean: clean_cexamples
+veryclean: veryclean_cexamples
+distclean: veryclean_cexamples
+
+all_cexamples: $(CEX_OBJDIR) all_snopt all_csnopt $(CEX_OBJDIR)/csntoya
+
+$(CEX_OBJDIR): $(top_builddir)
+	if [ ! -d $(CEX_OBJDIR) ]; then mkdir $@; fi
+
+$(CEX_OBJDIR)/csntoya: $(CEXAMPLES_LO)
+	$(LINK_C) $(CFLAGS) $(CINCLUDE) $^ -o $@ $(LDFLAGS) $(CLIBRARY)
+
+$(CEX_OBJDIR)/%.lo : $(CEX_SRCDIR)/%.c
+	$(COMPILE_C) $(CFLAGS) $(CINCLUDE) -c $< -o $@
+
+clean_cexamples:
+	$(CLEAN) rm -f $(CEX_OBJDIR)/*.lo
+
+veryclean_cexamples: clean_cexamples
+	$(CLEAN) rm -f $(CEXAMPLES_EXE)
+	$(CLEAN) rm -f $(CEX_OBJDIR)/*.out
+

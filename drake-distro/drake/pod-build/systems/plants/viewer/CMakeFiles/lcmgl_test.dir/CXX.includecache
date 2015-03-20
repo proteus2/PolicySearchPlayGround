@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/beomjoon/Documents/Github/drake-distro/build/include/bot_lcmgl_client/lcmgl.h
+lcm/lcm.h
+-
+
+/home/beomjoon/Documents/Github/drake-distro/build/include/lcm/eventlog.h
+stdio.h
+-
+stdint.h
+-
+
+/home/beomjoon/Documents/Github/drake-distro/build/include/lcm/lcm.h
+stdint.h
+-
+eventlog.h
+/home/beomjoon/Documents/Github/drake-distro/build/include/lcm/eventlog.h
+
+/home/beomjoon/Documents/Github/drake-distro/drake/systems/plants/viewer/lcmgl_test.cpp
+bot_lcmgl_client/lcmgl.h
+-
+

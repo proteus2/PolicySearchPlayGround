@@ -1,0 +1,42 @@
+FILE(REMOVE_RECURSE
+  "lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_y.c"
+  "lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_y.h"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_link_data.c"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_link_data.h"
+  "lcmgen/lcmtypes/drake_lcmt_robot_state.c"
+  "lcmgen/lcmtypes/drake_lcmt_robot_state.h"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_command.c"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_command.h"
+  "lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_x.c"
+  "lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_x.h"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_draw.c"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_draw.h"
+  "lcmgen/lcmtypes/drake_lcmt_scope_data.c"
+  "lcmgen/lcmtypes/drake_lcmt_scope_data.h"
+  "lcmgen/lcmtypes/lcmt_drake_signal.c"
+  "lcmgen/lcmtypes/lcmt_drake_signal.h"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_geometry_data.c"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_geometry_data.h"
+  "lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_u.c"
+  "lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_u.h"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_load_robot.c"
+  "lcmgen/lcmtypes/drake_lcmt_viewer_load_robot.h"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_y.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_lcmt_viewer_link_data.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_lcmt_robot_state.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_lcmt_viewer_command.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_x.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_lcmt_viewer_draw.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_lcmt_scope_data.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/lcmt_drake_signal.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_lcmt_viewer_geometry_data.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_examples_Pendulum_lcmt_pendulum_u.c.o"
+  "CMakeFiles/drake_lcmtypes.dir/lcmgen/lcmtypes/drake_lcmt_viewer_load_robot.c.o"
+  "lib/libdrake_lcmtypes.pdb"
+  "lib/libdrake_lcmtypes.so"
+)
+
+# Per-language clean rules from dependency scanning.
+FOREACH(lang C)
+  INCLUDE(CMakeFiles/drake_lcmtypes.dir/cmake_clean_${lang}.cmake OPTIONAL)
+ENDFOREACH(lang)

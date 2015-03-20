@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../libf2c/f2c.h
+
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/csntoya.c
+stdio.h
+-
+string.h
+-
+f2c.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/f2c.h
+snopt.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/snopt.h
+toyfunction.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/toyfunction.h
+snfilewrapper.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/snfilewrapper.h
+
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/snfilewrapper.c
+f2c.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/f2c.h
+
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/snfilewrapper.h
+
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/snopt.h
+f2c.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/f2c.h
+
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/toyfunction.c
+stdio.h
+-
+string.h
+-
+f2c.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/f2c.h
+
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/toyfunction.h
+f2c.h
+/home/beomjoon/Documents/Github/drake-distro/snopt/cexamples/f2c.h
+
