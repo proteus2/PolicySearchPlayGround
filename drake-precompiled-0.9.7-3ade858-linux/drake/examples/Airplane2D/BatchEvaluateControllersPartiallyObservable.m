@@ -28,7 +28,7 @@ end
 x0_list = repmat([3.9;0;0;0],1,n_x0);
 alpha_list = test_alpha_list;
 
-train_file='partially_observable_supervised_controller.mat';
+train_file='./controllers/supervised_partially_observable_controller.mat';
 load(train_file);
 trainOnSelection = false;
 getLearningCurve = false;
@@ -50,6 +50,7 @@ for idx=1:size(x0_alpha_list,2)
             getOptimalTraj = true;
         end
 
+        % for each obs, take one alpha value to test.
         if getOptimalTraj 
             alpha_for_obs = test_alpha_list(idx,:);
             [optimal_u,optimal_x] = getRobustTrajectory(x0,alpha_for_obs,false);         
@@ -59,10 +60,6 @@ for idx=1:size(x0_alpha_list,2)
             save(optimaltraj_fname,'optimal_u','optimal_x','alpha_for_obs','traj_list_opt','traj_opt_cost');
         else
             load(optimaltraj_fname);
-   
- 
-
-
             u{1,1} = optimal_u;
             tf=optimal_u.getBreaks; tf=tf(end);
             [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha_for_obs(1));

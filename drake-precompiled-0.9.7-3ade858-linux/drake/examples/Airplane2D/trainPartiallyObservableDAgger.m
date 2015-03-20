@@ -23,6 +23,7 @@ function [controller,data] = trainPartiallyObservableDAgger(x0_list,n_mmd_itern,
             x=[new_x x]; y =[new_y y];
         end
     end
+    load('RF_seed')
     rng(RF_seed);
     controller = TreeBagger(50,x',y','Method','regression');
 
