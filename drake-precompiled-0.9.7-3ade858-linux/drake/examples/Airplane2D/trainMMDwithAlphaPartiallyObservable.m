@@ -25,4 +25,4 @@ train_x0_list= repmat([3.9; 0; 0; 0],1,n_obs);
 aggregate=false;
 [controller,data] = trainPartiallyObservableMMD(train_x0_list,n_mmd_itern,train_alpha_list,train_obs_list,aggregate);
 
-save('mmd_partially_observable_controller.mat','controller','data','train_alpha_list','train_x0_list');
+save('./controllers/mmd_partially_observable_controller.mat','controller','data','train_alpha_list','train_x0_list');
