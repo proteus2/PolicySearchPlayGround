@@ -32,11 +32,6 @@ train_file='./controllers/mmd_partially_observable_controller.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
-train_file='./controllers/dagger_partially_observable_controller.mat';
-load(train_file);
-ctrl_list{2,1} = controller;
-
-
 x0_alpha_list  = [x0_list; test_obs_list];
 
 trainOnSelection = false;
