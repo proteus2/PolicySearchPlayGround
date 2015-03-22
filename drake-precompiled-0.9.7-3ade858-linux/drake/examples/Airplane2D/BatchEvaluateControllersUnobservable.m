@@ -29,14 +29,11 @@ train_file='./controllers/mmd_unobservable_controller.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
-train_file='./controllers/dagger_unobservable_controller.mat';
-load(train_file);
-ctrl_list{2,1} = controller;
 
 
 train_file='./controllers/supervised_unobservable_controller.mat';
 load(train_file);
-ctrl_list{3,1} = controller;
+ctrl_list{2,1} = controller;
 
 x0_alpha_list  = [x0_list; alpha_list];
 for idx=1:size(x0_alpha_list,2)
