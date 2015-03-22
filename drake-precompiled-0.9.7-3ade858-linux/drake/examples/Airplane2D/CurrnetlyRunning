@@ -6,5 +6,5 @@ trainPartiallyObservableDAgger - tmux session 10
 trainPartiallyObservableMMD - tmux session 13
 
 To Run:
-test error for unobservable dagger, sup
+test error for unobservable dagger
 test error for partially observable dagger
