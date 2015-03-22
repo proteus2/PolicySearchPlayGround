@@ -25,7 +25,7 @@ else
     alpha_list = test_alpha_list;
 end
 
-train_file='./controllers/supervised_observable_controller.mat';
+train_file='./controllers/mmd_observable_controller.mat';
 % train_file = 'supervised_controller.mat';
 load(train_file);
 trainOnSelection = false;
@@ -139,6 +139,7 @@ for idx=1:size(x0_alpha_list,2)
 end
 controller_name = strtok(train_file,'.');
 save_fname=strcat(controller_name,'_test_error.mat');
+save_fname=strcat('.',save_fname);
 save(save_fname,'cost_list_all_alpha','alpha_list','traj_list_all_alpha','traj_opt_list_all_alpha');
 
 % 

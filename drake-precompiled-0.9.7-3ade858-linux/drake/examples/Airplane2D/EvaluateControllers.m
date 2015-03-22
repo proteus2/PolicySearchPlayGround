@@ -18,7 +18,7 @@ function [traj_list,cost_list] = EvaluateControllers(ctrl_list,x0,tf,alpha)
             else
                     [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
             end
-        else if strcmp(class(ctrl),'TreeBagger') 
+        elseif strcmp(class(ctrl),'TreeBagger') 
             if size(ctrl.X,2) == 4
                 [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,false);  
             else

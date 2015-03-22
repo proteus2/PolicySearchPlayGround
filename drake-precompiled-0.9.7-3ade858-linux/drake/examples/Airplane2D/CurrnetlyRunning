@@ -1,7 +1,7 @@
-trainUnobservableDAgger - tmux session 0
-trainDAgger - tmux session 9
-trainPartiallyObservableMMMd - tmux session 10
-BatchEvaluateControllers - tmux session 3
+trainPartiallyObservableDAgger - tmux session 10
+trainPartiallyObservableMMD - tmux session 13
 
-Need to run:
-trainPartiallyObservableDAgger (currently being run on GUI matlab )
+Done:
+trainDAgger - tmux session 9
+trainUnobservableDAgger - tmux session 0
+BatchEvaluateControllers - tmux session 3

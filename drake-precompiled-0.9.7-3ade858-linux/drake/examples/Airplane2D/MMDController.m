@@ -61,21 +61,14 @@ classdef MMDController
             % dataset
             obj.max_d(obj.n_mmd_itern) = -Inf;
             
-            far_x_list = [];
-            d_list = [];
+            obj.self_discrepancy(obj.n_mmd_itern,1) = 1/(n_data^2)*sum(sum(obj.computeGramMatrix(x_data,sigma(3))));
             for idx = 1:size(x_data,2)
                 x = x_data(:,idx);
-                k = obj.computeMMD(x,x_data,mu,sigma,mu,sigma); 
-                d_list = [d_list k];
+                k = obj.computeMMD(x,x_data,mu,sigma,mu,sigma, obj.self_discrepancy(obj.n_mmd_itern,1)); 
                 if k>=obj.max_d(obj.n_mmd_itern)
                     obj.max_d(obj.n_mmd_itern) = k;
-                    far_x_list = [far_x_list x];
                 end
             end
-%                         far_x_list(:,1) = [];
-% 
-%             figure;scatter(x_data(1,:),x_data(2,:))
-%             hold on;scatter(far_x_list(1,:),far_x_list(2,:))
             
             n_replicate = 1;
             x_data = repmat(x_data,1,n_replicate);
@@ -84,7 +77,7 @@ classdef MMDController
             obj.controllers{obj.n_mmd_itern,1} = TreeBagger(50,x_data(1:4,:)',y_data','Method','regression','MinLeaf',1);
         end
         
-        function mmd = computeMMD(obj,x1,x2,mu1,sigma1,mu2,sigma2)
+        function mmd = computeMMD(obj,x1,x2,mu1,sigma1,mu2,sigma2,g2)
             %% NOTE: This function takes ONLY noramlized data
             if (~isequal(mu1,mu2)|| ~isequal(sigma1,sigma2))
                 % if two datasets have differen tmean and sigma,
@@ -102,9 +95,10 @@ classdef MMDController
             % compute the Gram matrix of x1
             g1 = obj.computeGramMatrix(x1,sigma(3));
             
-            % compute the Gram matrix of x2
-            g2 = obj.computeGramMatrix(x2,sigma(3));
-            
+            % compute the Gram matrix of x2 
+            if ~exist('g2','var') || (~isequal(mu1,mu2)|| ~isequal(sigma1,sigma2))
+                g2 = obj.computeGramMatrix(x2,sigma(3));
+            end
             % compute K(x1,x2)
             n=size(x1,2); m = size(x2,2);
             K = zeros(n,m);
@@ -112,7 +106,6 @@ classdef MMDController
                 dists = computeDistance(obj,x1(:,idx),x2,sigma(3));
                 K(idx,:) = obj.rbf_kernel(dists);
             end
-            
             mmd = sum(sum(g1))/(n^2) + sum(sum(g2))/(m^2) - 2*sum(sum(K))/(n*m);
         end
             
@@ -190,8 +183,11 @@ classdef MMDController
                 data_std = obj.data_stddev{idx,1};
                 normed_x=x-data_mu;
                 normed_x=normed_x./data_std;
-
-                curr_d = obj.computeMMD(normed_x,data,data_mu,data_std,data_mu,data_std);
+                if size(obj.self_discrepancy,1)==0
+                    curr_d = obj.computeMMD(normed_x,data,data_mu,data_std,data_mu,data_std);
+                else
+                    curr_d = obj.computeMMD(normed_x,data,data_mu,data_std,data_mu,data_std, obj.self_discrepancy(idx,1));
+                end
                 d_list= [d_list curr_d];
                 if curr_d <= obj.max_d(idx)
                     candidates{size(candidates,1)+1,1} = idx; candidates{size(candidates,1),2} = curr_d;

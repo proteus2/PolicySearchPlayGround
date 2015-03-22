@@ -38,7 +38,9 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
             [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
             x=[new_x x]; y =[new_y y];
         end
+         tic
         controller = setNewController(controller,x,y);
+        toc
     end
     
     
@@ -80,11 +82,17 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                             % Check if the encountered state lies far from datasets
                              if (emptyCandidates) && (norm(x1(1:2,k)-[5;9])>1.5)
                                 d,current_state,d_return
-                                x = [x current_state];
+                                x = [x; current_state];
                                 xf = [5;9;0;0];
                                 plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
-                                [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
-
+                                traj_fname = sprintf( './IntermediateTrainData/partially_observable_intermediate_mmd_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,...
+                                                        current_state(1),current_state(2),current_state(3),current_state(4) )
+                                if ~exist(traj_fname,'file')              
+                                    [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
+                                    save(traj_fname, 'xtraj_list','utraj');
+                                else
+                                    load(traj_fname)
+                                end       
                                 x_to_attach=[]; y_to_attach=[];
                                 for xtraj_idx=1:numel(xtraj_list)
                                     xtraj = rungeKattaSimulation(current_state,utraj,0.001,1,p,true,obs); 
@@ -92,9 +100,9 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                                     tf=t(end);
                                     [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
 
-                                    if new_y(1) == 0
-                                        keyboard
-                                    end
+%                                     if new_y(1) == 0
+%                                         keyboard
+%                                     end
 
                                     x_to_attach=[new_x x_to_attach]; y_to_attach =[new_y y_to_attach];
                                 end

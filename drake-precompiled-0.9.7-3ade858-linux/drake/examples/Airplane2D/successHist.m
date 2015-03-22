@@ -1,4 +1,4 @@
-load('./TestErrorFiles/sup_observable_test_error')
+load('./controllers/mmd_observable_controller_test_error.mat')
 
 score_list = zeros(1,size(traj_list_all_alpha,1));
 for idx=1:size(traj_list_all_alpha,1)
