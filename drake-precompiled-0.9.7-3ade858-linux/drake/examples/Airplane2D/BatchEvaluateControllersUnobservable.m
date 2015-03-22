@@ -38,46 +38,7 @@ train_file='./controllers/supervised_unobservable_controller.mat';
 load(train_file);
 ctrl_list{3,1} = controller;
 
-% ctrl_list = cell(n_files,1);
-% for fidx = 1:n_files
-%     train_file = train_files{1,fidx};
-%     load(train_file,'controller');
-%     ctrl_list{fidx,1} = controller;
-% end
-            
-if trainOnSelection
-    switch class(controller)
-        case 'MMDController'
-            data_set = controller.data_sets_unnormalized;
-            controller_name = 'MMDController';
-        otherwise
-            data_set = data;
-            controller_name = 'TreeBagger';
-    end
-        
-    if getLearningCurve
-        ctrl_list = cell(size(data_set,1),1);
-        for trainIdx = 1:size(data_set,1)
-            ctrl_list{trainIdx,1} = trainOnSelectedData(1:trainIdx,data_set,controller_name);
-        end
-    else
-        ctrl_list{1,1} = trainOnSelectedData(trainIdx,data_set,controller,'TreeBagger');
-    end
-else
-    ctrl_list{1,1} = controller;
-%     train_file='observable_supervised_controller.mat';
-%     load(train_file)
-%     ctrl_list{2,1} = controller;
-%         train_file='dagg_results_alpha_0.001.mat';
-%     load(train_file);
-%     ctrl_list{3,1} = controller;
-end
-%  
-% load('ctrl_list');
 x0_alpha_list  = [x0_list; alpha_list];
-% a=ctrl_list{end,1};
-% ctrl_list ={};
-% ctrl_list{1} = a;
 for idx=1:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
@@ -117,26 +78,13 @@ for idx=1:size(x0_alpha_list,2)
         end
 
         apprxtraj_fname = './data_for_plots/test/';
-            fname = train_file;
-            if getLearningCurve
-                fname = strcat(fname,'_learning_curve');
-            end
-            apprxtraj_fname = strcat(apprxtraj_fname,fname);
-            
+        fname = train_file;
+        apprxtraj_fname = strcat(apprxtraj_fname,fname);    
         apprxtraj_fname =strcat(apprxtraj_fname,sprintf('_alpha=%d,x0=[%0.2f,%0.2f,%0.2f,%0.2f]',alpha,x0(1),x0(2),x0(3),x0(4)),'.mat');
 
-%         if ~exist(apprxtraj_fname,'file')
-            tf = optimal_u.getBreaks; tf=tf(end);
-            tf=tf+2;
-            [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
-%             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
-%         else
-%             load(apprxtraj_fname)
-%             tf = optimal_u.getBreaks; tf=tf(end);
-%             tf=tf+2;
-%             [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
-%             save(apprxtraj_fname,'traj_list','cost_list','alpha','ctrl_list')
-%         end
+        tf = optimal_u.getBreaks; tf=tf(end);
+        tf=tf+2;
+        [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha);
 
         cost_list_all_alpha{idx,1} = traj_opt_cost;
         cost_list_all_alpha{idx,2} = cost_list(:,:);
