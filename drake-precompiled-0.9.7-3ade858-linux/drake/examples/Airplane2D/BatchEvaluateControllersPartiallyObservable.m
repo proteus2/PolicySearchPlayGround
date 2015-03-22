@@ -28,12 +28,19 @@ end
 x0_list = repmat([3.9;0;0;0],1,n_x0);
 alpha_list = test_alpha_list;
 
-train_file='./controllers/supervised_partially_observable_controller.mat';
+train_file='./controllers/mmd_partially_observable_controller.mat';
 load(train_file);
+ctrl_list{1,1} = controller;
+
+train_file='./controllers/dagger_partially_observable_controller.mat';
+load(train_file);
+ctrl_list{2,1} = controller;
+
+
+x0_alpha_list  = [x0_list; test_obs_list];
+
 trainOnSelection = false;
 getLearningCurve = false;
-ctrl_list{1,1} = controller;
-x0_alpha_list  = [x0_list; test_obs_list];
 
 
 for idx=1:size(x0_alpha_list,2)
