@@ -1,7 +1,10 @@
+BatchEvaluateControllersPartiallyObservable - session 0
+BatchEvaluateControllersUnobservable - tmux session 3
+
+Done:
 trainPartiallyObservableDAgger - tmux session 10
 trainPartiallyObservableMMD - tmux session 13
 
-Done:
-trainDAgger - tmux session 9
-trainUnobservableDAgger - tmux session 0
-BatchEvaluateControllers - tmux session 3
+To Run:
+test error for unobservable dagger, sup
+test error for partially observable dagger
