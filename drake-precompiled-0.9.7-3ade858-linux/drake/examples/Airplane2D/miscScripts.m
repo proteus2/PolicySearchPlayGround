@@ -20,14 +20,14 @@ for idx=1:size(cost_list_all_alpha,1)
 visualizeTraj(traj_list_all_alpha{idx,1}{1,1},alpha_list(idx));cost_list_all_alpha{idx,2}
 end
 %% Plotting mistake states, and reference trajectory - at the end of trainMMDver2
-ref_traj = controller.data_sets_unnormalized{idx,1};
+%ref_traj = controller.data_sets_unnormalized{idx,1};
     field = ObstacleField();
     field = field.GenerateRandomObstacles();    
  figure(25); clf;  hold on;
  p=PlanePlant();
     v = PlaneVisualizer(p,field);
-    v.draw(0,ref_traj(:,1));
- hold on; ref= scatter(ref_traj(1,:),ref_traj(2,:),'black')
+    v.draw(0,x1(:,1));
+% hold on; ref= scatter(ref_traj(1,:),ref_traj(2,:),'black')
 %   hold on; scatter(controller.data_sets_unnormalized{9,1}(1,:),controller.data_sets_unnormalized{9,1}(2,:),'green')
 
 hold on; exed=scatter(x1(1,1:end),x1(2,1:end),'blue');
