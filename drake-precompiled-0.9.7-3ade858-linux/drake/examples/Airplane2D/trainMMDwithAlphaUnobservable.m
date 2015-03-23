@@ -2,11 +2,11 @@ n_mmd_itern = 50;
 
 n_x0=10;
 
-if ~exist('./train_alpha_list.mat','file')
+if ~exist('./train_unobs_alpha_list.mat','file')
     train_alpha_list = 5*x0_rand + (1-x0_rand)*30;
-    save('train_alpha_list','train_alpha_list');
+    save('train_unobs_alpha_list','train_alpha_list');
 else
-    load('train_alpha_list')
+    load('train_unobs_alpha_list')
 end
 
 train_alpha_list=train_alpha_list(1:n_x0);

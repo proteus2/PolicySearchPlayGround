@@ -148,6 +148,8 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
     end
     
     if (info==1 || info==4 || info==5)
+        utraj,xtraj,traj_list,F
+        utraj = utraj_list{end,2}
         return
     else
         F_list(F_list==0) = Inf;

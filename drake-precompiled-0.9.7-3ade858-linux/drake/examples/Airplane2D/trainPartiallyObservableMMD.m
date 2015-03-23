@@ -17,33 +17,33 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
     n_alpha = size(alpha_list,2);
     n_obs = size(train_obs_list,2);
     tf_list = zeros( n_obs, n_alpha );
-    for obs_idx=1:size(train_obs_list,2)
-        obs = train_obs_list(obs_idx);
-        alpha_for_obs_val = alpha_list(obs_idx,:);
-       % load('./InitTraining/partially_observable_initial_mmd_traj_alpha=1.356525e+01,1.387324e+01,1.424192e+01,x0=[3.900000e+00,0,0,0].mat');
-        init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,x0(1),x0(2),x0(3),x0(4) )
-        if ~exist(init_fname,'file')              
-            [utraj,xtraj_list,traj_list,F]=getRobustTrajectory(x0_list(:,1),alpha_for_obs_val,false);
-            save(init_fname, 'xtraj_list','utraj');
-        else
-            load(init_fname)
-        end       
-        
-        x=[];y=[];
-        for idx=1:numel(xtraj_list)
-            xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
-            t = xtraj.getBreaks(); tf=t(end);
-            tf_list(obs_idx,idx) = tf;
-            t=0:tf/21:tf;
-            [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
-            x=[new_x x]; y =[new_y y];
-        end
-         tic
-        controller = setNewController(controller,x,y);
-        toc
-    end
-    
-    
+%     for obs_idx=1:size(train_obs_list,2)
+%         obs = train_obs_list(obs_idx);
+%         alpha_for_obs_val = alpha_list(obs_idx,:);
+%        % load('./InitTraining/partially_observable_initial_mmd_traj_alpha=1.356525e+01,1.387324e+01,1.424192e+01,x0=[3.900000e+00,0,0,0].mat');
+%         init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,x0(1),x0(2),x0(3),x0(4) )
+%         if ~exist(init_fname,'file')              
+%             [utraj,xtraj_list,traj_list,F]=getRobustTrajectory(x0_list(:,1),alpha_for_obs_val,false);
+%             save(init_fname, 'xtraj_list','utraj');
+%         else
+%             load(init_fname)
+%         end       
+%         
+%         x=[];y=[];
+%         for idx=1:numel(xtraj_list)
+%             xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
+%             t = xtraj.getBreaks(); tf=t(end);
+%             tf_list(obs_idx,idx) = tf;
+%             t=0:tf/21:tf;
+%             [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
+%             x=[new_x x]; y =[new_y y];
+%         end
+%          tic
+%         %controller = setNewController(controller,x,y);
+%         toc
+%     end
+    %save('rmv_me_testing_init_mmd_data','tf_list','controller');
+    load('rmv_me_testing_init_mmd_data');
     
     
     

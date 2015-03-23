@@ -28,7 +28,7 @@ end
 x0_list = repmat([3.9;0;0;0],1,n_x0);
 alpha_list = test_alpha_list;
 
-train_file='./controllers/dagger_partially_observable_controller.mat';
+train_file='./rmv_me_testing_init_mmd_data.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
@@ -38,7 +38,7 @@ trainOnSelection = false;
 getLearningCurve = false;
 
 
-for idx=1:size(x0_alpha_list,2)
+for idx=3:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         obs = x0_alpha_list(5,idx);
         

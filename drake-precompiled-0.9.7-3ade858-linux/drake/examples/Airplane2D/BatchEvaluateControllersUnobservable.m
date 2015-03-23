@@ -2,40 +2,35 @@
 clear all;
 close all;
 
+n_alpha=10;
 n_x0=50;
-x0_rand = rand(1,n_x0);
-if ~exist('./test_alpha_list.mat','file')
-    test_alpha_list = 5*x0_rand + (1-x0_rand)*30;
-    save('test_alpha_list','test_alpha_list');
+test_alpha_list = zeros(n_x0,n_alpha);
+if ~exist('./test_unobs_alpha_list.mat','file')
+    %test_alpha_list = 5*x0_rand + (1-x0_rand)*30;
+    for idx=1:n_x0
+        x0_rand = rand(1,n_alpha);
+        test_alpha_list(idx,:) = 5*x0_rand + (1-x0_rand)*30;
+    end
+    save('test_unobs_alpha_list','test_alpha_list');
 else
-    load('test_alpha_list')
+    load('test_unobs_alpha_list')
 end
-
-load('train_alpha_list');
-
 
 %% Eval script
 trainTest = false;
-if trainTest  
-    fprintf('Training error evaluation...')
-    x0_list = train_x0_list;
-    alpha_list = train_alpha_list;
-else
-    x0_list = repmat([3.9;0;0;0],1,n_x0);
-    alpha_list = test_alpha_list;
-end
+x0_list = repmat([3.9;0;0;0],1,n_x0);
+% take the first alpha of each batch to test on 50 models:
+x0_alpha_list  = [x0_list; test_alpha_list(1:end,1)'];
+
 
 train_file='./controllers/mmd_unobservable_controller.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
-
-
 train_file='./controllers/supervised_unobservable_controller.mat';
 load(train_file);
 ctrl_list{2,1} = controller;
 
-x0_alpha_list  = [x0_list; alpha_list];
 for idx=1:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         alpha = x0_alpha_list(5,idx);
@@ -53,7 +48,8 @@ for idx=1:size(x0_alpha_list,2)
 
         if getOptimalTraj 
             %[optimal_u,optimal_x] = getTrajectory(x0,alpha,false);
-            [optimal_u,optimal_x] = getRobustTrajectory(x0,alpha,false);         
+            curr_alpha_list = test_alpha_list(idx,:);
+            [optimal_u,optimal_x] = getRobustTrajectory(x0,curr_alpha_list,false);         
 
             u{1,1} = optimal_u;
             tf=optimal_u.getBreaks; tf=tf(end);
