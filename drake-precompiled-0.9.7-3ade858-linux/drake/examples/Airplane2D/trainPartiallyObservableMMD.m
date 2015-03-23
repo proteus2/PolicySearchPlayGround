@@ -61,7 +61,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                     obs = train_list(5,idx);
                     alpha_for_obs_val = alpha_list(idx,:); % gets all sampeld alpha values for this observation
 
-                    for alpha_idx = 1:size(alpha_for_obs_val)% - train only on the first alpha value
+                    for alpha_idx = 1:numel(alpha_for_obs_val)% - train only on the first alpha value
                         % train on the sampled alpha values
                         tf = tf_list(idx,alpha_idx);
                         alpha = alpha_list(idx,alpha_idx);
@@ -72,7 +72,6 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                         for k=1:N-1
                             current_state = [x1(:,k);obs];
                             [d,min_idx,emptyCandidates,candidates,d_return] = checkDiscrepancy(controller,current_state); 
-                            min_idx=1;
                             min_idx
                             executedCtrls=[executedCtrls min_idx];
                             dist_to_goal = norm(x1(1:2,k)-[5; 9]);

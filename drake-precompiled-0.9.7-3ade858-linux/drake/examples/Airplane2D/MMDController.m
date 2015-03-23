@@ -160,7 +160,7 @@ classdef MMDController
                 Q(3,3) = 15;
                 Q(4,4) = 15;
                 if size(x1,1) ==5
-                    Q(5,5) = 15;
+                    Q(5,5) = 100;
                 end
             end
 %             Q(1,1) = 1000000;
