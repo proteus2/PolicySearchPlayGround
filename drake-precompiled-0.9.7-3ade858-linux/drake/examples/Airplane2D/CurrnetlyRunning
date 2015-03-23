@@ -1,4 +1,4 @@
-BatchEvaluateControllersPartiallyObservable(dagger) - session 0
+BatchEvaluateControllers(dagger) - session 0
 BatchEvaluateControllersUnobservable(need to fix) - tmux session 3
 
 Done:

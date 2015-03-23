@@ -25,7 +25,7 @@ else
     alpha_list = test_alpha_list;
 end
 
-train_file='./controllers/mmd_observable_controller.mat';
+train_file='./controllers/dagger_observable_controller.mat';
 % train_file = 'supervised_controller.mat';
 load(train_file);
 trainOnSelection = false;
