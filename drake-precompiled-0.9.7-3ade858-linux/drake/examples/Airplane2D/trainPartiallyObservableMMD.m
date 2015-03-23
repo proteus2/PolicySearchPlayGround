@@ -75,7 +75,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                             min_idx
                             executedCtrls=[executedCtrls min_idx];
                             dist_to_goal = norm(x1(1:2,k)-[5; 9]);
-                            if dist_to_goal<=0.5
+                            if dist_to_goal<=0.7
                                 break
                             end
 
