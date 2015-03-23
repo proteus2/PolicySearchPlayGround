@@ -1,0 +1,22 @@
+function score = checkSuccess(xtraj)
+    xf = xtraj.eval(xtraj.tspan(end)); xf = xf(1:3,1);
+    xg = [0;0.5;0.1];
+    goal_threshold = 0.70;
+    
+    
+    t = xtraj.getBreaks();
+    xtraj_vals = xtraj.eval(t);
+    obj_pose_traj = xtraj_vals(1:3,:);
+    hand_pose_traj = xtraj_vals(7:9,:);
+    
+    contact_idx = find(sqrt(sum((hand_pose_traj-obj_pose_traj).^2)<0.25,1);
+    dists = sum(bsxfun(@minus,hand_pose_traj(:,1),hand_pose_traj(:,2:end)).^2);
+    % check if obj moved before hand touched it
+    
+
+    if (norm(xf-xg)<goal_threshold) 
+        score = true;
+    else
+        score = false;
+    end
+end

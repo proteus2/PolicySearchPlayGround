@@ -1,26 +1,27 @@
 function test_control_policy
     checkDependency('lcmgl');
-    load('./DAgger_trainining_output/DAgg_predicted_traj_3_9');
-    q_sol=xtraj(1:end-1,1:end);
-    q_sol = [q_sol];
-    h_sol = [xtraj(end,:)]
-%     h_sol(2)=0.5
+    success_score = zeros(4,10);
     
-%     load('RF_seed');
-%     rng(RF_seed);
-    len = 0.2;
-    obj_end_pose = [0; 0.5; len/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
+        fname= sprintf('./MMD_training_output/MMD_predicted_traj_%d_%d.mat',1,9);
+        load(fname);
+        q_sol=xtraj(1:end-1,1:end);
+        q_sol = [q_sol];
+        h_sol = [xtraj(end,:)];
 
-    robot = createRobot();
-    v = robot.constructVisualizer();
-    qtraj_sol = PPTrajectory(foh(cumsum(h_sol), q_sol));
-    qtraj_sol = qtraj_sol.setOutputFrame(v.getInputFrame);
+        len = 0.2;
+        obj_end_pose = [0; 0.5; len/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
+
+        robot = createRobot();
+        v = robot.constructVisualizer();
+        qtraj_sol = PPTrajectory(foh(cumsum(h_sol), q_sol));
+        qtraj_sol = qtraj_sol.setOutputFrame(v.getInputFrame);
+
     v.playback(qtraj_sol, struct('slider', true));
     lcmgl = drake.util.BotLCMGLClient(lcm.lcm.LCM.getSingleton(), 'goal');
     lcmgl.glColor3f(1,0,0);
     lcmgl.sphere(obj_end_pose(1:3), 0.01, 20, 20);
     lcmgl.switchBuffers();
-        norm(xtraj(1:3,end)-[0;0.5;1])
+    norm(xtraj(1:3,end)-[0;0.5;0.1])
     keyboard
 end
 
