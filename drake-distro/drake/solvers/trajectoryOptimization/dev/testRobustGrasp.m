@@ -1,5 +1,5 @@
 function testRobustGrasp
-checkDependency('lcmgl');
+%checkDependency('lcmgl');
 
 hand_urdf = 'robotiq_hand_description/cfg/s-model_articulated_fourbar_remove_package.urdf';
 hand = RigidBodyManipulator(hand_urdf,struct('floating',true));
@@ -82,10 +82,10 @@ delete('fort.15');
 delete('ik_robust.out');
 system('touch ik_robust.out');
 tic
-% [x_sol,F,info] = plan.solve(x_seed); % F=value of objective fcn after optimization
+[x_sol,F,info] = plan.solve(x_seed); % F=value of objective fcn after optimization
 toc
 info
-load('traj_x=-1,roll=1.570796e+00,.mat');
+%load('traj_x=-1,roll=1.570796e+00,.mat');
 
 % [q_sol,v_sol,h_sol] = parseSolution(plan, x_sol)
 

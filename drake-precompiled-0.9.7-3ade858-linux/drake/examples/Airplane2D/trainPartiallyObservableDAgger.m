@@ -64,7 +64,6 @@ function [controller,data] = trainPartiallyObservableDAgger(x0_list,n_mmd_itern,
                             plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
 
 
-                            [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
                             t = xtraj.getBreaks();
 
                             x_to_attach=[]; y_to_attach=[];

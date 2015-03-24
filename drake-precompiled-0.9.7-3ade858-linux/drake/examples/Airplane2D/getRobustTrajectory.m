@@ -133,10 +133,10 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
                 initial_guess.x = PPTrajectory(foh([0,tf0/2,tf0],[x0,x_mid,xf]));
             end
         end
-        tic
+        
         [utraj_list,xtraj_list,~,F,info]=solveTraj(master_prog,tf0,initial_guess);
         info
-        toc
+        
         n_retries = n_retries+1
         F
         if ~(info==11 || info == 13 || info ==42 ||info==3)

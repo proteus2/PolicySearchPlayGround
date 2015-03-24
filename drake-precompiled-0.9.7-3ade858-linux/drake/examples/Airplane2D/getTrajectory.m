@@ -149,10 +149,9 @@ function [utraj,xtraj,traj_list,F]=getTrajectory(x0,alpha,visualize,xf,tf,xinit,
             end
 %             end
         end
-        tic
         [xtraj,utraj,~,F,info]=solveTraj(prog,tf0,initial_guess);
         info
-        toc
+        
         n_retries = n_retries+1
         F
         if ~(info==11 || info == 13 || info ==42 ||info==3)
