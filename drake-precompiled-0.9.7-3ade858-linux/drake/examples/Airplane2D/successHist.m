@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-load('./controllers/mmd_partially_observable_controller_test_error.mat')
-=======
 files = {'./controllers/test_error/supervised_partially_observable_controller_test_error.mat'...,
     './controllers/test_error/mmd_partially_observable_controller_test_error.mat'...,
     './controllers/test_error/dagger_partially_observable_controller_test_error.mat'};
