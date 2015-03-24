@@ -81,8 +81,8 @@ for idx in range(10):
 			xt = np.reshape(np.transpose(xt),prediction_dim,)
 		
 		print 'one iteration done'
-		save_object( controller, '/MMD_training_output/controller_idx='+str(idx)+'_'+'init_idx='+str(initIdx) )
-		sio.savemat( '/MMD_training_output/MMD_predicted_traj'+'_'+str(initIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )
+		save_object( controller, './MMD_training_output/controller_idx='+str(idx)+'_'+'init_idx='+str(initIdx) )
+		sio.savemat( './MMD_training_output/MMD_predicted_traj'+'_'+str(initIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )
 		
 	if there_were_no_empty_cand:
 		break

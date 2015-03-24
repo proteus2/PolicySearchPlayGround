@@ -1,4 +1,4 @@
-fname='supervised_vs_mmd_vs_dagg_test_error.mat';
+fname='./controllers/test_error/dagger_observable_controller_test_error.mat';
 load(fname);
 
 
@@ -45,7 +45,6 @@ n = size(cost_list_all_alpha,1);
 ctrl_mean=mean(ctrl_cost);
 ctrl_std = std(ctrl_cost);
 ctrl_CI = 1.96*ctrl_std/sqrt(n);
-ctrl_mean(2) = ctrl_mean(2)+0.2;
 % ctrl_mean(3) =ctrl_mean(3)+0.01;
 
 traj_opt_mean=mean(traj_opt_cost);
