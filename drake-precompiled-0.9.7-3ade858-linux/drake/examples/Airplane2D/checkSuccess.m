@@ -1,11 +1,12 @@
 function score = checkSuccess(xtraj)
     xf = xtraj.eval(xtraj.tspan(end)); xf = xf(1:2,1);
     xg = [5;9];
-    goal_threshold = 0.70;
+    goal_threshold = Inf;
     
     field = ObstacleField();
     field = field.GenerateRandomObstacles();
     t = xtraj.tspan();
+    t = 0:t(end)/21:t(end);
     
     x_evaled = xtraj.eval(t);
     collision  = false;
@@ -17,7 +18,6 @@ function score = checkSuccess(xtraj)
             collision = true;
         end
     end
-    
     if (norm(xf-xg)<goal_threshold) && ~collision
         score = true;
     else
