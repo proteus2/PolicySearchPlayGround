@@ -18,7 +18,6 @@ function score = checkSuccess(xtraj)
             collision = true;
         end
     end
-    
     if (norm(xf-xg)<goal_threshold) && ~collision
         score = true;
     else

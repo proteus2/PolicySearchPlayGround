@@ -33,7 +33,9 @@ for idx=1:size(traj_list_all_alpha,1)
     trajopt_score_list(idx) = checkSuccess(xtraj);
 end
 
+success_rate = sum(score_list)/size(traj_list_all_alpha,1)
 traj_opt_success_rate = sum(trajopt_score_list)/size(traj_list_all_alpha,1)
+    
 traj_opt_mean = mean(trajopt_score_list);
 traj_opt_CI =  1.96*std(std(trajopt_score_list))/sqrt(n);
 
