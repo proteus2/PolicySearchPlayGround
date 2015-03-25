@@ -28,7 +28,7 @@ end
 x0_list = repmat([3.9;0;0;0],1,n_x0);
 alpha_list = test_alpha_list;
 
-train_file='./rmv_me_testing_init_mmd_data.mat';
+train_file='./controllers/mmd_partially_observable_controller.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
@@ -85,7 +85,7 @@ for idx=3:size(x0_alpha_list,2)
          
 end
 controller_name = strtok(train_file,'.');
-save_fname=strcat(controller_name,'_test_error.mat');
+save_fname=strcat(controller_name,'_test_error2.mat');
 save_fname=strcat('.',save_fname);
 save(save_fname,'cost_list_all_alpha','alpha_list','traj_list_all_alpha','traj_opt_list_all_alpha');
 
