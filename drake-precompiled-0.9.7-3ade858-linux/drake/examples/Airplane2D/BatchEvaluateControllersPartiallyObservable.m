@@ -3,7 +3,7 @@ clear all;
 close all;
 
 n_x0=50;
-n_alpha = 5;
+n_alpha = 3;
 test_alpha_list = zeros(n_x0,n_alpha);
 obs_rand = rand(1,n_x0);
 
@@ -28,7 +28,7 @@ end
 x0_list = repmat([3.9;0;0;0],1,n_x0);
 alpha_list = test_alpha_list;
 
-train_file='./controllers/mmd_partially_observable_controller.mat';
+train_file='./controllers/mmd_partially_observable_controller_h_not_same_just_one_xtraj.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
@@ -38,7 +38,7 @@ trainOnSelection = false;
 getLearningCurve = false;
 
 
-for idx=3:size(x0_alpha_list,2)
+for idx=1:size(x0_alpha_list,2)
         x0 = x0_alpha_list(1:4,idx);
         obs = x0_alpha_list(5,idx);
         
@@ -75,7 +75,7 @@ for idx=3:size(x0_alpha_list,2)
 
         tf = optimal_u.getBreaks; tf=tf(end);
         tf=tf+2;
-        [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha_for_obs(1));
+        [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha_for_obs(1),obs);
 
 
         cost_list_all_alpha{idx,1} = traj_opt_cost;
@@ -85,7 +85,7 @@ for idx=3:size(x0_alpha_list,2)
          
 end
 controller_name = strtok(train_file,'.');
-save_fname=strcat(controller_name,'_test_error2.mat');
+save_fname=strcat(controller_name,'_test_error.mat');
 save_fname=strcat('.',save_fname);
 save(save_fname,'cost_list_all_alpha','alpha_list','traj_list_all_alpha','traj_opt_list_all_alpha');
 

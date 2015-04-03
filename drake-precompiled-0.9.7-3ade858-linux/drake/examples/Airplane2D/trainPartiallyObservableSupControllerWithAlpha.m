@@ -13,7 +13,7 @@ for obs_idx=1:n_obs
     init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,x0(1),x0(2),x0(3),x0(4) )
     load(init_fname)
     
-    for idx=1:numel(xtraj_list)
+    for idx=1:numel(xtraj_list) % numel(xtraj_list) = number of alpha values associated with each observation
         xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
         t = xtraj.getBreaks(); tf=t(end);
         tf_list(obs_idx,idx) = tf;
@@ -26,5 +26,5 @@ end
 load('RF_seed');
 rng(RF_seed);
 [controller] = TreeBagger(50,x',y','Method','regression');
-save('partially_observable_supervised_controller','controller','train_alpha_list');
+save('supervised_partially_observable_controller','controller','train_alpha_list');
 

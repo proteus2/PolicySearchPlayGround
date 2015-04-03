@@ -237,7 +237,7 @@ classdef MMDController
         
         function k = rbf_kernel(obj,distance)
             % computes the kernel given distance
-            sigma = 100;
+            sigma = 10;
             k = exp(-distance./(2*sigma));
         end
 

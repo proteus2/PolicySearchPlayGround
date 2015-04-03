@@ -10,9 +10,7 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
     x_list=[];
     y_list=[];
     for idx=1:size(train_list,2)
-            if idx==26
-                continue
-            end
+
             alpha = train_list(5,idx);
             x0=train_list(1:4,idx);
              init_fname = sprintf('./InitTraining/initial_mmd_traj_alpha=%d,x0=[%d,%d,%d,%d].mat',alpha,x0(1),x0(2),x0(3),x0(4))
@@ -49,9 +47,7 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
     for MMD_iteration = 1:n_mmd_itern
             x = []; y=[]; train_idx = 1;
             for idx=1:size(train_list,2)
-                if idx==26
-                    continue 
-                end
+
                alpha = train_list(5,idx);
                 x0=train_list(1:4,idx);
                     
@@ -71,10 +67,19 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                         end
                         
                         xf = [5;9;0;0];
-                        if mod(k,100) == 0
+%                         if mod(k,100) == 0
                             tic
+                        traj_fname = sprintf( './IntermediateTrainData/observable_intermediate_dagger_traj_alpha_val=%d,x0=[%d,%d,%d,%d].mat',alpha,...
+                                                current_state(1),current_state(2),current_state(3),current_state(4) )
                             plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
-                            [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+                            if ~exist(traj_fname,'file')              
+                                [u_traj_from_curr_loc,x_traj_from_curr_loc,F] = getTrajectory(x1(:,k),alpha,false,[5;9;0;0],plan_time);
+                                save(traj_fname, 'x_traj_from_curr_loc','u_traj_from_curr_loc');
+                            else
+                               load(traj_fname)
+                            end     
+                                
+                            
                             t = x_traj_from_curr_loc.getBreaks();
                             [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
 
@@ -84,11 +89,11 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                                  t = x_traj_from_curr_loc.getBreaks();
                                  [x_to_attach,y_to_attach] = turnTrajToData(x_traj_from_curr_loc,u_traj_from_curr_loc,t,alpha);
                             end
-                            data{k,1} = x_to_attach';
-                            data{k,2} = y_to_attach';
-                            x = [x; x_to_attach'];
-                            y = [y; y_to_attach'];
-                        end
+                            data{k,1} = x_to_attach(:,1)';
+                            data{k,2} = y_to_attach(:,1)';
+                            x = [x; x_to_attach(:,1)'];
+                            y = [y; y_to_attach(:,1)'];
+%                         end
                         
                         control = controller.predict(current_state');
                         
@@ -99,8 +104,8 @@ function [controller,data] = trainDAgger(x0_list,n_mmd_itern,alpha_list)
                         fprintf('Completed=%0.1f percent of alpha value = %0.2d and MMD iteration of %d\n', k/(N-1)*100, alpha, MMD_iteration);
                     end
                     train_idx = train_idx + 1;
+                    controller = TreeBagger(50,x,y,'Method','regression');
             end  
-            controller = TreeBagger(50,x,y,'Method','regression');
 
     end   
 end

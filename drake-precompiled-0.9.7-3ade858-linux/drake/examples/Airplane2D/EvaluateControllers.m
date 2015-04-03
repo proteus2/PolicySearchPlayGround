@@ -1,4 +1,4 @@
-function [traj_list,cost_list] = EvaluateControllers(ctrl_list,x0,tf,alpha)
+function [traj_list,cost_list] = EvaluateControllers(ctrl_list,x0,tf,alpha,obs)
     
     n_ctrls = size(ctrl_list,1);
     p = PlanePlant(alpha);
@@ -16,7 +16,11 @@ function [traj_list,cost_list] = EvaluateControllers(ctrl_list,x0,tf,alpha)
             if size(ctrl.data_sets{1},1) == 4
                     [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,false);  
             else
-                    [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
+                    if ~exist('obs','var')
+                        [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,true);  
+                    else
+                        [xtraj,utraj,t]=rungeKattaSimulation(x0,ctrl,dt,tf,p,false,Inf,obs); 
+                    end
             end
         elseif strcmp(class(ctrl),'TreeBagger') 
             if size(ctrl.X,2) == 4

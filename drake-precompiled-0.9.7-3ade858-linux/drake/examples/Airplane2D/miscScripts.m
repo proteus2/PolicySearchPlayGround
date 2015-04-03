@@ -28,16 +28,16 @@ end
     v = PlaneVisualizer(p,field);
     v.draw(0,x1(:,1));
 % hold on; ref= scatter(ref_traj(1,:),ref_traj(2,:),'black')
-%   hold on; scatter(controller.data_sets_unnormalized{9,1}(1,:),controller.data_sets_unnormalized{9,1}(2,:),'green')
+  hold on; scatter(controller.data_sets_unnormalized{1,1}(1,:),controller.data_sets_unnormalized{1,1}(2,:),'green')
 
 hold on; exed=scatter(x1(1,1:end),x1(2,1:end),'blue');
 %  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');
-
-if ~isempty(x)
-hold on; detected=scatter(x(1,:),x(2,:),100,'magenta','filled')
-end
-hold on; scatter(xf(1,:),xf(2,:),1000,'red');
-hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
+% 
+% if ~isempty(x)
+% hold on; detected=scatter(x(1,:),x(2,:),100,'magenta','filled')
+% end
+% hold on; scatter(xf(1,:),xf(2,:),1000,'red');
+% hold on; scatter(x_to_attach(1,:),x_to_attach(2,:),'magenta')
 
 %% Plotting mistakes vs distance from the center
 ref_traj = controller.data_sets_unnormalized{9,1};

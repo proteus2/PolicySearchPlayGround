@@ -1,4 +1,4 @@
-function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha,alpha)
+function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha,alpha,obs)
     t=0:dt:tf;
     N = size(t,2);
     x1=zeros(4,N); u1=zeros(1,N);
@@ -11,7 +11,11 @@ function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha,alpha)
         if varyAlpha
             curr_state = [x1(:,k);alpha];
         else
-            curr_state = x1(:,k);
+            if exist('obs','var')
+                curr_state = [x1(:,k);obs];
+            else
+                curr_state = x1(:,k);
+            end
         end
         if strcmp(class(u),'TreeBagger')
             control = u.predict(curr_state');

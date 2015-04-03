@@ -126,13 +126,13 @@ classdef RobustDircolTrajectoryOptimization < NonlinearProgram
                 
                 % setting h's across different trajectories are the same
                 node_range = num_vars_per_sample*(prog_idx-2) + prog_list{prog_idx}.h_inds(:);
-                h_idx = prog_list{prog_idx}.h_inds(:);
-                h_idx = (prog_idx-2)*num_vars_per_sample + h_idx;
-                A_tau(node_range, h_idx) = eye(nh);          
-                
-                h_idx = prog_list{prog_idx}.h_inds(:);
-                h_idx = (prog_idx-1)*num_vars_per_sample + h_idx;
-                A_tau(node_range, h_idx) = -eye(nh);
+%                 h_idx = prog_list{prog_idx}.h_inds(:);
+%                 h_idx = (prog_idx-2)*num_vars_per_sample + h_idx;
+%                 A_tau(node_range, h_idx) = eye(nh);          
+%                 
+%                 h_idx = prog_list{prog_idx}.h_inds(:);
+%                 h_idx = (prog_idx-1)*num_vars_per_sample + h_idx;
+%                 A_tau(node_range, h_idx) = -eye(nh);
 
                 %figure; imagesc(A_tau)
             end
