@@ -28,7 +28,7 @@ end
 x0_list = repmat([3.9;0;0;0],1,n_x0);
 alpha_list = test_alpha_list;
 
-train_file='./controllers/mmd_partially_observable_controller_h_not_same_just_one_xtraj.mat';
+train_file='./controllers/mmd_partially_observable_controller_h_not_same_smaller_sigma.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
