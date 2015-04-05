@@ -26,5 +26,5 @@ end
 load('RF_seed');
 rng(RF_seed);
 [controller] = TreeBagger(50,x',y','Method','regression');
-save('supervised_partially_observable_controller','controller','train_alpha_list');
+save('supervised_partially_observable_controller_3_alphas','controller','train_alpha_list');
 
