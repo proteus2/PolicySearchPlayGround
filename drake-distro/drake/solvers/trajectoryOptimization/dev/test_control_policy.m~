@@ -2,37 +2,24 @@ function test_control_policy
     checkDependency('lcmgl');
     success_score = zeros(4,10);
     
-    %valid only from obs_idx=2
-    obs_idx = 2;
+    obs_idx = 0;
     load('./partial_observable_init_training_data/com_list_for_observations_list.mat');
     obs = obs_cands(obs_idx+1,:);
-    obs(2)/2
-    com = zeros(2,3);
-    com(1,:) = com_list(obs_idx+1,:,1);
-    com(2,:) = com_list(obs_idx+1,:,2);
-    com(1,2)=0; com(2,2)=0;
-    test_predicted_traj=false;
-    if test_predicted_traj
-        fname= sprintf('./MMD_training_output_partially_observable/MMD_predicted_traj_%d_%d.mat',0,3)
-        load(fname);
-        q_sol=xtraj(1:end-1,1:end);
-        q_sol = [q_sol];
-        h_sol = [xtraj(end,:)];
-    else
-        fname= sprintf('./partial_observable_init_training_data/new_traj_%d.mat',obs_idx-1)
-        load(fname);
 
-        h_sol = [0 h_sol];
-    end
-    q_sol(3,1)
-    % q_sol(1:6) = obj location
+    fname= sprintf('./MMD_training_output_partially_observable/MMD_predicted_traj_%d_%d.mat',0,3);
+    fname= sprintf('./partial_observable_init_training_data/new_traj_%d.mat',obs_idx);
+    load(fname);
 
 
+    q_sol=xtraj(1:end-1,1:end);
+    q_sol = [q_sol];
+    h_sol = [xtraj(end,:)];
+
+    len = 0.2;
     
-   
     
-    %% Related to visualization
-    obj_goal_pose = [0; 0.5; obs(2)/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
+    %% 
+    obj_end_pose = [0; 0.5; len/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
     robot = createRobot(obs);
     v = robot.constructVisualizer();
     qtraj_sol = PPTrajectory(foh(cumsum(h_sol), q_sol));
@@ -41,12 +28,9 @@ function test_control_policy
     v.playback(qtraj_sol, struct('slider', true));
     lcmgl = drake.util.BotLCMGLClient(lcm.lcm.LCM.getSingleton(), 'goal');
     lcmgl.glColor3f(1,0,0);
-
-    lcmgl.sphere(obj_goal_pose(1:3), 0.01, 20, 20);
-    lcmgl.sphere(com(1,:), 0.01, 20, 20);
-    lcmgl.sphere(com(2,:), 0.01, 20, 20);
-
+    lcmgl.sphere(obj_end_pose(1:3), 0.01, 20, 20);
     lcmgl.switchBuffers();
+    norm(xtraj(1:3,end)-[0;0.5;0.1])
     keyboard
 end
 
