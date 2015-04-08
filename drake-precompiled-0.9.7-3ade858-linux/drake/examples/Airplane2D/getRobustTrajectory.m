@@ -56,7 +56,8 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
     
     disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
     disp(disp_msg);
-    max_num_retries = 5;
+    max_num_retries = 3;
+    max_n_trajs_saved = 2;
     n_retries = 0;
     
     % create a list of initial guess
@@ -81,7 +82,7 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
     traj_list = cell(0,2);
     F_list =[];
     n_trajs_saved = 0;
-   	while (info~=1 && info~=4 && info~=5) && (n_retries <=max_num_retries || n_trajs_saved<5)
+   	while (info~=1 && info~=4 && info~=5) && (n_retries <=max_num_retries || n_trajs_saved<max_n_trajs_saved)
          if n_retries == 0
             initial_guess.x = x_initial_guess;
          else

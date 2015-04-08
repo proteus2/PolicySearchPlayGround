@@ -29,7 +29,7 @@ function [controller,data] = trainPartiallyObservableDAgger(x0_list,n_mmd_itern,
     controller = TreeBagger(50,x',y','Method','regression');
 
 
-fprintf('initial controller trained\n')
+    fprintf('initial controller trained\n')
 
     
     % set parameters
@@ -60,40 +60,39 @@ fprintf('initial controller trained\n')
                         end
 
                         
-xf = [5;9;0;0];
-                            tic
-                            plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
+                        xf = [5;9;0;0];
+                        tic
+                        plan_time = norm(xf(1:2)-current_state(1:2))/alpha;
 
-			
-                            [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
-				traj_fname = sprintf( './IntermediateTrainData/partially_observable_intermediate_dagg_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,...
-                                                        current_state(1),current_state(2),current_state(3),current_state(4) )
 
-				if ~exist(traj_fname,'file')
-                                    [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
-                                    save(traj_fname, 'xtraj_list','utraj');
-                                else
-                                    load(traj_fname)
-                                end
-                            
-                            x_to_attach=[]; y_to_attach=[];
-                            for xtraj_idx=1:numel(xtraj_list)
-                                xtraj = rungeKattaSimulation(current_state,utraj,0.001,1,p,true,obs); 
-                                t = xtraj.getBreaks();
-                                tf=t(end);
-                                [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
+                        traj_fname = sprintf( './IntermediateTrainData/partially_observable_intermediate_dagg_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,...
+                                                    current_state(1),current_state(2),current_state(3),current_state(4) )
+
+                        if ~exist(traj_fname,'file')
+                                [utraj,xtraj_list,F] = getRobustTrajectory(x1(:,k),alpha_for_obs_val,false,[5;9;0;0],plan_time);
+                                save(traj_fname, 'xtraj_list','utraj');
+                        else
+                                load(traj_fname)
+                        end
+
+                        x_to_attach=[]; y_to_attach=[];
+                        for xtraj_idx=1:numel(xtraj_list)
+                            xtraj = rungeKattaSimulation(current_state,utraj,0.001,1,p,true,obs); 
+                            t = xtraj.getBreaks();
+                            tf=t(end);
+                            [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
 
 %                                 if new_y(1) == 0
 %                                     keyboard
 %                                 end
 
-                                x_to_attach=[new_x(:,1) x_to_attach]; y_to_attach =[new_y(:,1) y_to_attach];
-                            end
+                            x_to_attach=[new_x(:,1) x_to_attach]; y_to_attach =[new_y(:,1) y_to_attach];
+                        end
 
-                            data{k,1} = x_to_attach(:,1)';
-                            data{k,2} = y_to_attach(:,1)';
-                            x = [x; x_to_attach(:,1)'];
-                            y = [y; y_to_attach(:,1)'];
+                        data{k,1} = x_to_attach(:,1)';
+                        data{k,2} = y_to_attach(:,1)';
+                        x = [x; x_to_attach(:,1)'];
+                        y = [y; y_to_attach(:,1)'];
 
                         control = controller.predict(current_state');
 

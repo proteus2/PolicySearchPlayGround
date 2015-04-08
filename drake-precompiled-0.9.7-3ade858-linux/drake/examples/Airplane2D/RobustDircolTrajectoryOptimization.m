@@ -125,14 +125,14 @@ classdef RobustDircolTrajectoryOptimization < NonlinearProgram
                 A_tau(node_range, u_idx) = -eye(nu*obj.N);        
                 
                 % setting h's across different trajectories are the same
-                node_range = num_vars_per_sample*(prog_idx-2) + prog_list{prog_idx}.h_inds(:);
-%                 h_idx = prog_list{prog_idx}.h_inds(:);
-%                 h_idx = (prog_idx-2)*num_vars_per_sample + h_idx;
-%                 A_tau(node_range, h_idx) = eye(nh);          
-%                 
-%                 h_idx = prog_list{prog_idx}.h_inds(:);
-%                 h_idx = (prog_idx-1)*num_vars_per_sample + h_idx;
-%                 A_tau(node_range, h_idx) = -eye(nh);
+ %                node_range = num_vars_per_sample*(prog_idx-2) + prog_list{prog_idx}.h_inds(:);
+ %                h_idx = prog_list{prog_idx}.h_inds(:);
+ %                h_idx = (prog_idx-2)*num_vars_per_sample + h_idx;
+ %                A_tau(node_range, h_idx) = eye(nh);          
+                 
+ %                h_idx = prog_list{prog_idx}.h_inds(:);
+ %                h_idx = (prog_idx-1)*num_vars_per_sample + h_idx;
+ %                A_tau(node_range, h_idx) = -eye(nh);
 
                 %figure; imagesc(A_tau)
             end
@@ -168,7 +168,9 @@ classdef RobustDircolTrajectoryOptimization < NonlinearProgram
         [z,F,info,infeasible_constraint_name] = obj.solve(z0);
 %         xtraj = reconstructStateTrajectory(obj,z);
         if nargout>1, utraj = reconstructInputTrajectory(obj,z); end
-        xtraj_list = reconstructStateTrajectory(obj,z);
+        %xtraj_list = reconstructStateTrajectory(obj,z);
+
+	xtraj_list=0;
     end
     
     function [utraj] = reconstructInputTrajectory(obj,z)
