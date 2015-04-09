@@ -64,7 +64,7 @@ classdef MMDController
             obj.self_discrepancy(obj.n_mmd_itern,1) = 1/(n_data^2)*sum(sum(obj.computeGramMatrix(x_data,sigma(3))));
             for idx = 1:size(x_data,2)
                 x = x_data(:,idx);
-                k = obj.computeMMD(x,x_data,mu,sigma,mu,sigma, (obj.self_discrepancy(obj.n_mmd_itern,1)*n_data^2) ); 
+                k = obj.computeMMD(x,x_data,mu,sigma,mu,sigma, (obj.self_discrepancy(obj.n_mmd_itern,1)) ); 
                 if k>=obj.max_d(obj.n_mmd_itern)
                     obj.max_d(obj.n_mmd_itern) = k;
                 end
@@ -93,20 +93,21 @@ classdef MMDController
             end
             
             % compute the Gram matrix of x1
-            g1 = obj.computeGramMatrix(x1,sigma(3));
+            n=size(x1,2);
+            g1 = sum(sum(obj.computeGramMatrix(x1,sigma(3))))/(n^2);
             
             % compute the Gram matrix of x2 
+             m = size(x2,2);
             if ~exist('g2','var') || (~isequal(mu1,mu2)|| ~isequal(sigma1,sigma2))
-                g2 = obj.computeGramMatrix(x2,sigma(3));
+                g2 = sum(sum((obj.computeGramMatrix(x2,sigma(3)))))/(m^2);
             end
             % compute K(x1,x2)
-            n=size(x1,2); m = size(x2,2);
             K = zeros(n,m);
             for idx=1:n
                 dists = computeDistance(obj,x1(:,idx),x2,sigma(3));
                 K(idx,:) = obj.rbf_kernel(dists);
             end
-            mmd = sum(sum(g1))/(n^2) + sum(sum(g2))/(m^2) - 2*sum(sum(K))/(n*m);
+            mmd = g1 + (g2) - 2*sum(sum(K))/(n*m);
         end
             
         function [x,mu,sigma] = normalizeData(obj,x)
