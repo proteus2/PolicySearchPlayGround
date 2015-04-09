@@ -44,13 +44,13 @@ N = 10;
 q_nom = zeros(nq_hand+6,N);
 Q_contact_force = zeros(3); % penlaty on the force applied to the object
 
-num_samples = 2;
+num_samples = 1;
 %Q_contact_force = eye(3)/(hand.getMass*norm(hand.gravity))^2;
 ncp_tol = 1e-6;
 
 obj_beg_pose = zeros(6,1);
 obj_beg_pose(3) = len/2;
-obj_beg_pose(5,1) = pi/2;
+obj_beg_pose(5,1) = 0;
 obj_end_pose = [0; 0.5; len/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
 hand_beg_pose = [0; -0.5; 0.1; zeros(3,1)];
 hand_beg_vel = zeros(6,1);
@@ -65,7 +65,7 @@ plan = plan.addBoundingBoxConstraint(BoundingBoxConstraint(0.05*ones(N-1,1),0.2*
 
 plan = plan.setSolverOptions('snopt', 'iterationslimit', 1e6);
 %plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 1000);
-plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 500);
+plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 1);
 plan = plan.setSolverOptions('snopt', 'majoroptimalitytolerance', 1e-4);
 x_seed = zeros(plan.num_vars, 1);
 for i = 1:num_samples
@@ -82,13 +82,13 @@ delete('fort.15');
 delete('ik_robust.out');
 system('touch ik_robust.out');
 tic
-% [x_sol,F,info] = plan.solve(x_seed); % F=value of objective fcn after optimization
+[x_sol,F,info] = plan.solve(x_seed); % F=value of objective fcn after optimization
 toc
 
 info
-load('new_traj_28.mat');
+% load('new_traj_28.mat');
 
-% [q_sol,v_sol,h_sol] = parseSolution(plan, x_sol)
+[q_sol,v_sol,h_sol] = parseSolution(plan, x_sol)
 
 % q_beg_obj = q_sol(1:6,1);
 % q_beg_hand = q_sol(7:12,1);
@@ -104,7 +104,7 @@ v.playback(qtraj_sol, struct('slider', true));
 lcmgl = drake.util.BotLCMGLClient(lcm.lcm.LCM.getSingleton(), 'goal');
 lcmgl.glColor3f(1,0,0);
 lcmgl.sphere(obj_end_pose(1:3), 0.01, 20, 20);
-lcmgl.switchBuffers();
+%lcmgl.switchBuffers();
 keyboard
 end
 

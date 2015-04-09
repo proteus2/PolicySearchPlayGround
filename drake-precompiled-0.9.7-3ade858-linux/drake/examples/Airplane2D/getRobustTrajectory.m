@@ -27,7 +27,7 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
         p = PlanePlant(alpha(alpha_idx));
         prog = DircolTrajectoryOptimization(p,N,[0 3]);
         prog = addStateConstraint(prog,ConstantConstraint(x0),1);
-        const = BoundingBoxConstraint(xf-[0.01;0.01;0;0],xf+[0.01;0.01;0;0]); %make the xf constraint lenient
+        const = BoundingBoxConstraint(xf-[0.11;0.11;0;0],xf+[0.11;0.11;0;0]); %make the xf constraint lenient
         prog = addStateConstraint(prog,const,N);
         field = ObstacleField();
         field = field.GenerateRandomObstacles();
@@ -56,8 +56,8 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
     
     disp_msg = strcat('Solving for x,y=', num2str(x0(1)),',',num2str(x0(2)));
     disp(disp_msg);
-    max_num_retries = 3;
-    max_n_trajs_saved = 2;
+    max_num_retries = 10;
+    max_n_trajs_saved = 5;
     n_retries = 0;
     
     % create a list of initial guess
@@ -82,7 +82,7 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
     traj_list = cell(0,2);
     F_list =[];
     n_trajs_saved = 0;
-   	while (info~=1 && info~=4 && info~=5) && (n_retries <=max_num_retries || n_trajs_saved<max_n_trajs_saved)
+   	while (info~=1 && info~=4 && info~=5) && ( n_trajs_saved<max_n_trajs_saved)
          if n_retries == 0
             initial_guess.x = x_initial_guess;
          else
@@ -154,13 +154,14 @@ function [utraj,xtraj,traj_list,F]=getRobustTrajectory(x0,alpha,visualize,xf,tf,
         return
     else
         F_list(F_list==0) = Inf;
-        if n_retries>= max_num_retries+1
+        %if n_retries>= max_num_retries+1
             [~,min_idx] = min(F_list);
             min_idx=min_idx(1);
             xtraj = traj_list{min_idx,1}; utraj = traj_list{min_idx,2};
-        end
+        %end
+            min_idx
+
     end
-    min_idx
     
 %     visualizeTraj(xtraj);
 end

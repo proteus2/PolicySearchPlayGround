@@ -3,14 +3,15 @@ function test_control_policy
     success_score = zeros(4,10);
     
     %valid only from obs_idx=2
-    obs_idx = 2;
-    load('./partial_observable_init_training_data/com_list_for_observations_list.mat');
+    obs_idx =0;
+    load('./partial_observable_init_training_data/com_list_for_partially_observations_list.mat');
     obs = obs_cands(obs_idx+1,:);
     obs(2)/2
     com = zeros(2,3);
     com(1,:) = com_list(obs_idx+1,:,1);
     com(2,:) = com_list(obs_idx+1,:,2);
-    com(1,2)=0; com(2,2)=0;
+    com(1,3) = com(1,3)+obs(2)/2; com(2,3) = com(2,3)+obs(2)/2; 
+    %com(1,2)=0; com(2,2)=0;
     test_predicted_traj=false;
     if test_predicted_traj
         fname= sprintf('./MMD_training_output_partially_observable/MMD_predicted_traj_%d_%d.mat',0,3)
@@ -19,12 +20,11 @@ function test_control_policy
         q_sol = [q_sol];
         h_sol = [xtraj(end,:)];
     else
-        fname= sprintf('./partial_observable_init_training_data/new_traj_%d.mat',obs_idx-1)
+        fname= sprintf('./partial_observable_init_training_data/new_traj_%d.mat',obs_idx)
         load(fname);
 
         h_sol = [0 h_sol];
     end
-    q_sol(3,1)
     % q_sol(1:6) = obj location
 
 

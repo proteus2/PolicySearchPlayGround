@@ -3,7 +3,7 @@
   <link name="cylinder">
     <inertial>
       <mass value="2.000000"/>
-      <origin xyz="0.005402 0.000000 0.066432"/>
+      <origin xyz="0.003401 -0.000466 0.072368"/>
       <inertia ixx="0.000010" ixy="0.0" ixz="0.0" iyy="0.000010" iyz="0.0" izz="0.000200"/>
     </inertial>
     <collision>

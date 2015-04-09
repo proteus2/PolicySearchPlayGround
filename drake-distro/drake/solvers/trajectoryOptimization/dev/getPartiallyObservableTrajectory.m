@@ -1,4 +1,4 @@
-function trajectory = getPartiallyObservableTrajectory(x0,path,radius,len,com_list)
+function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,x0)
     radius
     len
     com_list
@@ -10,7 +10,6 @@ function trajectory = getPartiallyObservableTrajectory(x0,path,radius,len,com_li
     fname=strcat(path,fname)
     
     checkDependency('lcmgl');
-    x0= cell2mat(x0);
     
     hand_urdf = 'robotiq_hand_description/cfg/s-model_articulated_fourbar_remove_package.urdf';
     hand = RigidBodyManipulator(hand_urdf,struct('floating',true));
@@ -50,24 +49,18 @@ function trajectory = getPartiallyObservableTrajectory(x0,path,radius,len,com_li
     %Q_contact_force = eye(3)/(hand.getMass*norm(hand.gravity))^2;
     ncp_tol = 1e-6;
 
-    obj_beg_pose = zeros(6,1);
-    obj_beg_pose(3) = len/2;
-    obj_beg_pose(5,1) = 0;    
-    hand_beg_pose = [0; -0.5; len/2; zeros(3,1)];
-    hand_beg_vel = zeros(6,1);
-
-    obj_beg_pose = x0(1,1:6);
-    hand_beg_pose = x0(1,7:12);
+    if exist('x0','var')
+            x0= cell2mat(x0);
+        obj_beg_pose = x0(1,1:6);
+        hand_beg_pose = x0(1,7:12);
+    else
+        obj_beg_pose = zeros(6,1);
+        obj_beg_pose(3) = len/2;
+        obj_beg_pose(5,1) = 0;
+        hand_beg_pose = [0; -0.5; 0.1; zeros(3,1)];
+        hand_beg_vel = zeros(6,1);
+    end
     obj_end_pose = [0; 0.5; len/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
-    
-    
-%     
-% obj_beg_pose = zeros(6,1);
-% obj_beg_pose(3) = len/2;
-% obj_beg_pose(5,1) = pi/2;
-% obj_end_pose = [0; 0.5; len/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
-% hand_beg_pose = [0; -0.5; 0.1; zeros(3,1)];
-% hand_beg_vel = zeros(6,1);
 
     plan = RobustGrasp(hand_urdf,hand_tip_names,...
       hand_tip_pts, back_tip_names, back_tip_pts,...
@@ -111,13 +104,6 @@ function trajectory = getPartiallyObservableTrajectory(x0,path,radius,len,com_li
 %     fname=strcat(path,fname)
 %     save(fname,'q_sol','v_sol','h_sol')
 %  
-    init_hsol = x0(end);
-
-    trajectory = [q_sol(:,:); [init_hsol h_sol] ];
-    
-    x=trajectory(:,1:end-1)';
-    y=trajectory(:,2:end)';
-
     
     n_traj = 0;
     fname=sprintf('new_traj_%d.mat',n_traj);
@@ -129,7 +115,18 @@ function trajectory = getPartiallyObservableTrajectory(x0,path,radius,len,com_li
     end
     fname=sprintf('new_traj_%d.mat',n_traj);
     fname=strcat(path,fname)
-    save(fname,'x','y');
+    
+    if exist('x0','var')
+        init_hsol = x0(end);
+        trajectory = [q_sol(:,:); [init_hsol h_sol] ];
+        x=trajectory(:,1:end-1)';
+        y=trajectory(:,2:end)';
+        save(fname,'x','y','q_sol','v_sol','h_sol');
+    else
+        save(fname,'q_sol','v_sol','h_sol');
+    end
+
+    
 
 %     v = plan.robot.constructVisualizer();
 %     qtraj_sol = PPTrajectory(foh(cumsum([0 h_sol]), q_sol));
