@@ -64,7 +64,7 @@ classdef MMDController
             obj.self_discrepancy(obj.n_mmd_itern,1) = 1/(n_data^2)*sum(sum(obj.computeGramMatrix(x_data,sigma(3))));
             for idx = 1:size(x_data,2)
                 x = x_data(:,idx);
-                k = obj.computeMMD(x,x_data,mu,sigma,mu,sigma, obj.self_discrepancy(obj.n_mmd_itern,1)); 
+                k = obj.computeMMD(x,x_data,mu,sigma,mu,sigma, (obj.self_discrepancy(obj.n_mmd_itern,1)*n_data^2) ); 
                 if k>=obj.max_d(obj.n_mmd_itern)
                     obj.max_d(obj.n_mmd_itern) = k;
                 end
@@ -80,7 +80,7 @@ classdef MMDController
         function mmd = computeMMD(obj,x1,x2,mu1,sigma1,mu2,sigma2,g2)
             %% NOTE: This function takes ONLY noramlized data
             if (~isequal(mu1,mu2)|| ~isequal(sigma1,sigma2))
-                % if two datasets have differen tmean and sigma,
+                % if two datasets have different mean and sigma,
                 % unnormalize and renomralize.
                 x1 = bsxfun(@times,x1,simga1) + mu1;
                 x2 = bsxfun(@times,x2,simga2) + mu2;
@@ -160,7 +160,7 @@ classdef MMDController
                 Q(3,3) = 15;
                 Q(4,4) = 15;
                 if size(x1,1) ==5
-                    Q(5,5) = 100;
+                    Q(5,5) = 20;
                 end
             end
 %             Q(1,1) = 1000000;
@@ -237,7 +237,7 @@ classdef MMDController
         
         function k = rbf_kernel(obj,distance)
             % computes the kernel given distance
-            sigma = 10;
+            sigma = 100;
             k = exp(-distance./(2*sigma));
         end
 

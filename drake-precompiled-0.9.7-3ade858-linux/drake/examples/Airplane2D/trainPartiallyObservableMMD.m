@@ -35,21 +35,20 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
             ntrajs = ntrajs+1;
         end
 
-%         x=[];y=[];
-%         for idx=1:numel(xtraj_list)
-%             xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
-%             t = xtraj.getBreaks(); tf=t(end);
-%             tf_list(obs_idx,idx) = tf;
-%             t=0:tf/21:tf;
-%             [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
-%             x=[new_x x]; y =[new_y y];
-%         end
-%          tic
-%         controller = setNewController(controller,x,y);
-        toc
+        x=[];y=[];
+        for idx=1:numel(alpha_for_obs_val)
+            xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
+            t = xtraj.getBreaks(); tf=t(end);
+            tf_list(obs_idx,idx) = tf;
+            t=0:tf/21:tf;
+            [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
+            x=[new_x x]; y =[new_y y];
+        end
+
+        controller = setNewController(controller,x,y);
     end
-%     save('rmv_me_testing_init_mmd_data','tf_list','controller');
-    %load('rmv_me_testing_init_mmd_data');
+     save('rmv_me_testing_init_mmd_data','tf_list','controller');
+%    load('rmv_me_testing_init_mmd_data');
     
     
     
