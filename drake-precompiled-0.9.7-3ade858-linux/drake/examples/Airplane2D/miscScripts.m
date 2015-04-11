@@ -28,7 +28,8 @@ end
     v = PlaneVisualizer(p,field);
     v.draw(0,x1(:,1));
 % hold on; ref= scatter(ref_traj(1,:),ref_traj(2,:),'black')
-  hold on; scatter(controller.data_sets_unnormalized{1,1}(1,:),controller.data_sets_unnormalized{1,1}(2,:),'green')
+  hold on; scatter(controller.data_sets_unnormalized{4,1}(1,:),controller.data_sets_unnormalized{min_idx,1}(2,:),'purple')
+
 
 hold on; exed=scatter(x1(1,1:end),x1(2,1:end),'blue');
 %  hold on; scatter(x2(1,1:end),x2(2,1:end),'blue');

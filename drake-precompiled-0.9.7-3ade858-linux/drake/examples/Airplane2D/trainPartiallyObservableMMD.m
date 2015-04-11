@@ -18,7 +18,7 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
     n_alpha = size(alpha_list,2);
     n_obs = size(train_obs_list,2);
     tf_list = zeros( n_obs, n_alpha );
-    for obs_idx=1:size(train_obs_list,2)
+    for obs_idx=1:5%size(train_obs_list,2)
         obs = train_obs_list(obs_idx);
         alpha_for_obs_val = alpha_list(obs_idx,:);
         init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,x0(1),x0(2),x0(3),x0(4) )
@@ -59,17 +59,17 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
             % allow n_mmd_itern times to train
             x = []; y=[]; 
             
-            for idx=1:size(train_list,2)
+            for obs_idx=1:5%size(train_obs_list,2)
                     % for all the observation values,
                     
-                    x0=train_list(1:4,idx);
-                    obs = train_list(5,idx);
-                    alpha_for_obs_val = alpha_list(idx,:); % gets all sampeld alpha values for this observation
+                    x0=train_list(1:4,obs_idx);
+                    obs = train_list(5,obs_idx);
+                    alpha_for_obs_val = alpha_list(obs_idx,:); % gets all sampeld alpha values for this observation
 
                     for alpha_idx = 1:numel(alpha_for_obs_val)% - train only on the first alpha value
                         % train on the sampled alpha values
-                        tf = tf_list(idx,alpha_idx);
-                        alpha = alpha_list(idx,alpha_idx);
+                        tf = tf_list(obs_idx,alpha_idx);
+                        alpha = alpha_list(obs_idx,alpha_idx);
                             
                         N  = numel(0:dt:tf);
                         x1=zeros(4,N); x1(:,1) = x0; % state simulation

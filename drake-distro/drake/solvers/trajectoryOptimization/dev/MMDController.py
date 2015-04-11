@@ -54,6 +54,7 @@ class MMDController:
 		a=rbf_kernel(D1,D1,gamma)
 		b=rbf_kernel(D1,D2,gamma)
 		c=rbf_kernel(D2,D2,gamma)
+		import pdb; pdb.set_trace()
 		n_d1 = np.shape(D1)[0]
 		n_d2 = np.shape(D2)[0]
 		

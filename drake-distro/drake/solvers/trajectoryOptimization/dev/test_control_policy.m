@@ -3,7 +3,7 @@ function test_control_policy
     success_score = zeros(4,10);
     
     %valid only from obs_idx=2
-    obs_idx =0;
+    obs_idx =4;
     load('./partial_observable_init_training_data/com_list_for_partially_observations_list.mat');
     obs = obs_cands(obs_idx+1,:);
     obs(2)/2
@@ -20,7 +20,7 @@ function test_control_policy
         q_sol = [q_sol];
         h_sol = [xtraj(end,:)];
     else
-        fname= sprintf('./partial_observable_init_training_data/new_traj_%d.mat',obs_idx)
+        fname= sprintf('./partial_observable_init_training_data/new_traj_%d.mat',obs_idx+2)
         load(fname);
 
         h_sol = [0 h_sol];

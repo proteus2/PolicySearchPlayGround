@@ -13,11 +13,11 @@ from MMDController import MMDController
 #eng.cd('/home/beomjoon/Documents/Github/drake-distro/drake/solvers/trajectoryOptimization/dev')
 
 # load initial data
-train_data = sio.loadmat('init_train_data')
+train_data = sio.loadmat('new_traj_0.mat')
 
-x_list = train_data['train_x']
-y_list = train_data['train_y']
-
+x_list = train_data['x']
+y_list = train_data['y']
+import pdb; pdb.set_trace()
 # train initial supervised learner
 controller = MMDController()
 n_init_data = np.shape(x_list)[1]
