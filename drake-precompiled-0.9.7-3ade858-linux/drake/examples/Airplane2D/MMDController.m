@@ -182,7 +182,7 @@ classdef MMDController
                 negtheta = find(theta<0);
             end
             
-            overtheta = find(theta>360);
+            overtheta = find(theta>2*pi);
             while ~isempty(overtheta)
                 theta(overtheta) = theta(overtheta) - 2*pi;
                 overtheta = find(theta<0);
@@ -251,9 +251,9 @@ classdef MMDController
                 else
                     curr_d = obj.computeMMD(normed_x,data,data_mu,data_std,data_mu,data_std, obj.self_discrepancy(idx,1));
                 end
-                d_list= [d_list curr_d];
                 if curr_d <= obj.max_d(idx)
                     candidates{size(candidates,1)+1,1} = idx; candidates{size(candidates,1),2} = curr_d;
+                    d_list= [d_list curr_d];
                 end
             end
             

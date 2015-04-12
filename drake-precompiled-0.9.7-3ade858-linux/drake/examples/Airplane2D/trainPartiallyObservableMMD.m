@@ -18,7 +18,8 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
     n_alpha = size(alpha_list,2);
     n_obs = size(train_obs_list,2);
     tf_list = zeros( n_obs, n_alpha );
-    for obs_idx=1:5%size(train_obs_list,2)
+    unsuccessful_idx=[];
+    for obs_idx=1:size(train_obs_list,2)
         obs = train_obs_list(obs_idx);
         alpha_for_obs_val = alpha_list(obs_idx,:);
         init_fname = sprintf( './InitTraining/partially_observable_initial_mmd_traj_obs_val=%d,x0=[%d,%d,%d,%d].mat',obs,x0(1),x0(2),x0(3),x0(4) )
@@ -28,24 +29,32 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
         else
             load(init_fname)
         end       
+        
+                x=[];y=[];
         for idx=1:numel(alpha_for_obs_val)
             xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
-            successes = successes+ checkSuccess(xtraj);
-   
-            ntrajs = ntrajs+1;
-        end
-
-        x=[];y=[];
-        for idx=1:numel(alpha_for_obs_val)
-            xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
+            doesItSuccess = checkSuccess(xtraj);
             t = xtraj.getBreaks(); tf=t(end);
             tf_list(obs_idx,idx) = tf;
-            t=0:tf/21:tf;
+            
+            if ~doesItSuccess
+                unsuccessful_idx=[unsuccessful_idx obs_idx];
+                
+                successes = successes+ doesItSuccess;
+
+                ntrajs = ntrajs+1;
+                continue
+            end
+            
+
+                        t=0:tf/21:tf;
+
             [new_x,new_y] = turnTrajToData(xtraj,utraj,t,obs);
             x=[new_x x]; y =[new_y y];
         end
-
-        controller = setNewController(controller,x,y);
+        if ~isempty(x)
+            controller = setNewController(controller,x,y);
+        end
     end
      save('rmv_me_testing_init_mmd_data','tf_list','controller');
 %    load('rmv_me_testing_init_mmd_data');
