@@ -18,7 +18,7 @@ train_x0_list= repmat([3.9; 0; 0; 0],1,30);
 aggregate=false;
 [controller,data] = trainMMD(train_x0_list,n_mmd_itern,train_alpha_list,aggregate);
 
-save('mmd_observable_controller.mat','controller','data','train_alpha_list','train_x0_list');
+save('./controllers/mmd_observable_controller.mat','controller','data','train_alpha_list','train_x0_list');
 
 % if aggregate
 %     save('mmd_results_alpha_0.001_agg.mat','controller','data','train_alpha_list','train_x0_list');

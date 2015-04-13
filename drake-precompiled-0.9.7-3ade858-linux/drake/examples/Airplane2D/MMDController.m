@@ -240,6 +240,7 @@ classdef MMDController
             assert(size(x,2)==1)
             candidates = {};
             d_list =[];
+            mmd_cand_list = [];
             for idx=1:size(obj.data_sets,1)
                 data = obj.data_sets{idx,1};
                 data_mu = obj.data_mean{idx,1};
@@ -251,9 +252,11 @@ classdef MMDController
                 else
                     curr_d = obj.computeMMD(normed_x,data,data_mu,data_std,data_mu,data_std, obj.self_discrepancy(idx,1));
                 end
+                                    d_list= [d_list curr_d];
+
                 if curr_d <= obj.max_d(idx)
                     candidates{size(candidates,1)+1,1} = idx; candidates{size(candidates,1),2} = curr_d;
-                    d_list= [d_list curr_d];
+                    mmd_cand_list = [mmd_cand_list curr_d];
                 end
             end
             
@@ -271,7 +274,7 @@ classdef MMDController
                     normed_x=normed_x./data_std; 
                     d_cand_list(idx) = min(computeDistanceBetweenStates(obj,normed_x,obj.data_sets{candidate_idx(idx),1},data_std(3)));
                 end
-                [min_d,min_idx] = min(d_list);%min(d_cand_list);
+                [min_d,min_idx] = min(mmd_cand_list);%min(d_cand_list);
                 min_idx = candidates{min_idx,1};
                 emptyCandidates = false;
             else

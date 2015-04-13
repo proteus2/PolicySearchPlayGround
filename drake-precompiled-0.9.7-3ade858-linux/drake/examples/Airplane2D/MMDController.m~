@@ -101,7 +101,7 @@ classdef MMDController
             % compute K(x1,x2)
             K = zeros(n,m);
             for idx=1:n
-                dists = computeDistance(obj,x1(:,idx),x2,sigma(3));
+                dists = computeDistanceBetweenStates(obj,x1(:,idx),x2,sigma(3));
                 K(idx,:) = obj.rbf_kernel(dists);
             end
             mmd = g1 + g2 - 2*sum(sum(K))/(n*m);
@@ -122,12 +122,12 @@ classdef MMDController
             n = size(x,2);
             k = zeros(n,n);
             for idx1=1:n   
-                dists = computeDistance(obj,x(:,idx1),x,theta_stddev);
+                dists = computeDistanceBetweenStates(obj,x(:,idx1),x,theta_stddev);
                 k(idx1,:) = obj.rbf_kernel(dists);
             end
         end
         
-        function dist_matrix = computeDistanceBetweenStates(obj,x,D,theta_stddev)
+        function dist_matrix = computeDistance(obj,x,D,theta_stddev)
             % computes the distance between x1 (n by 1)and x2
             % (n by m). The output is n by m matrix
             assert(size(x,2)==1,'x size not 1');
@@ -158,12 +158,6 @@ classdef MMDController
 %             difference(3,:) = theta_dists*theta_std_dev;
 %             diff_x = difference;
             
-           
-            
-            if any(diff_matrix(3,:)>2*pi || diff_matrix(3,:)<0)
-                fprintf('STOPPIN, WRONG ANGLE DIFFERFENCE\n')
-                return
-            end
             
             if ~exist('Q','var')
                 Q = eye(size(x1,1));
@@ -188,7 +182,7 @@ classdef MMDController
                 negtheta = find(theta<0);
             end
             
-            overtheta = find(theta>360);
+            overtheta = find(theta>2*pi);
             while ~isempty(overtheta)
                 theta(overtheta) = theta(overtheta) - 2*pi;
                 overtheta = find(theta<0);
@@ -198,7 +192,7 @@ classdef MMDController
             x_prime(3,:) = theta;
         end
         
-        function [dist_x] = computeDistance(obj,x1,x2,theta_std_dev,Q)
+        function [dist_x] = computeDistanceBetweenStates(obj,x1,x2,theta_std_dev,Q)
             %% Must FIX and NORMALIZE both x1 with same mean and std dev first
             assert(size(x1,2)==1,'x1 size not 1');
             
@@ -246,6 +240,7 @@ classdef MMDController
             assert(size(x,2)==1)
             candidates = {};
             d_list =[];
+            mmd_cand_list = [];
             for idx=1:size(obj.data_sets,1)
                 data = obj.data_sets{idx,1};
                 data_mu = obj.data_mean{idx,1};
@@ -257,9 +252,11 @@ classdef MMDController
                 else
                     curr_d = obj.computeMMD(normed_x,data,data_mu,data_std,data_mu,data_std, obj.self_discrepancy(idx,1));
                 end
-                d_list= [d_list curr_d];
+                                    d_list= [d_list curr_d];
+
                 if curr_d <= obj.max_d(idx)
                     candidates{size(candidates,1)+1,1} = idx; candidates{size(candidates,1),2} = curr_d;
+                    mmd_cand_list = [mmd_cand_
                 end
             end
             
@@ -275,7 +272,7 @@ classdef MMDController
                     data_std = obj.data_stddev{candidate_idx(idx),1};
                     normed_x=x-data_mu;
                     normed_x=normed_x./data_std; 
-                    d_cand_list(idx) = min(computeDistance(obj,normed_x,obj.data_sets{candidate_idx(idx),1},data_std(3)));
+                    d_cand_list(idx) = min(computeDistanceBetweenStates(obj,normed_x,obj.data_sets{candidate_idx(idx),1},data_std(3)));
                 end
                 [min_d,min_idx] = min(d_list);%min(d_cand_list);
                 min_idx = candidates{min_idx,1};
