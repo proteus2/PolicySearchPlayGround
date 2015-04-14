@@ -72,7 +72,7 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
 
     plan = plan.setSolverOptions('snopt', 'iterationslimit', 1e6);
     %plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 1000);
-    plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 200);
+    plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 500);
     plan = plan.setSolverOptions('snopt', 'majoroptimalitytolerance', 1e-4);
     x_seed = zeros(plan.num_vars, 1);
     for i = 1:num_samples
@@ -121,9 +121,9 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
         trajectory = [q_sol(:,:); [init_hsol h_sol] ];
         x=trajectory(:,1:end-1)';
         y=trajectory(:,2:end)';
-        save(fname,'x','y','q_sol','v_sol','h_sol');
+        save(fname,'x','y','q_sol','v_sol','h_sol','radius','len','com_list');
     else
-        save(fname,'q_sol','v_sol','h_sol');
+        save(fname,'q_sol','v_sol','h_sol','radius','len','com_list');
     end
 
     

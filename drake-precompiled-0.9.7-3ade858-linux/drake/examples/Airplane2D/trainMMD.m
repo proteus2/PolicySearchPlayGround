@@ -43,6 +43,9 @@ function [controller,mmd_data] = trainMMD(x0_list,n_mmd_itern,alpha_list,aggrega
                     [utraj,xtraj,traj_list] = getTrajectory(x0,alpha,false);
                 end
             end
+            if ~checkSuccess(xtraj)
+                keyboard
+            end
             tf = xtraj.getBreaks(); tf=tf(end);
             tf_list(idx) = tf;
                 idx

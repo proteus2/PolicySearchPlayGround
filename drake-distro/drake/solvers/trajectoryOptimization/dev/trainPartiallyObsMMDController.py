@@ -14,9 +14,9 @@ from MMDController import MMDController
 	# len,radius are sampled from: mu = [0.04, 0.2], sigma = [0.01 0.01; 0.01 0.1],abs(mvnrnd(mu,sigma,n_obs))
 
 # load observations
-n_obs = 10;
+n_obs = 1;
 n_samples_per_obs = 2;
-com_data = sio.loadmat('./partial_observable_init_training_data/com_list_for_observations_list.mat')
+com_data = sio.loadmat('./partial_observable_init_training_data/com_list_for_partially_observations_list.mat')
 com_list = com_data['com_list']
 
 # initial data
@@ -26,15 +26,21 @@ rad_list 	= np.zeros((n_obs,1))
 len_list	= np.zeros((n_obs,1))
 
 for i in range(n_obs):
-	fname 	   ='./partial_observable_init_training_data/xy_format_new_traj_' + str(i+1) + '.mat'
+	fname 	   ='./partial_observable_init_training_data/new_traj_' + str(i) + '.mat'
 	train_data = sio.loadmat(fname)
-	x_list     = train_data['x']
-	y_list 	   = train_data['y']
+	q_sol = train_data['q_sol']
+	h_sol = train_data['h_sol']
+	
+	h_sol = np.hstack( (np.matrix(([0])),h_sol) )
+	qh_sol = np.vstack( (q_sol,h_sol) )
+	x_list = qh_sol[:,0:9]
+	y_list = qh_sol[:,1:10]
 	rad_list[i,0]   = train_data['radius']
 	len_list[i,0]   = train_data['len']
 	controller.setNewController(x_list,y_list)
 	init_conds_list[i,:] = x_list[0,:]
 
+import pdb; pdb.set_trace()
 
 # predict
 eng = matlab.engine.start_matlab()
