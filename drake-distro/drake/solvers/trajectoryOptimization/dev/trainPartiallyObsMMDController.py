@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestRegressor
 import scipy.io as sio
 import numpy as np
 import copy
-#import matlab.engine
+import matlab.engine
 from MMDController import MMDController
 
 # make observations - done via sample_CoM_from_obs
@@ -63,7 +63,6 @@ eng.addpath_pods()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake')
 eng.addpath_drake()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake/solvers/trajectoryOptimization/dev')
-
 def save_object(obj, filename):
     with open(filename, 'wb') as output:
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
@@ -88,6 +87,7 @@ for idx in range(n_mmd_iterations):
 		for i in range(0,N):
 			print 'Completed ' + str((float(i)/N)*100.0) + ' % of the ' + str(obsIdx)+ 'th observation'
 			xtraj[0:,i] = xt
+			xt=np.hstack( (xt,length,radius) ) 
 			
 			# check discrepancy
 			min_idx,d_list,scaled_x,empty_candidate = controller.checkDiscrepancy(xt)
