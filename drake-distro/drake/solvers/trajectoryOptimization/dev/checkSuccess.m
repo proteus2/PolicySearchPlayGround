@@ -6,6 +6,7 @@ function score = checkSuccess(xtraj)
     
     t = xtraj.getBreaks();
     xtraj_vals = xtraj.eval(t);
+    
     obj_pose_traj = xtraj_vals(1:3,:);
     hand_pose_traj = xtraj_vals(7:9,:);
     

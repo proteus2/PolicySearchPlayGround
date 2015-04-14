@@ -6,7 +6,7 @@ import pickle
 from sklearn.ensemble import RandomForestRegressor
 import scipy.io as sio
 import numpy as np
-import matlab.engine
+#import matlab.engine
 from MMDController import MMDController
 
 #eng = matlab.engine.start_matlab()
@@ -34,7 +34,7 @@ state_dim = np.shape(init_conds_list)[0]
 prediction_dim = 43;
 
 import pdb; pdb.set_trace()
-
+'''
 eng = matlab.engine.start_matlab()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/')
 eng.addpath_pods()
@@ -44,7 +44,7 @@ eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drak
 def save_object(obj, filename):
     with open(filename, 'wb') as output:
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
-
+'''
 n_traj_opt_calls = 0;
 for idx in range(10):
 	for initIdx in range(n_init_data):

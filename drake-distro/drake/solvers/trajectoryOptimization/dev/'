@@ -56,21 +56,22 @@ class MMDController:
 		return np.exp(-sqred_l2_dist/(2*gamma))
 
 	def setNewController(self,x,y):
+		print y
 		x = np.transpose(x)
 		y = np.transpose(y)
-
 		self.Q = np.eye( np.shape(x[0,:])[1] )
+		print y
 		#x=self.setAnglesToBetweenZeroToThreeSixty(x)
 		#y=self.setAnglesToBetweenZeroToThreeSixty(y)
 		self.unnormalized_data_list[0].append(x)
 		self.unnormalized_data_list[1].append(y)
-
+		
 		# first normalize the data, and save the scaler
-		scaler = preprocessing.StandardScaler()
-		scaler.fit(x)
+		scaler = preprocessing.StandardScaler().fit(x)
 		self.scaler_list.append(scaler)
-		scaled_x = scaler.transform(x,copy=True)
+		scaled_x = scaler.transform(x)
 		self.normalized_data_list.append(scaled_x)
+		print y
 
 		# compute the max_mmd
 		n_data = np.shape(x)[0]
@@ -83,19 +84,20 @@ class MMDController:
 		self.max_mmd.append(max_mmd)	
 
 		# train the new controller, then append it to self.controllers
+		import pdb; pdb.set_trace() 
 		controller = RandomForestRegressor()
-		controller.fit(x,y)
+		controller.fit(scaled_x,y)
 		self.controller_list.append( controller )
 		
 	def setAnglesToBetweenZeroToThreeSixty(self,x):
 		pass	
 
 	def computeMMD(self,D1,D2):
-		gamma=10
+		gamma=0.5
 		#a=self.custom_kernel(D1,D1,gamma=0.5)
-		a=pairwise_kernels(D1,D1,metric=self.custom_kernel,gamma=10)
-		b=pairwise_kernels(D1,D2,metric=self.custom_kernel,gamma=10)
-		c=pairwise_kernels(D2,D2,metric=self.custom_kernel,gamma=10)
+		a=pairwise_kernels(D1,D1,metric=self.custom_kernel,gamma=0.5)
+		b=pairwise_kernels(D1,D2,metric=self.custom_kernel,gamma=0.5)
+		c=pairwise_kernels(D2,D2,metric=self.custom_kernel,gamma=0.5)
 		
 		n_d1 = np.shape(D1)[0]
 		n_d2 = np.shape(D2)[0]

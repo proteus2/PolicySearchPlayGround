@@ -6,6 +6,7 @@ import pickle
 from sklearn.ensemble import RandomForestRegressor
 import scipy.io as sio
 import numpy as np
+import copy
 import matlab.engine
 from MMDController import MMDController
 
@@ -14,7 +15,7 @@ from MMDController import MMDController
 	# len,radius are sampled from: mu = [0.04, 0.2], sigma = [0.01 0.01; 0.01 0.1],abs(mvnrnd(mu,sigma,n_obs))
 
 # load observations
-n_obs = 1;
+n_obs = 5;
 n_samples_per_obs = 2;
 com_data = sio.loadmat('./partial_observable_init_training_data/com_list_for_partially_observations_list.mat')
 com_list = com_data['com_list']
@@ -34,16 +35,18 @@ for i in range(n_obs):
 	h_sol = np.hstack( (np.matrix(([0])),h_sol) )
 	qh_sol = np.vstack( (q_sol,h_sol) )
 
-	x_list = qh_sol[:,0:9]
-	y_list = qh_sol[:,1:10]
+	# make a deepcopy, so that even when x is normalized it does not change the value qh_sol
+	x_list = copy.deepcopy(qh_sol[:,0:9]) #TODO: attach radius and length
+	y_list = copy.deepcopy(qh_sol[:,1:10])
+
 	rad_list[i,0]   = train_data['radius']
 	len_list[i,0]   = train_data['len']
-	controller.setNewController(x_list,y_list)
-	# interestingly, Python arguments are pass by reference by default. 
 	# The value of qh_sol is changed after x_list has been passed in.
+	# Interestingly, Python arguments are pass by reference by default.
+	# (From StackOverflow:Objects in python (and most mainstream languages) are passed as reference.)
+	controller.setNewController(x_list,y_list)
 
 	# Just resetting qh_sol for init condition setup
-	qh_sol = np.vstack( (q_sol,h_sol) )
 	init_conds_list[i,:] = np.transpose(qh_sol)[0,:]
 
 # predict
@@ -57,7 +60,6 @@ eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drak
 def save_object(obj, filename):
     with open(filename, 'wb') as output:
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
-
 
 path = './MMD_training_output_partially_observable/'
 n_traj_opt_calls = 0
@@ -83,7 +85,6 @@ for idx in range(n_mmd_iterations):
 			# check discrepancy
 			min_idx,d_list,scaled_x,empty_candidate = controller.checkDiscrepancy(xt)
 			if empty_candidate:		
-				import pdb; pdb.set_trace()
 				there_were_no_empty_cand = False
 				fname = path+'new_traj_'+str(n_traj_opt_calls)+'.mat'
 				if not os.path.isfile(fname):
