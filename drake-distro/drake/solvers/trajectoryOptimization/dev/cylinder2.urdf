@@ -3,18 +3,18 @@
   <link name="cylinder">
     <inertial>
       <mass value="2.000000"/>
-      <origin xyz="0.016448 -0.005208 0.144785"/>
+      <origin xyz="-0.127960 0.054197 0.119531"/>
       <inertia ixx="0.000010" ixy="0.0" ixz="0.0" iyy="0.000010" iyz="0.0" izz="0.000200"/>
     </inertial>
     <collision>
       <geometry>
-        <cylinder length="0.490508" radius="0.042261"/>
+        <cylinder length="0.486608" radius="0.132393"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
     <visual>
       <geometry>
-        <cylinder length="0.490508" radius="0.042261"/>
+        <cylinder length="0.486608" radius="0.132393"/>
       </geometry>
       <material name="gray">
         <color rgba="0.5 0.5 .5 1"/>

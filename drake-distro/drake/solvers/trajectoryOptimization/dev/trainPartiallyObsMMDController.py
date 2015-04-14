@@ -33,14 +33,18 @@ for i in range(n_obs):
 	
 	h_sol = np.hstack( (np.matrix(([0])),h_sol) )
 	qh_sol = np.vstack( (q_sol,h_sol) )
+
 	x_list = qh_sol[:,0:9]
 	y_list = qh_sol[:,1:10]
 	rad_list[i,0]   = train_data['radius']
 	len_list[i,0]   = train_data['len']
 	controller.setNewController(x_list,y_list)
-	init_conds_list[i,:] = x_list[0,:]
+	# interestingly, Python arguments are pass by reference by default. 
+	# The value of qh_sol is changed after x_list has been passed in.
 
-import pdb; pdb.set_trace()
+	# Just resetting qh_sol for init condition setup
+	qh_sol = np.vstack( (q_sol,h_sol) )
+	init_conds_list[i,:] = np.transpose(qh_sol)[0,:]
 
 # predict
 eng = matlab.engine.start_matlab()
@@ -73,11 +77,13 @@ for idx in range(n_mmd_iterations):
 
 		there_were_no_empty_cand = True
 		for i in range(0,N):
+			print 'Completed ' + str((float(i)/N)*100.0) + ' % of the ' + str(obsIdx)+ 'th observation'
 			xtraj[0:,i] = xt
 			
 			# check discrepancy
 			min_idx,d_list,scaled_x,empty_candidate = controller.checkDiscrepancy(xt)
 			if empty_candidate:		
+				import pdb; pdb.set_trace()
 				there_were_no_empty_cand = False
 				fname = path+'new_traj_'+str(n_traj_opt_calls)+'.mat'
 				if not os.path.isfile(fname):

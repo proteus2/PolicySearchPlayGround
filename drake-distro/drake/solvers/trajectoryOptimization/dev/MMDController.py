@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics.pairwise import rbf_kernel
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.metrics.pairwise import pairwise_distances
+from sklearn.metrics.pairwise import pairwise_kernels
 from sklearn import preprocessing
 import numpy as np
 
@@ -26,24 +27,33 @@ class MMDController:
 		self.Q = [];
 
 	def computeStateDifference(self,x,y,**kwargs):
+		# extract part of x that makes sense with euclidean distance
+		new_x = x[0:3]
+		new_y = y[0:3]
+		state_dim = np.shape(x)[0]
+		for idx in range(6,state_dim,6):
+			new_x = np.hstack( (new_x,x[idx:idx+3]) )
+			new_y = np.hstack( (new_y,y[idx:idx+3]) )
+
+
 		# computes the abs difference between given two state vectors
-		diff_matrix = np.abs(x-y)
+		diff_matrix = np.abs(new_x-new_y)
 		
 		# compute the proper difference of roll pitch yaw of palm and cylinder 
+		'''
 		if diff_matrix[0,5] > np.pi:
 			diff_matrix[0,5] = abs(2*np.pi-diff_matrix[0,5])
 
 		if diff_matrix[0,11] > np.pi:
 			diff_matrix[0,11] = abs(2*np.pi-diff_matrix[0,11])
-
-		import pdb; pdb.set_trace()
+		'''
 		return diff_matrix
 
 	def custom_kernel(self,x,y,**kwargs):
-		import pdb; pdb.set_trace()
-		kwargs.get('gamma',1)
+		gamma = kwargs.get('gamma',1)
 		difference = self.computeStateDifference(x,y)
-		return np.exp(-difference/(2*gamma))
+		sqred_l2_dist =np.sum( np.power(difference,2) )
+		return np.exp(-sqred_l2_dist/(2*gamma))
 
 	def setNewController(self,x,y):
 		x = np.transpose(x)
@@ -81,13 +91,11 @@ class MMDController:
 
 	def computeMMD(self,D1,D2):
 		gamma=0.5
-		a=self.custom_kernel(D1,D1,gamma=0.5)
-		b=self.custom_kernel(D1,D2,gamma=0.5)
-		c=self.custom_kernel(D2,D2,gamma=0.5)
+		#a=self.custom_kernel(D1,D1,gamma=0.5)
+		a=pairwise_kernels(D1,D1,metric=self.custom_kernel,gamma=0.5)
+		b=pairwise_kernels(D1,D2,metric=self.custom_kernel,gamma=0.5)
+		c=pairwise_kernels(D2,D2,metric=self.custom_kernel,gamma=0.5)
 		
-		a=rbf_kernel(D1,D1,gamma)
-		b=rbf_kernel(D1,D2,gamma)
-		c=rbf_kernel(D2,D2,gamma)
 		n_d1 = np.shape(D1)[0]
 		n_d2 = np.shape(D2)[0]
 		
