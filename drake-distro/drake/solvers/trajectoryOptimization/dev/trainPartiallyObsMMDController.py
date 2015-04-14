@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestRegressor
 import scipy.io as sio
 import numpy as np
 import copy
-import matlab.engine
+#import matlab.engine
 from MMDController import MMDController
 
 # make observations - done via sample_CoM_from_obs
@@ -15,7 +15,7 @@ from MMDController import MMDController
 	# len,radius are sampled from: mu = [0.04, 0.2], sigma = [0.01 0.01; 0.01 0.1],abs(mvnrnd(mu,sigma,n_obs))
 
 # load observations
-n_obs = 5;
+n_obs = 10;
 n_samples_per_obs = 2;
 com_data = sio.loadmat('./partial_observable_init_training_data/com_list_for_partially_observations_list.mat')
 com_list = com_data['com_list']
@@ -31,16 +31,23 @@ for i in range(n_obs):
 	train_data = sio.loadmat(fname)
 	q_sol = train_data['q_sol']
 	h_sol = train_data['h_sol']
+	rad_list[i,0]   = train_data['radius']
+	len_list[i,0]   = train_data['len']
 	
 	h_sol = np.hstack( (np.matrix(([0])),h_sol) )
 	qh_sol = np.vstack( (q_sol,h_sol) )
+	qh_obs_sol = copy.deepcopy(qh_sol)
 
 	# make a deepcopy, so that even when x is normalized it does not change the value qh_sol
-	x_list = copy.deepcopy(qh_sol[:,0:9]) #TODO: attach radius and length
+	x_list = copy.deepcopy(qh_sol[:,0:9]) 
+	n_x = np.shape(x_list)[1]
+	rads = np.empty(n_x)
+	lens = np.empty(n_x)
+	lens.fill(rad_list[i,0])
+	rads.fill(len_list[i,0])
+	x_list = np.vstack((x_list,lens,rads))
 	y_list = copy.deepcopy(qh_sol[:,1:10])
 
-	rad_list[i,0]   = train_data['radius']
-	len_list[i,0]   = train_data['len']
 	# The value of qh_sol is changed after x_list has been passed in.
 	# Interestingly, Python arguments are pass by reference by default.
 	# (From StackOverflow:Objects in python (and most mainstream languages) are passed as reference.)

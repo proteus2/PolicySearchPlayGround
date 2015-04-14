@@ -91,11 +91,11 @@ class MMDController:
 		pass	
 
 	def computeMMD(self,D1,D2):
-		gamma=10
+		gamma=5
 		#a=self.custom_kernel(D1,D1,gamma=0.5)
-		a=pairwise_kernels(D1,D1,metric=self.custom_kernel,gamma=10)
-		b=pairwise_kernels(D1,D2,metric=self.custom_kernel,gamma=10)
-		c=pairwise_kernels(D2,D2,metric=self.custom_kernel,gamma=10)
+		a=pairwise_kernels(D1,D1,metric=self.custom_kernel,gamma=5)
+		b=pairwise_kernels(D1,D2,metric=self.custom_kernel,gamma=5)
+		c=pairwise_kernels(D2,D2,metric=self.custom_kernel,gamma=5)
 		
 		n_d1 = np.shape(D1)[0]
 		n_d2 = np.shape(D2)[0]
