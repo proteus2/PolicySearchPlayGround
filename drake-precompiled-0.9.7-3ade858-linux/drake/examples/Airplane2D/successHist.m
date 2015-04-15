@@ -1,8 +1,6 @@
 files = {    
-    %'./controllers/mmd_par```tially_observable_controller_h_not_same_smaller_sigma_test_error.mat',...
-    %'./controllers/mmd_partially_observable_controller_h_not_same_test_error',...
-    %'./controllers/supervised_partially_observable_controller_3_alphas_test_error.mat',...
-    './controllers/mmd_observable_controller_test_error.mat';
+    './controllers/partially_observable_stat/supervised_partially_observable_controller_3_alphas_test_error.mat';
+    './controllers/partially_observable_stat/mmd_partially_observable_controller_h_not_same_smaller_sigma_test_error.mat';
     };
 
 % files = {'./controllers/supervised_mmd_unobservable_controller_test_error'};
@@ -49,11 +47,12 @@ traj_opt_CI =  1.96*std(std(trajopt_score_list))/sqrt(n);
 % hold on; errorbar([traj_opt_mean 0 ctrl_mean_list],[traj_opt_CI 0 ctrl_CI_list],'o');
 
 
-figure;bar([traj_opt_mean ctrl_mean_list]) 
+figure;
+bar([traj_opt_mean ctrl_mean_list]) 
 hold on; errorbar([traj_opt_mean ctrl_mean_list],[traj_opt_CI ctrl_CI_list],'o');
 
 ax = gca;
-ax.XTickLabel = {'trajopt','DAgger','TOIL','Supervised'};
+ax.XTickLabel = {'trajopt','DAgger','Supervised','TOIL'};
 title('Success Rate for 50 Different Models')
 ylim([0 1])
 ylabel('Success Rate')

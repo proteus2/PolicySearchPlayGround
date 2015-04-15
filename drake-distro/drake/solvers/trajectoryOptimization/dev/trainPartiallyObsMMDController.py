@@ -63,6 +63,7 @@ eng.addpath_pods()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake')
 eng.addpath_drake()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake/solvers/trajectoryOptimization/dev')
+
 def save_object(obj, filename):
     with open(filename, 'wb') as output:
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
@@ -93,15 +94,13 @@ for idx in range(n_mmd_iterations):
 			min_idx,d_list,scaled_x,empty_candidate = controller.checkDiscrepancy(xt)
 			if empty_candidate:		
 				there_were_no_empty_cand = False
-				fname = path+'new_traj_'+str(n_traj_opt_calls)+'.mat'
+				fname = path+'intermediate_traj_'+str(n_traj_opt_calls)+'.mat'
 				if not os.path.isfile(fname):
-					eng.getPartiallyObservableTrajectory(xt.tolist(),path,radius,length,coms.tolist())
+					eng.getPartiallyObservableTrajectory(path,radius,length,coms.tolist(),xt.tolist())
 				
 				new_data = sio.loadmat(fname)
 				x = new_data['x']
 				y = new_data['y']
-				x = x[:,0:prediction_dim]
-				y = y[:,0:prediction_dim]
 				controller.setNewController(x,y)
 				n_traj_opt_calls = n_traj_opt_calls + 1;
 
@@ -111,7 +110,6 @@ for idx in range(n_mmd_iterations):
 				xt = controller.predict(xt)
 
 			xt = np.reshape(np.transpose(xt),prediction_dim,)
-		
 		print 'one iteration done'
 		save_object( controller, path+'controller_idx='+str(idx)+'_'+'obsidx='+str(obsIdx) )
 		sio.savemat(path+'MMD_predicted_traj'+'_'+str(obsIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )

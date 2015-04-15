@@ -33,6 +33,13 @@ function [controller,mmd_data] = trainPartiallyObservableMMD(x0_list,n_mmd_itern
                 x=[];y=[];
         for idx=1:numel(alpha_for_obs_val)
             xtraj = rungeKattaSimulation([3.9;0;0;0],utraj,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false); 
+            
+            %%% For testing purpose
+            load('./controllers/partially_observable_controller/Q5=50/mmd_partially_observable_controller_h_not_same_smaller_sigma')
+            [xtraj_ctrller,~,~,exed] = rungeKattaSimulation([3.9;0;0;0],controller,0.001,1,PlanePlant(alpha_for_obs_val(idx)),false,Inf,obs); 
+            plotTrajectory({xtraj;xtraj_ctrller},exed)
+            %%%
+
             doesItSuccess = checkSuccess(xtraj);
             t = xtraj.getBreaks(); tf=t(end);
             tf_list(obs_idx,idx) = tf;

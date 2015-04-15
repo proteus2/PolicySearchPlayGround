@@ -1,4 +1,4 @@
-function [xtraj,utraj,t] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha,alpha,obs)
+function [xtraj,utraj,t,exed] = rungeKattaSimulation(x0,u,dt,tf,p,varyAlpha,alpha,obs)
     t=0:dt:tf;
     N = size(t,2);
     x1=zeros(4,N); u1=zeros(1,N);

@@ -53,6 +53,7 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
             x0= cell2mat(x0);
         obj_beg_pose = x0(1,1:6);
         hand_beg_pose = x0(1,7:12);
+                hand_beg_vel = zeros(6,1);
     else
         obj_beg_pose = zeros(6,1);
         obj_beg_pose(3) = len/2;
@@ -72,7 +73,7 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
 
     plan = plan.setSolverOptions('snopt', 'iterationslimit', 1e6);
     %plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 1000);
-    plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 500);
+    plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 150);
     plan = plan.setSolverOptions('snopt', 'majoroptimalitytolerance', 1e-4);
     x_seed = zeros(plan.num_vars, 1);
     for i = 1:num_samples
@@ -80,7 +81,7 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
       x_seed(last_q_inds(plan.robot.getBody(plan.robot.findLinkInd('palm')).position_num)) = [0; 0.5; zeros(4,1)];
     end
     plan = plan.setSolverOptions('snopt','print','ik_robust.out');
-    plan = plan.setSolverOptions('snopt','superbasicslimit',2000);
+    plan = plan.setSolverOptions('snopt','superbasicslimit',1);
 
     % Explicitly specifying the solver
     plan = plan.setSolver('snopt');
@@ -105,24 +106,40 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
 %     save(fname,'q_sol','v_sol','h_sol')
 %  
     
-    n_traj = 0;
-    fname=sprintf('new_traj_%d.mat',n_traj);
-    fname=strcat(path,fname)
-    while exist(fname,'file')
-        n_traj = n_traj + 1;
-        fname=sprintf('new_traj_%d.mat',n_traj);
-        fname=strcat(path,fname)
-    end
-    fname=sprintf('new_traj_%d.mat',n_traj);
-    fname=strcat(path,fname)
+
     
     if exist('x0','var')
-        init_hsol = x0(end);
+        init_hsol = x0(end-2)
         trajectory = [q_sol(:,:); [init_hsol h_sol] ];
-        x=trajectory(:,1:end-1)';
-        y=trajectory(:,2:end)';
+        x=trajectory(:,1:end-1);
+        y=trajectory(:,2:end);
+        x = [x;ones(1,9)*len;ones(1,9)*radius];
+        
+        n_traj = 0;
+        fname=sprintf('intermediate_traj_%d.mat',n_traj);
+        fname=strcat(path,fname)
+        while exist(fname,'file')
+            n_traj = n_traj + 1;
+            fname=sprintf('intermediate_traj_%d.mat',n_traj);
+            fname=strcat(path,fname)
+        end
+        fname=sprintf('intermediate_traj_%d.mat',n_traj);
+        fname=strcat(path,fname)
+    
         save(fname,'x','y','q_sol','v_sol','h_sol','radius','len','com_list');
     else
+        
+        n_traj = 0;
+        fname=sprintf('new_traj_%d.mat',n_traj);
+        fname=strcat(path,fname)
+        while exist(fname,'file')
+            n_traj = n_traj + 1;
+            fname=sprintf('new_traj_%d.mat',n_traj);
+            fname=strcat(path,fname)
+        end
+        fname=sprintf('new_traj_%d.mat',n_traj);
+        fname=strcat(path,fname)
+        
         save(fname,'q_sol','v_sol','h_sol','radius','len','com_list');
     end
 

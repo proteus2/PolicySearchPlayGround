@@ -2,12 +2,14 @@
 clear all;
 close all;
 
-n_x0=50;
 n_alpha = 3;
-test_alpha_list = zeros(n_x0,n_alpha);
-obs_rand = rand(1,n_x0);
 
 if ~exist('./test_partially_observable_alpha_list.mat','file')
+    n_obs=50;
+    n_x0 =50;
+    test_alpha_list = zeros(n_x0,n_alpha);
+
+    obs_rand = rand(1,n_x0);
     test_obs_list = 0.05*obs_rand + (1-obs_rand)*0.1;
     
     % sample alpha values for each observations: alpha_list(n_obs,n_alphas)
@@ -20,15 +22,20 @@ if ~exist('./test_partially_observable_alpha_list.mat','file')
     % save the alpha values
     save('test_partially_observable_alpha_list','test_alpha_list','test_obs_list');
 else
-    load('test_partially_observable_alpha_list')
+    %load('test_partially_observable_alpha_list')
 end
 
+load('train_partially_observable_alpha_list')
+test_alpha_list = train_alpha_list;
+test_obs_list = train_obs_list;
 
 %% Eval script
+n_x0 = size(test_obs_list,2);
+
 x0_list = repmat([3.9;0;0;0],1,n_x0);
 alpha_list = test_alpha_list;
 
-train_file='./controllers/mmd_partially_observable_controller_h_not_same_smaller_sigma.mat';
+train_file='./controllers/partially_observable_controller/Q5=50/mmd_partially_observable_controller_h_not_same_smaller_sigma.mat';
 load(train_file);
 ctrl_list{1,1} = controller;
 
@@ -67,7 +74,11 @@ for idx=1:size(x0_alpha_list,2)
             [traj_list_opt,traj_opt_cost]=EvaluateControllers(u,x0,tf,alpha_for_obs(1));
             traj_opt_cost
         end
-
+        
+        if ~checkSuccess(traj_list_opt{1})
+            keyboard
+        end
+% 
         apprxtraj_fname = './data_for_plots/test/';
         fname = train_file;
         apprxtraj_fname = strcat(apprxtraj_fname,fname);
@@ -76,7 +87,6 @@ for idx=1:size(x0_alpha_list,2)
         tf = optimal_u.getBreaks; tf=tf(end);
         tf=tf+2;
         [traj_list,cost_list]=EvaluateControllers(ctrl_list,x0,tf,alpha_for_obs(1),obs);
-
 
         cost_list_all_alpha{idx,1} = traj_opt_cost;
         cost_list_all_alpha{idx,2} = cost_list(:,:);

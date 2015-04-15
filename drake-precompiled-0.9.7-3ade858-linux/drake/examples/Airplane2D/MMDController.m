@@ -142,7 +142,7 @@ classdef MMDController
                     fprintf('Wrong angle difference detected')
                     keyboard;
             end
-            diff_matrix(3,:) = theta_diff;
+            diff_matrix(3,:) = theta_diff; %TODO: Should I divide theta_diff by theta_stddev?
             
 %             difference = abs(bsxfun(@minus,x1,x2));
 %             theta_dists = difference(3,:)*theta_std_dev;
