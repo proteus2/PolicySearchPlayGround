@@ -86,7 +86,7 @@ for idx in range(n_mmd_iterations):
 		print xt[0:3]
 		there_were_no_empty_cand = True
 		for i in range(0,N):
-			print 'Completed ' + str((float(i)/N)*100.0) + ' % of the ' + str(obsIdx)+ 'th observation'
+			print 'Completed ' + str(idx) + 'th mmd iteration ' + str((float(i)/N)*100.0) + ' % of the ' + str(obsIdx)+ 'th observation'
 			xtraj[0:,i] = copy.deepcopy(xt)
 			print 'xtraj = ' +str(xtraj[0:3,i])
 			xt=np.hstack( (xt,length,radius) ) 
@@ -97,6 +97,7 @@ for idx in range(n_mmd_iterations):
 			if empty_candidate:		
 				there_were_no_empty_cand = False
 				fname = path+'intermediate_traj_'+str(n_traj_opt_calls)+'.mat'
+				import pdb; pdb.set_trace()
 				if not os.path.isfile(fname):
 					eng.getPartiallyObservableTrajectory(path,radius,length,coms.tolist(),xt.tolist())
 				
@@ -117,7 +118,6 @@ for idx in range(n_mmd_iterations):
 
 			xt = np.reshape(np.transpose(xt),prediction_dim,)
 		print 'one iteration done'
-		import pdb; pdb.set_trace()
 		save_object( controller, path+'controller_idx='+str(idx)+'_'+'obsidx='+str(obsIdx) )
 		sio.savemat(path+'MMD_predicted_traj'+'_'+str(obsIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )
 		
