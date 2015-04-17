@@ -15,9 +15,9 @@ from MMDController import MMDController
 	# len,radius are sampled from: mu = [0.04, 0.2], sigma = [0.01 0.01; 0.01 0.1],abs(mvnrnd(mu,sigma,n_obs))
 
 # load observations
-n_obs = 10;
+n_obs = 1;
 n_samples_per_obs = 2;
-com_data = sio.loadmat('./partial_observable_init_training_data/com_list_for_partially_observations_list.mat')
+com_data = sio.loadmat('./partial_observable_init/com_list_for_partially_observations_list.mat')
 com_list = com_data['com_list']
 
 # initial data
@@ -27,7 +27,7 @@ rad_list 	= np.zeros((n_obs,1))
 len_list	= np.zeros((n_obs,1))
 
 for i in range(n_obs):
-	fname 	   ='./partial_observable_init_training_data/new_traj_' + str(i) + '.mat'
+	fname 	   ='./partial_observable_init/new_traj_' + str(i) + '.mat'
 	train_data = sio.loadmat(fname)
 	q_sol = train_data['q_sol']
 	h_sol = train_data['h_sol']
@@ -43,8 +43,8 @@ for i in range(n_obs):
 	n_x = np.shape(x_list)[1]
 	rads = np.empty(n_x)
 	lens = np.empty(n_x)
-	lens.fill(rad_list[i,0])
-	rads.fill(len_list[i,0])
+	lens.fill(len_list[i,0])
+	rads.fill(rad_list[i,0])
 	x_list = np.vstack((x_list,lens,rads))
 	y_list = copy.deepcopy(qh_sol[:,1:10])
 
@@ -63,7 +63,6 @@ eng.addpath_pods()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake')
 eng.addpath_drake()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake/solvers/trajectoryOptimization/dev')
-
 def save_object(obj, filename):
     with open(filename, 'wb') as output:
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
@@ -84,14 +83,17 @@ for idx in range(n_mmd_iterations):
 		coms[0,:] = com_list[obsIdx,:,0]
 		coms[1,:] = com_list[obsIdx,:,1]
 
+		print xt[0:3]
 		there_were_no_empty_cand = True
 		for i in range(0,N):
 			print 'Completed ' + str((float(i)/N)*100.0) + ' % of the ' + str(obsIdx)+ 'th observation'
-			xtraj[0:,i] = xt
+			xtraj[0:,i] = copy.deepcopy(xt)
+			print 'xtraj = ' +str(xtraj[0:3,i])
 			xt=np.hstack( (xt,length,radius) ) 
 			
 			# check discrepancy
 			min_idx,d_list,scaled_x,empty_candidate = controller.checkDiscrepancy(xt)
+#			print d_list	
 			if empty_candidate:		
 				there_were_no_empty_cand = False
 				fname = path+'intermediate_traj_'+str(n_traj_opt_calls)+'.mat'
@@ -104,13 +106,18 @@ for idx in range(n_mmd_iterations):
 				controller.setNewController(x,y)
 				n_traj_opt_calls = n_traj_opt_calls + 1;
 
-				# make prediction
+				# make prediction	
 				xt = controller.predict(xt)
 			else:
-				xt = controller.predict(xt)
+				xt = copy.deepcopy(controller.predict(xt))
+				print 'pred = ' + str(xt[0,0:3])
+				if i < 9:
+					print 'true = ' + str( np.transpose(y_list[:,i])[0,0:3]) 
+				print '\n'
 
 			xt = np.reshape(np.transpose(xt),prediction_dim,)
 		print 'one iteration done'
+		import pdb; pdb.set_trace()
 		save_object( controller, path+'controller_idx='+str(idx)+'_'+'obsidx='+str(obsIdx) )
 		sio.savemat(path+'MMD_predicted_traj'+'_'+str(obsIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )
 		

@@ -72,9 +72,9 @@ class MMDController:
 		if diff_matrix[0,11] > np.pi:
 			diff_matrix[0,11] = abs(2*np.pi-diff_matrix[0,11])
 		'''
-		diff_matrix[-1] = diff_matrix[-1]*np.sqrt(10)
-		diff_matrix[-2] = diff_matrix[-2]*np.sqrt(10)
-		
+		diff_matrix[-1] = diff_matrix[-1]*np.sqrt(1)
+		diff_matrix[-2] = diff_matrix[-2]*np.sqrt(1)
+	
 		return diff_matrix
 
 	def custom_kernel(self,x,y,**kwargs):
@@ -92,7 +92,7 @@ class MMDController:
 
 		self.Q = np.eye( 45 )
 		x=self.setAnglesToBetweenZeroToThreeSixty(x)
-		y=self.setAnglesToBetweenZeroToThreeSixty(y)
+#		y=self.setAnglesToBetweenZeroToThreeSixty(y)
 
 		self.unnormalized_data_list[0].append(x)
 		self.unnormalized_data_list[1].append(y)
@@ -108,14 +108,14 @@ class MMDController:
 		n_data = np.shape(x)[0]
 		max_mmd = -float('inf')
 		for i in range(n_data):
-			xi = np.reshape( scaled_x[i,:],(1,np.shape(x)[1]) )
-			mmd_i = self.computeMMD(xi,scaled_x,scaler.std_[3:6],scaler.std_[9:12])
+			scaled_xi = np.reshape( scaled_x[i,:],(1,np.shape(x)[1]) )
+			mmd_i = self.computeMMD(scaled_xi,scaled_x,scaler.std_[3:6],scaler.std_[9:12])
 			if mmd_i > max_mmd:
 				max_mmd = mmd_i
 		self.max_mmd.append(max_mmd)	
 
 		# train the new controller, then append it to self.controllers
-		controller = RandomForestRegressor()
+		controller = RandomForestRegressor(n_estimators=50)
 		controller.fit(scaled_x,y)
 		self.controller_list.append( controller )
 		
@@ -136,7 +136,7 @@ class MMDController:
 					robot_rpy[t_idx,rpy_idx] = robot_rpy[t_idx,rpy_idx]+2*np.pi
 				while robot_rpy[t_idx,rpy_idx] > 2*np.pi:
 					robot_rpy[t_idx,rpy_idx] = robot_rpy[t_idx,rpy_idx]-2*np.pi
-		if np.any(robot_rpy>2*np.pi) or np.any(robot_rpy< 0):
+		if np.any(robot_rpy>2*np.pi) or np.any(robot_rpy< 0) or np.any(cylinder_rpy>2*np.pi) or np.any(cylinder_rpy < 0):
 			print 'angle shit happened'
 			import pdb; pdb.set_trace()
 		# NOTE: '=' operator on Python arrays make shallow copies
@@ -161,6 +161,7 @@ class MMDController:
 		# this function determines which of the classfiers to use
 		n_ctrlls = np.shape(self.controller_list)[0]
 		x_query = np.reshape(x_query,(1,np.shape(x_query)[0]))		
+		x_query = self.setAnglesToBetweenZeroToThreeSixty(x_query)
 
 		min_mmd = float('inf')
 		candidates = []
@@ -201,7 +202,6 @@ class MMDController:
 			min_idx = np.argmin(d_list)
 			scaler = self.scaler_list[min_idx]
 			scaled_x = scaler.transform(x_query)
-		print min_idx
 		prediction = self.controller_list[min_idx].predict(scaled_x)
 		return prediction
 		

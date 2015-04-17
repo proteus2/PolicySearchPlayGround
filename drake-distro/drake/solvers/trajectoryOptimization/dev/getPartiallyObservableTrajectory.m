@@ -73,7 +73,7 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
 
     plan = plan.setSolverOptions('snopt', 'iterationslimit', 1e6);
     %plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 1000);
-    plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 150);
+    plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 500);
     plan = plan.setSolverOptions('snopt', 'majoroptimalitytolerance', 1e-4);
     x_seed = zeros(plan.num_vars, 1);
     for i = 1:num_samples
@@ -81,7 +81,7 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
       x_seed(last_q_inds(plan.robot.getBody(plan.robot.findLinkInd('palm')).position_num)) = [0; 0.5; zeros(4,1)];
     end
     plan = plan.setSolverOptions('snopt','print','ik_robust.out');
-    plan = plan.setSolverOptions('snopt','superbasicslimit',1);
+    plan = plan.setSolverOptions('snopt','superbasicslimit',2000);
 
     % Explicitly specifying the solver
     plan = plan.setSolver('snopt');

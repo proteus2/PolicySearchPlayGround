@@ -3,7 +3,7 @@ function test_control_policy
     success_score = zeros(4,10);
     
     %valid only from obs_idx=2
-    obs_idx =35;
+    obs_idx =0;
             partial=true
 
     load('./observable_init/com_list_for_partially_observations_list.mat');
@@ -14,24 +14,25 @@ function test_control_policy
     com(2,:) = com_list(obs_idx+1,:,2);
     com(1,3) = com(1,3)+obs(2)/2; com(2,3) = com(2,3)+obs(2)/2; 
     %com(1,2)=0; com(2,2)=0;
-%     test_predicted_traj=false;
-%     if test_predicted_traj
-%         fname= sprintf('./MMD_training_output_partially_observable/MMD_predicted_traj_%d_%d.mat',obs_idx,0)
-%         load(fname);
-%         q_sol=xtraj(1:end-1,1:end);
-%         q_sol = [q_sol];
-%         h_sol = [xtraj(end,:)];
-%     else
+    test_predicted_traj=false;
+    if test_predicted_traj
+        fname= sprintf('./MMD_training_output_partially_observable/MMD_predicted_traj_%d_%d.mat',obs_idx,0)
+        load(fname);
+        q_sol=xtraj(1:end-1,1:end);
+        q_sol = [q_sol];
+        h_sol = [xtraj(end,:)];
+ 
+    else
         if partial
             fname= sprintf('./partial_observable_init/new_traj_%d.mat',obs_idx)
         else
             fname= sprintf('./observable_init/new_traj_%d.mat',obs_idx)
         end
         
-        load(fname);
-
+%         load(fname);
+                load('./MMD_training_output_partially_observable/intermediate_traj_0.mat');
         h_sol = [0 h_sol];
-%     end
+    end
     % q_sol(1:6) = obj location
 
 
