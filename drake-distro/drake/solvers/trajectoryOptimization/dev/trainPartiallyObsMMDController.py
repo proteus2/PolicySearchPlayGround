@@ -97,7 +97,6 @@ for idx in range(n_mmd_iterations):
 			if empty_candidate:		
 				there_were_no_empty_cand = False
 				fname = path+'intermediate_traj_'+str(n_traj_opt_calls)+'.mat'
-				import pdb; pdb.set_trace()
 				if not os.path.isfile(fname):
 					eng.getPartiallyObservableTrajectory(path,radius,length,coms.tolist(),xt.tolist())
 				
