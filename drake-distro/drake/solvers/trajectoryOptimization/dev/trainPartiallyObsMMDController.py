@@ -15,7 +15,7 @@ from MMDController import MMDController
 	# len,radius are sampled from: mu = [0.04, 0.2], sigma = [0.01 0.01; 0.01 0.1],abs(mvnrnd(mu,sigma,n_obs))
 
 # load observations
-n_obs = 1;
+n_obs = 10;
 n_samples_per_obs = 2;
 com_data = sio.loadmat('./partial_observable_init/com_list_for_partially_observations_list.mat')
 com_list = com_data['com_list']
@@ -69,7 +69,7 @@ def save_object(obj, filename):
 
 path = './MMD_training_output_partially_observable/'
 n_traj_opt_calls = 0
-n_mmd_iterations = 10
+n_mmd_iterations = 1
 N=10
 prediction_dim = 43;
 coms = np.zeros((2,3))
@@ -110,15 +110,14 @@ for idx in range(n_mmd_iterations):
 				xt = controller.predict(xt)
 			else:
 				xt = copy.deepcopy(controller.predict(xt))
-				print 'pred = ' + str(xt[0,0:3])
-				if i < 9:
-					print 'true = ' + str( np.transpose(y_list[:,i])[0,0:3]) 
-				print '\n'
+			print 'pred = ' + str(xt[0,0:3])
+			if i < 9:
+				print 'true = ' + str( np.transpose(y_list[:,i])[0,0:3]) 
+			print '\n'
 
 			xt = np.reshape(np.transpose(xt),prediction_dim,)
 		print 'one iteration done'
 		save_object( controller, path+'controller_idx='+str(idx)+'_'+'obsidx='+str(obsIdx) )
-		sio.savemat(path+'MMD_predicted_traj'+'_'+str(obsIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj},{'init_conds_list':init_conds_list} )
-		
+		sio.savemat(path+'MMD_predicted_traj'+'_'+str(obsIdx)+'_'+str(idx)+'.mat', {'xtraj':xtraj,'init_conds_list':init_conds_list,'rad':radius,'len':length} )
 	if there_were_no_empty_cand:
 		break

@@ -13,7 +13,9 @@ from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.metrics.pairwise import pairwise_kernels
 from sklearn import preprocessing
+import numpy.matlib
 import numpy as np
+import copy
 
 class MMDController:
 	def __init__(self):
@@ -116,7 +118,10 @@ class MMDController:
 
 		# train the new controller, then append it to self.controllers
 		controller = RandomForestRegressor(n_estimators=50)
-		controller.fit(scaled_x,y)
+		n_repmat=5
+		x_repmatted = np.matlib.repmat(scaled_x,n_repmat,1)
+		y_repmatted = np.matlib.repmat(y,n_repmat,1)
+		controller.fit(x_repmatted,y_repmatted)
 		self.controller_list.append( controller )
 		
 	def setAnglesToBetweenZeroToThreeSixty(self,x):
@@ -145,9 +150,11 @@ class MMDController:
 	def computeMMD(self,D1,D2,cylinder_rpy_std_,robot_rpy_std_):
 		gamma_=100
 		#a=self.custom_kernel(D1,D1,gamma=0.5)
-		a=pairwise_kernels(D1,D1,metric=self.custom_kernel,gamma=gamma_,cylinder_rpy_std=cylinder_rpy_std_,robot_rpy_std=robot_rpy_std_)
-		b=pairwise_kernels(D1,D2,metric=self.custom_kernel,gamma=gamma_,cylinder_rpy_std=cylinder_rpy_std_,robot_rpy_std=robot_rpy_std_)
-		c=pairwise_kernels(D2,D2,metric=self.custom_kernel,gamma=gamma_,cylinder_rpy_std=cylinder_rpy_std_,robot_rpy_std=robot_rpy_std_)
+		D1_lowdim=copy.deepcopy(D1[:,0:12])
+		D2_lowdim=copy.deepcopy(D2[:,0:12])
+		a=pairwise_kernels(D1_lowdim,D1_lowdim,metric=self.custom_kernel,gamma=gamma_,cylinder_rpy_std=cylinder_rpy_std_,robot_rpy_std=robot_rpy_std_)
+		b=pairwise_kernels(D1_lowdim,D2_lowdim,metric=self.custom_kernel,gamma=gamma_,cylinder_rpy_std=cylinder_rpy_std_,robot_rpy_std=robot_rpy_std_)
+		c=pairwise_kernels(D2_lowdim,D2_lowdim,metric=self.custom_kernel,gamma=gamma_,cylinder_rpy_std=cylinder_rpy_std_,robot_rpy_std=robot_rpy_std_)
 
 		
 		n_d1 = np.shape(D1)[0]
