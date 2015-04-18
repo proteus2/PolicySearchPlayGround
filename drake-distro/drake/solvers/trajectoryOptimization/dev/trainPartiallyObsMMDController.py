@@ -1,4 +1,4 @@
-# trainMMDController.py
+# trainPartiallyObservableMMDController.py
 """Trains and predicts the robot grasping simulator """
 import os.path
 import pickle
@@ -15,7 +15,7 @@ from MMDController import MMDController
 	# len,radius are sampled from: mu = [0.04, 0.2], sigma = [0.01 0.01; 0.01 0.1],abs(mvnrnd(mu,sigma,n_obs))
 
 # load observations
-n_obs = 10;
+n_obs = 40;
 n_samples_per_obs = 2;
 com_data = sio.loadmat('./partial_observable_init/com_list_for_partially_observations_list.mat')
 com_list = com_data['com_list']

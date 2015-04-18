@@ -1,4 +1,5 @@
-# trainMMDController.py
+# trainObservableMMDController.py
+
 """Trains and predicts the robot grasping simulator """
 import os.path
 import pickle
@@ -7,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 import scipy.io as sio
 import numpy as np
 import copy
-#import matlab.engine
+import matlab.engine
 from MMDController import MMDController
 
 # make observations - done via sample_CoM_from_obs
@@ -15,7 +16,7 @@ from MMDController import MMDController
 	# len,radius are sampled from: mu = [0.04, 0.2], sigma = [0.01 0.01; 0.01 0.1],abs(mvnrnd(mu,sigma,n_obs))
 
 # load observations
-n_obs = 10;
+n_obs = 40;
 n_samples_per_obs = 2;
 com_data = sio.loadmat('./partial_observable_init/com_list_for_partially_observations_list.mat')
 com_list = com_data['com_list']
@@ -60,14 +61,13 @@ for i in range(n_obs):
 	init_conds_list[i,:] = np.transpose(qh_sol)[0,:]
 
 # predict
-'''
 eng = matlab.engine.start_matlab()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/')
 eng.addpath_pods()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake')
 eng.addpath_drake()
 eng.cd('/home/beomjoon/Documents/Github/PolicySearchPlayGround/drake-distro/drake/solvers/trajectoryOptimization/dev')
-'''
+
 def save_object(obj, filename):
     with open(filename, 'wb') as output:
         pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
@@ -79,7 +79,7 @@ N=10
 prediction_dim = 43;
 coms = np.zeros((1,3))
 for idx in range(n_mmd_iterations):
-	for obsIdx in range(n_obs):
+	for obsIdx in range(n_obs):	
 		xt = init_conds_list[obsIdx,:]
 		xt[-1] = 0
 		xtraj = np.zeros( (prediction_dim,N) )
@@ -102,7 +102,7 @@ for idx in range(n_mmd_iterations):
 				there_were_no_empty_cand = False
 				fname = path+'intermediate_traj_'+str(n_traj_opt_calls)+'.mat'
 				if not os.path.isfile(fname):
-					eng.getPartiallyObservableTrajectory(path,radius,length,coms.tolist(),xt.tolist())
+					eng.getObservableTrajectory(path,radius,length,coms.tolist(),xt.tolist())
 				
 				new_data = sio.loadmat(fname)
 				x = new_data['x']

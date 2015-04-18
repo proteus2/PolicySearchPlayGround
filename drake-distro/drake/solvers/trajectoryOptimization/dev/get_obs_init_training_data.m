@@ -1,5 +1,5 @@
 %% Make initial training data
-path='./observable_init_training_data/';
+path='./observable_init/';
 load(strcat(path,'com_list_for_partially_observations_list.mat'));
 coms = cell(1,2);
 for idx=1:40

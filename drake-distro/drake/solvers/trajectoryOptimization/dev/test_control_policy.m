@@ -3,7 +3,7 @@ function test_control_policy
     success_score = zeros(4,10);
     
     %valid only from obs_idx=2
-    obs_idx =0;
+    obs_idx =9;
             partial=true
 
     load('./observable_init/com_list_for_partially_observations_list.mat');
@@ -30,7 +30,7 @@ function test_control_policy
         end
         
 %         load(fname);
-                load('./MMD_training_output_partially_observable/intermediate_traj_0.mat');
+                load('./MMD_training_output_observable/intermediate_traj_0.mat');
         h_sol = [0 h_sol];
     end
     % q_sol(1:6) = obj location

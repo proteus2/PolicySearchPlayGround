@@ -3,7 +3,6 @@ function trajectory = getObservableTrajectory(path,radius,len,com_list,x0)
     len
     com_list
     coms(1,:) = cell2mat(com_list{1,1})
-    coms(2,:) = cell2mat(com_list{1,2})
     com_list = coms;
     n_traj = 0;
     fname=sprintf('new_traj_%d.mat',n_traj);
@@ -113,7 +112,7 @@ function trajectory = getObservableTrajectory(path,radius,len,com_list,x0)
         trajectory = [q_sol(:,:); [init_hsol h_sol] ];
         x=trajectory(:,1:end-1);
         y=trajectory(:,2:end);
-        x = [x;ones(1,9)*len;ones(1,9)*radius];
+        x = [x;repmat(coms',1,size(x,2))];
         
         n_traj = 0;
         fname=sprintf('intermediate_traj_%d.mat',n_traj);
