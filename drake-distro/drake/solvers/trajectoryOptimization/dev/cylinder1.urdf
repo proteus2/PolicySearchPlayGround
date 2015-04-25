@@ -2,19 +2,19 @@
 <robot name="cylinder" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <link name="cylinder">
     <inertial>
-      <mass value="2.000000"/>
-      <origin xyz="0.148328 0.044774 0.108152"/>
-      <inertia ixx="0.000010" ixy="0.0" ixz="0.0" iyy="0.000010" iyz="0.0" izz="0.000200"/>
+      <mass value="1.000000"/>
+      <origin xyz="0.181223 -0.000000 -0.164039"/>
+      <inertia ixx="0.001000" ixy="0.0" ixz="0.0" iyy="0.001000" iyz="0.0" izz="0.005000"/>
     </inertial>
     <collision>
       <geometry>
-        <cylinder length="0.590606" radius="0.243888"/>
+        <cylinder length="0.328078" radius="0.181223"/>
       </geometry>
       <origin rpy="0 0 0" xyz="0 0 0"/>
     </collision>
     <visual>
       <geometry>
-        <cylinder length="0.590606" radius="0.243888"/>
+        <cylinder length="0.328078" radius="0.181223"/>
       </geometry>
       <material name="gray">
         <color rgba="0.5 0.5 .5 1"/>

@@ -1,5 +1,5 @@
 %% Make initial training data
-path='./partial_observable_init_training_data/';
+path='./partial_observable_init/';
 load(strcat(path,'com_list_for_partially_observations_list.mat'));
 coms = cell(1,2);
 for idx=1:40
@@ -8,7 +8,9 @@ for idx=1:40
     
     coms{1} = mat2cell(com_list(idx,:,1),1);
     coms{2} = mat2cell(com_list(idx,:,2),1);
+    tic
     getPartiallyObservableTrajectory(path,radius,len,coms);
+    toc
 end
 
 %% Get initial training data

@@ -40,7 +40,7 @@ function successHistPartiallyObs
     sup_CI = 1.96*std(success_score)/sqrt(n_obs);
     
     dagg_succ_rate = 0.53;
-    dagg_CI = 0.12
+    dagg_CI = 0.12;
     
     figure;bar([traj_opt_succ_rate dagg_succ_rate sup_succ_rate mmd_succ_rate])  
     hold on; errorbar([traj_opt_succ_rate dagg_succ_rate sup_succ_rate mmd_succ_rate ],[traj_opt_CI dagg_CI sup_CI mmd_CI],'o');

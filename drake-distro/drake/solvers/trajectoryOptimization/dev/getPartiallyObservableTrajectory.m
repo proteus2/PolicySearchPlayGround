@@ -140,7 +140,7 @@ function trajectory = getPartiallyObservableTrajectory(path,radius,len,com_list,
         fname=sprintf('new_traj_%d.mat',n_traj);
         fname=strcat(path,fname)
         
-        save(fname,'q_sol','v_sol','h_sol','radius','len','com_list');
+%         save(fname,'q_sol','v_sol','h_sol','radius','len','com_list');
     end
 
     

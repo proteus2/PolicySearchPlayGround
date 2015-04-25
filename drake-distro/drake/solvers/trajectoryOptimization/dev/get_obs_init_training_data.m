@@ -7,7 +7,9 @@ for idx=1:40
     len = obs_cands(idx,2)
     
     coms{1} = mat2cell(com_list(idx,:,1),1);
+    tic
     getObservableTrajectory(path,radius,len,coms);
+    toc
 end
 
 %% Get initial training data

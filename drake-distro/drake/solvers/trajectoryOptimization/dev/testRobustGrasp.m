@@ -65,7 +65,7 @@ plan = plan.addBoundingBoxConstraint(BoundingBoxConstraint(0.05*ones(N-1,1),0.2*
 
 plan = plan.setSolverOptions('snopt', 'iterationslimit', 1e6);
 %plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 1000);
-plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 150);
+plan = plan.setSolverOptions('snopt', 'majoriterationslimit', 1);
 plan = plan.setSolverOptions('snopt', 'majoroptimalitytolerance', 1e-4);
 x_seed = zeros(plan.num_vars, 1);
 for i = 1:num_samples

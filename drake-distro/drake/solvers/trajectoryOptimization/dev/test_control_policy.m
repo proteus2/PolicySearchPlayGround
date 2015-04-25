@@ -2,9 +2,9 @@ function test_control_policy
     checkDependency('lcmgl');
     success_score = zeros(4,10);
     
-    %valid only from obs_idx=2
-    obs_idx =9;
-            partial=true
+    % 8,9
+    obs_idx =23;
+            partial=false
 
     load('./observable_init/com_list_for_partially_observations_list.mat');
     obs = obs_cands(obs_idx+1,:);
@@ -12,7 +12,6 @@ function test_control_policy
     com = zeros(2,3);
     com(1,:) = com_list(obs_idx+1,:,1);
     com(2,:) = com_list(obs_idx+1,:,2);
-    com(1,3) = com(1,3)+obs(2)/2; com(2,3) = com(2,3)+obs(2)/2; 
     %com(1,2)=0; com(2,2)=0;
     test_predicted_traj=false;
     if test_predicted_traj
@@ -24,21 +23,34 @@ function test_control_policy
  
     else
         if partial
-            fname= sprintf('./partial_observable_init/new_traj_%d.mat',obs_idx)
+            fname= sprintf('./partial_observable_init/new_traj_%d.mat',obs_idx);
         else
-            fname= sprintf('./observable_init/new_traj_%d.mat',obs_idx)
+            fname= sprintf('./observable_init/new_traj_%d.mat',obs_idx);
         end
         
-%         load(fname);
-                load('./MMD_training_output_observable/intermediate_traj_0.mat');
+        load(fname);
+%                 load('./MMD_training_output_observable/intermediate_traj_0.mat');
         h_sol = [0 h_sol];
     end
-    % q_sol(1:6) = obj location
-
-
     
-   
+    % Setting for observable, obs_idx=35
+    if obs_idx == 8 & partial == false
+        q_sol(1:6,1:4)=zeros(6,4);
+        q_sol(3,:) = len/2;
+        q_sol(4:6,:) = zeros(3,10);
+    end
     
+   if obs_idx == 6 & partial == false
+        q_sol(1:6,1:4)=zeros(6,4);
+        q_sol(3,:) = len/2;
+%         q_sol(4:6,:) = zeros(3,10);
+   end
+    
+     if obs_idx == 6 & partial == true
+        q_sol(3,:) = len/2;
+%                 q_sol(4:6,:) = zeros(3,10);
+
+    end
     %% Related to visualization
     obj_goal_pose = [0; 0.5; obs(2)/2; zeros(3,1)]; % [x,y,z,roll,pitch,yaw]
     robot = createRobot(obs);
@@ -51,8 +63,8 @@ function test_control_policy
     lcmgl.glColor3f(1,0,0);
 
     lcmgl.sphere(obj_goal_pose(1:3), 0.01, 20, 20);
-    lcmgl.sphere(com(1,:), 0.01, 20, 20);
-    lcmgl.sphere(com(2,:), 0.01, 20, 20);
+%     lcmgl.sphere(com(1,:), 0.01, 20, 20);
+%     lcmgl.sphere(com(2,:), 0.01, 20, 20);
 
     lcmgl.switchBuffers();
     keyboard
